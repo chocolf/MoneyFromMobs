@@ -89,7 +89,11 @@ public class DeathListeners implements Listener{
 		else if (config.getBoolean(entityName + ".Enabled")) {
 			if (p==null && config.getBoolean(entityName+".OnlyOnKill")) return;
 			
-			amount = getAmount(entity, p);
+			if (entityName.equals("PLAYER")){
+				amount = getPlayerAmount(entity);
+			}
+			else amount = getAmount(entity, p);
+			
 			dropChance = config.getDouble(entityName + ".DropChance");
 			numberOfDrops = getNumberOfDrops(entityName);
 			
@@ -172,55 +176,58 @@ public class DeathListeners implements Listener{
 		return amount;
 	}
 	
-	// gets amount to give if entity is a player or a vanilla mob
+	// gets amount to give if entity is a player
+	public double getPlayerAmount(Entity entity) {
+		FileConfiguration config = plugin.getConfig();
+		double amount;
+		double playersBalance = plugin.getEcon().getBalance((Player) entity);
+		String strAmount = config.getString("PLAYER.Amount");
+		if ( strAmount.contains("%")) {
+			strAmount = strAmount.replace("%","");
+			amount = playersBalance*(Double.valueOf(strAmount)/100);
+		}else {
+			amount = Double.valueOf(strAmount);
+			if (amount > playersBalance) {
+				amount = playersBalance;
+			}
+		}
+		amount = Utils.round(amount, 2);
+		return amount;
+	}
+	
+	// gets amount to give if entity is a vanilla mob
 	public double getAmount(Entity entity, Player p) {
 		FileConfiguration config = plugin.getConfig();
 		String entityName = String.valueOf(entity.getType());
 		double amount;
 		
-		// if entity is a player
-		if ( entityName.equals("PLAYER")) {
-			double playersBalance = plugin.getEcon().getBalance((Player) entity);
-			String strAmount = config.getString("PLAYER.Amount");
-			if ( strAmount.contains("%")) {
-				strAmount = strAmount.replace("%","");
-				amount = playersBalance*(Double.valueOf(strAmount)/100);
-			}else {
-				amount = Double.valueOf(strAmount);
-				if (amount > playersBalance) {
-					amount = playersBalance;
-				}
-			}
-		}
-		// if entity is a mob
-		else {
-			Double min = config.getDouble(entityName + ".Min");
-			Double max = config.getDouble(entityName + ".Max");
+		Double min = config.getDouble(entityName + ".Min");
+		Double max = config.getDouble(entityName + ".Max");
+		
+		amount = Utils.doubleRandomNumber(min, max);
+		if ( p!=null) {
+			// times amount by looting multiplier
+			ItemStack killersWeapon = p.getInventory().getItemInMainHand();
+			int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
+			double lootingMultiplier = plugin.getManager().getLootingMultiplier();
+			lootingMultiplier = 1+(lootingMultiplier*lootingLevel);
+			amount *= lootingMultiplier;
 			
-			amount = Utils.doubleRandomNumber(min, max);
-			if ( p!=null) {
-				// times amount by looting multiplier
-				ItemStack killersWeapon = p.getInventory().getItemInMainHand();
-				int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
-				double lootingMultiplier = plugin.getManager().getLootingMultiplier();
-				lootingMultiplier = 1+(lootingMultiplier*lootingLevel);
-				amount *= lootingMultiplier;
-				
-				// times by permission multiplier
-				if (plugin.getManager().isPermissionMultiplierEnabled()) {
-					String permissionPrefix = "moneyfrommobs.multiplier.";
-					for (PermissionAttachmentInfo attachmentInfo : p.getEffectivePermissions()) {
-						if (attachmentInfo.getPermission().startsWith(permissionPrefix)) {
-					    	double permissionMultiplier = Double.parseDouble(attachmentInfo.getPermission().replace(permissionPrefix, ""));
-					    	permissionMultiplier /= 100;
-					    	permissionMultiplier += 1;
-					    	amount *= permissionMultiplier;
-					    }
-					}
+			// times by permission multiplier
+			if (plugin.getManager().isPermissionMultiplierEnabled()) {
+				String permissionPrefix = "moneyfrommobs.multiplier.";
+				for (PermissionAttachmentInfo attachmentInfo : p.getEffectivePermissions()) {
+					if (attachmentInfo.getPermission().startsWith(permissionPrefix)) {
+				    	double permissionMultiplier = Double.parseDouble(attachmentInfo.getPermission().replace(permissionPrefix, ""));
+				    	permissionMultiplier /= 100;
+				    	permissionMultiplier += 1;
+				    	amount *= permissionMultiplier;
+				    }
 				}
-				
 			}
+			
 		}
+		
 		amount = Utils.round(amount, 2);
 		return amount;
 	}
