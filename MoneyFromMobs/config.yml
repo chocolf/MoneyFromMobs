@@ -1,0 +1,585 @@
+# Whether to notify players with OP when there is an update for MoneyForMobs
+UpdateNotification: true
+
+# Extra money based on percentage per level of looting
+# 0.05 = 5% extra money per looting level so looting 10 gives 50% more money
+MoneyAddedPerLevel: 0.05
+
+# Set Enabled to false if you want money to go straight into players account instead of dropping as an item.
+# RGB Support for 1.16+ e.g. #62d180 instead of &a will give you a green
+# Item: can be set to a custom head from websites like https://minecraft-heads.com/custom-heads by copying the VALUE from the website requires 1.13+ e.g. 'CustomHead:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzUxMTM3ZTExNDQzYThmYmIwNWZjZDNjY2MxYWY5YmQyMzAzOTE4ZjM1NDQ4MTg1ZTNlZDk2ZWYxODRkYSJ9fX0='
+# CustomModelData can be set to to customize textures. Only works with 1.14+ I don't know much about it so I won't be able to help you but here is a little guide: https://www.planetminecraft.com/forums/communities/texturing/new-1-14-custom-item-models-tuto-578834/
+# DisableDecimal means that amounts like 5.00 will be changed to just 5 in the name
+MoneyDropsOnGround: 
+  Enabled: true
+  Item: 'EMERALD'
+  CustomModelData: 0
+  Enchanted: true
+  ItemName: '&a$%amount%'
+  DisableDecimal: false
+    
+# Sounds list: https://www.digminecraft.com/lists/sound_list_pc.php
+# Sound = sound played on pickup. Change to "NONE" if you don't want a sound to be played
+Sound: entity.item.pickup
+
+# Particles list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+# ParticleEffect = Particle effect spawned on pickup. Change to "NONE" if you don't want a particle to spawn.
+ParticleEffect: VILLAGER_HAPPY
+AmountOfParticles: 5
+  
+# Message to be sent when a player picks up/receives money. %amount% is the placeholder for the amount to be given
+Message: '&aYou picked up $%amount%!'
+
+# Where the message is shown when a player picks up/receives money
+ShowMessageInChat: false
+ShowMessageInActionBar: true
+ShowMessageInTitle: false
+
+# Messages sent to player when they use /MfmMute
+MuteToggleOnMessage: '&cMessages will no longer be shown when you pick up money dropped by mobs!'
+MuteToggleOffMessage: '&aMessages will now be shown when you pick up money dropped by mobs!'
+
+# Whether certain mobs should drop money
+# Slimes/MagmaCubes that have split will not be classed as a natural mob or a spawner mob.
+MoneyDropsFromNaturalMobs: true
+MoneyDropsFromSpawnerMobs: true
+MoneyDropsFromSpawnEggMobs: true
+MoneyDropsFromSplitSlimes: true
+
+# Disable money drops in a certain world by adding the world name to this list
+# To disable money drops in a worldguard region set the flag 'drop-money' to deny. This only works with the latest version of WorldGuard
+DisabledWorlds:
+  - 'world1'
+  - 'world2'
+
+# This option loops through all players and checks for dropped items every so many ticks to see if there is money next to a player so if you have a lot of players it could cause lag.
+# You only need to enable this option if you are not using PaperMC 1.13+, as PaperMC allows you to pick up money when your inventory is full without this option. https://papermc.io/downloads
+# Interval = how often the plugin checks for items around the player. 5 = checks every 5 ticks (20 ticks = 1 second).
+# Radius = radius around player to check for money
+PickupMoneyWhenInventoryIsFull:
+  Enabled: true
+  Interval: 5
+  Radius: 1
+
+# Whether permission multipliers are enabled. An example of this is if a player has the permission moneyfrommobs.multiplier.50 they will receive 50% more money when money drops
+PermissionMultipliersEnabled: true
+
+
+# Min = Lowest amount of money to be dropped.
+# Max = Highest amount of money to be dropped.
+# DropChance = Percentage chance for the player to be given money e.g 25 = 25% chance for mob to drop money
+# NumberOfDrops = number of money items to be dropped e.g 3 means the amount will be divided by 3 and drop 3 items. Can also be set to 1-3 which means its random between 1 and 3
+# OnlyOnKill = Whether mobs should drop money if they weren't killed by a player. False means mobs can drop money if they fell to their death for example
+
+# Looting doesn't affect players because it could lead to players killing each other to generate infinite money.
+# Amount: 10% = Player drops 10% of their balance.
+PLAYER:
+  Enabled: true
+  Amount: 10%
+  DropChance: 100
+  NumberOfDrops: 5
+  OnlyOnKill: true
+  Message: '&cYou dropped $%amount% on death.'
+  
+########## ANIMALS ##########
+CHICKEN:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+PIG:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SHEEP:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+COW:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+MUSHROOM_COW:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+PARROT:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SQUID:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+BAT:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+OCELOT:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+CAT:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+PANDA:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+HORSE:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SKELETON_HORSE:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+ZOMBIE_HORSE:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+DONKEY:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+MULE:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+LLAMA:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+TRADER_LLAMA:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+FOX:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+RABBIT:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+TURTLE:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+POLAR_BEAR:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+COD:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SALMON:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+PUFFERFISH:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+TROPICAL_FISH:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+DOLPHIN:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+BEE:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+WOLF:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SNOWMAN:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+  
+  
+########## HOSTILE OVERWORLD MOBS ##########
+ZOMBIE:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+ZOMBIE_VILLAGER:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+DROWNED:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+HUSK:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+STRAY:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+GIANT:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SPIDER:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+CAVE_SPIDER:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SKELETON:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+GUARDIAN:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+ELDER_GUARDIAN:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SLIME:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SILVERFISH:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+WITCH:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+CREEPER:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+PHANTOM:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+
+########## VILLAGERS / ILLAGERS ##########
+VILLAGER:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+WANDERING_TRADER:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+IRON_GOLEM:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+VINDICATOR:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+EVOKER:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+PILLAGER:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+RAVAGER:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+VEX:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+
+########## NETHER MOBS ##########
+WITHER_SKELETON:
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+STRIDER:
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+PIG_ZOMBIE: #This is old Zombie Pigman
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+PIGLIN:
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+PIGLIN_BRUTE:
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+ZOMBIFIED_PIGLIN:
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+HOGLIN:
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+ZOGLIN:
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+MAGMA_CUBE:
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+BLAZE:
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+GHAST:
+  Enabled: true
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+
+########## END MOBS ##########
+ENDERMAN:
+  Enabled: true
+  Min: 20
+  Max: 20
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+ENDERMITE:
+  Enabled: true
+  Min: 20
+  Max: 20
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SHULKER:
+  Enabled: true
+  Min: 20
+  Max: 20
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+
+########## BOSSES ##########
+ENDER_DRAGON:
+  Enabled: true
+  Min: 500
+  Max: 500
+  DropChance: 100
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+WITHER:
+  Enabled: true
+  Min: 500
+  Max: 500
+  DropChance: 100
+  NumberOfDrops: 1-3
+  OnlyOnKill: true

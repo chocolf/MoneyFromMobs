@@ -1,0 +1,25 @@
+main: me.chocolf.moneyfrommobs.MoneyFromMobs
+name: MoneyFromMobs
+version: 3.51
+api-version: 1.16
+author: Chocolf
+description: Makes mobs drop money with looting multiplier
+depend: [Vault]
+softdepend: [WorldEdit,WorldGuard,MythicMobs,PlaceholderAPI]
+commands:
+  MfmReload:
+    description: Reloads the config file of Money From Mobs
+    permission: MoneyFromMobs.reload
+    usage: "Usage: /MfmReload"
+  MfmDrop:
+    description: Drops a specified amount of money on the ground
+    permission: MoneyFromMobs.drop
+    usage: "Usage: /MfmDrop <AmountToDrop> <NumberOfDrops>"
+  MfmMute:
+    description: Mutes messages sent by the plugin when a player picks up money
+    permission: MoneyFromMobs.mute
+    usage: "Usage: /MfmMute"
+  MfmClear:
+    description: Removes all money drops off the ground
+    permission: MoneyFromMobs.clear
+    usage: "Usage: /MfmClear"

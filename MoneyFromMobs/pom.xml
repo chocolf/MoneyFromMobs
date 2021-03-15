@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>MoneyFromMobs</groupId>
+  <artifactId>MoneyFromMobs</artifactId>
+  <version>3.51</version>
+  <name>MoneyFromMobs</name>
+  <description>Makes mobs drop money with looting multiplier</description>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <repositories>
+  		<repository>
+		    <id>nexus</id>
+		    <name>Lumine Releases</name>
+		    <url>https://mvn.lumine.io/repository/maven-public/</url>
+		</repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+		<repository>
+		    <id>papermc</id>
+		    <url>https://papermc.io/repo/repository/maven-public/</url>
+		</repository>
+    </repositories>
+    <dependencies>
+	    <dependency>
+		    <groupId>io.lumine.xikage</groupId>
+		    <artifactId>MythicMobs</artifactId>
+		    <version>4.9.1</version>  
+		    <scope>provided</scope>
+		</dependency>
+        <dependency>
+         <groupId>me.clip</groupId>
+          <artifactId>placeholderapi</artifactId>
+          <version>2.10.9</version>
+         <scope>provided</scope>
+        </dependency>
+		<dependency>
+		    <groupId>com.destroystokyo.paper</groupId>
+		    <artifactId>paper-api</artifactId>
+		    <version>1.16.5-R0.1-SNAPSHOT</version>
+		    <scope>provided</scope>
+		</dependency>
+    </dependencies>
+</project>

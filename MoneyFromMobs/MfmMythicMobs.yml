@@ -1,0 +1,11 @@
+# Whether MythicMobs support should be enabled or not
+Enabled: false
+
+Skeleton_King:
+  Enabled: false
+  Min: 15
+  Max: 15
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+  
