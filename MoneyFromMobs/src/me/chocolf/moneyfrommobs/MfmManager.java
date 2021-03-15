@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,8 +81,8 @@ public class MfmManager {
 		if ( config.getString("MoneyDropsOnGround.Item").contains("CustomHead:")) {
 			setItemToDrop(getCustomHead(plugin.getConfig().getString("MoneyDropsOnGround.Item").replace("CustomHead:", "") ));
 		}else {
-			Material ItemType = Material.valueOf(plugin.getConfig().getString("MoneyDropsOnGround.Item"));
-			setItemToDrop(new ItemStack(ItemType, 1));
+			Material itemType = Material.valueOf(plugin.getConfig().getString("MoneyDropsOnGround.Item"));
+			setItemToDrop(new ItemStack(itemType, 1));
 		}
 		
 		ItemMeta meta = itemToDrop.getItemMeta();
@@ -127,7 +128,7 @@ public class MfmManager {
 				setNumberOfParticles(config.getInt("AmountOfParticles"));
 			}
 			catch(Exception e) {
-				Bukkit.getLogger().warning("[MoneyFromMobs] Make sure you have typed a valid Particle Effect in your config");
+				Bukkit.getLogger().warning("[MoneyFromMobs] Disabling particles on pickup. Make sure you have typed a valid Particle Effect in your config");
 				setParticleEffect(null);
 			}
 		}
@@ -136,10 +137,10 @@ public class MfmManager {
 			setSound(null);
 		}else {
 			try {
-				setSound( Sound.valueOf( config.getString("Sound").toUpperCase().replaceAll("\\.", "_") ) );
+				setSound( Sound.valueOf( config.getString("Sound").toUpperCase().replace(".", "_") ) );
 			}
 			catch (Exception e) {
-				Bukkit.getLogger().warning("[MoneyFromMobs] Make sure you have typed a valid Sound in your config");
+				Bukkit.getLogger().warning("[MoneyFromMobs] Disabling sound on pick up. Make sure you have typed a valid Sound in your config");
 				setSound(null);
 			}
 		}
@@ -220,7 +221,7 @@ public class MfmManager {
 		this.lootingMultiplier = lootingMultiplier;
 	}
 
-	public HashSet<String> getDisabledWorlds() {
+	public Set<String> getDisabledWorlds() {
 		return disabledWorlds;
 	}
 
@@ -244,24 +245,23 @@ public class MfmManager {
 			return canDropIfSpawnEgg;
 		case "SLIME_SPLIT":
 			return canDropIfSplitSlimes;
+		default:
+			return true;
 		}
-		return true;
 	}
 
 	public void giveMoney(Double amount,Player p) {
-		Sound sound = plugin.getManager().getSound();
-		Particle particle = plugin.getManager().getParticleEffect();
 		Location loc = p.getLocation();
 		
 		// call pickup money event
-		GiveMoneyEvent giveMoneyEvent = new GiveMoneyEvent(p, amount, sound, particle);
+		GiveMoneyEvent giveMoneyEvent = new GiveMoneyEvent(p, amount, sound, particleEffect);
 		Bukkit.getPluginManager().callEvent(giveMoneyEvent);
 		if (giveMoneyEvent.isCancelled()) return;
 		amount = giveMoneyEvent.getAmount();
 		sound = giveMoneyEvent.getSound();
-		particle = giveMoneyEvent.getParticle();
+		particleEffect = giveMoneyEvent.getParticle();
 		String strAmount = String.format("%.2f", amount);
-		String message = plugin.getManager().getMessage().replace("%amount%" ,strAmount);
+		String messageToSend = this.getMessage().replace("%amount%" ,strAmount);
 		
 		
 		if (amount == 0) return;
@@ -270,11 +270,8 @@ public class MfmManager {
 		plugin.getEcon().depositPlayer(p,amount);		
 		
 		// take off decimal place if amount ends in .00
-		if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal")) {
-			if (strAmount.contains(".00")) {
-				strAmount = String.format("%.0f", amount);
-			}
-		}
+		if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal") && strAmount.contains(".00"))
+			strAmount = String.format("%.0f", amount);
 		
 		// play sound
 		if (sound != null) {
@@ -282,25 +279,25 @@ public class MfmManager {
 		}
 		
 		// spawn particle
-		if (particle != null) {
+		if (particleEffect != null) {
 	    	loc.setY(loc.getY()+3);
-	    	p.getWorld().spawnParticle(plugin.getManager().getParticleEffect(), loc, plugin.getManager().getNumberOfParticles());
+	    	p.getWorld().spawnParticle(this.getParticleEffect(), loc, this.getNumberOfParticles());
 	    }
 		
 		// send message
-		if (message.length() != 0) {
+		if (messageToSend.length() != 0) {
 			FileConfiguration config = plugin.getConfig();
 			if ( p.hasMetadata("MfmMuteMessages")) {
 				return;
 			}
 			if(config.getString("ShowMessageInChat").equalsIgnoreCase("true")) {
-				p.sendMessage(message);
+				p.sendMessage(messageToSend);
 			}
 			if (config.getString("ShowMessageInActionBar").equalsIgnoreCase("true")) {
-				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messageToSend));
 			}
 			if(config.getString("ShowMessageInTitle").equalsIgnoreCase("true")) {
-				p.sendTitle("", message, 1, 10, 1);
+				p.sendTitle("", messageToSend, 1, 10, 1);
 			}
 		}
 	}
@@ -317,25 +314,22 @@ public class MfmManager {
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 			
-			Item ItemDropped = location.getWorld().dropItemNaturally(location, item );
+			Item itemDropped = location.getWorld().dropItemNaturally(location, item );
 			String strAmount = String.format("%.2f", amount);
 			
 			// removes decimal place
-			if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal")) {
-				if (strAmount.contains(".00")) {
-					strAmount = String.format("%.0f", amount);
-				}
-			}
+			if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal") && strAmount.contains(".00"))
+				strAmount = String.format("%.0f", amount);
 			
-			ItemDropped.setCustomName(plugin.getManager().getItemName().replace("%amount%", strAmount));
-			ItemDropped.setCustomNameVisible(true);
+			
+			itemDropped.setCustomName(this.getItemName().replace("%amount%", strAmount));
+			itemDropped.setCustomNameVisible(true);
 		}
-		return;
 	}
 	
-	private final static Pattern pattern = Pattern.compile("([0-9]){6}mfm");
+	private static final Pattern pattern = Pattern.compile("([0-9]){6}mfm");
 	
-	public boolean CheckIfMoney(ItemStack itemStack) {
+	public boolean checkIfMoney(ItemStack itemStack) {
 		// checks if item picked up is money
 		if (itemStack == null) return false;
 		if (!itemStack.hasItemMeta()) return false;
@@ -343,9 +337,7 @@ public class MfmManager {
 		if (!itemMeta.hasLore()) return false;
 		List<String> itemLore = itemMeta.getLore();
 		Matcher matcher = pattern.matcher(itemLore.get(0));
-		if (!matcher.find()) return false;
-		
-		return true;
+		return matcher.find();
 	}
 	
 	

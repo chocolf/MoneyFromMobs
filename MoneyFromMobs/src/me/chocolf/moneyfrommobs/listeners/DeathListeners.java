@@ -16,7 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.plugin.Plugin;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.chocolf.moneyfrommobs.MfmManager;
@@ -40,7 +39,7 @@ public class DeathListeners implements Listener{
 		SpawnReason spawnReason = e.getSpawnReason();
 		String strSpawnReason = String.valueOf(spawnReason);
 	    LivingEntity entity = e.getEntity();
-	    entity.setMetadata("SpawnReason", (MetadataValue)new FixedMetadataValue((Plugin)this.plugin, strSpawnReason));
+	    entity.setMetadata("MfMSpawnReason", (MetadataValue)new FixedMetadataValue(this.plugin, strSpawnReason));
 	}
 
 	
@@ -63,8 +62,8 @@ public class DeathListeners implements Listener{
 			return;
 		
 		// checks how entity spawned and if its disabled
-		if (entity.hasMetadata("SpawnReason")) {
-			String spawnReason = entity.getMetadata("SpawnReason").get(0).value().toString();
+		if (entity.hasMetadata("MfMSpawnReason")) {
+			String spawnReason = entity.getMetadata("MfMSpawnReason").get(0).value().toString();
 			if (!manager.canDrop(spawnReason))
 				return;
 		}
@@ -79,9 +78,7 @@ public class DeathListeners implements Listener{
 		
 		// if mythic mob died
 		if (mythicMobName!=null) {
-			if (p==null)
-				if (mfmMMConfig.getBoolean(mythicMobName+".OnlyOnKill"))
-					return;
+			if (p==null && mfmMMConfig.getBoolean(mythicMobName+".OnlyOnKill")) return;
 			
 			amount = getMMAmount(mythicMobName, p);
 			dropChance = mfmMMConfig.getDouble(mythicMobName+".DropChance");
@@ -90,9 +87,7 @@ public class DeathListeners implements Listener{
 		
 		// if normal mob/player died
 		else if (config.getBoolean(entityName + ".Enabled")) {
-			if (p==null)
-				if (config.getBoolean(entityName+".OnlyOnKill"))
-					return;
+			if (p==null && config.getBoolean(entityName+".OnlyOnKill")) return;
 			
 			amount = getAmount(entity, p);
 			dropChance = config.getDouble(entityName + ".DropChance");
@@ -144,10 +139,10 @@ public class DeathListeners implements Listener{
 	// METHODS
 	
 	// gets amount to give if entity is a MythicMob
-	private double getMMAmount(String EntityName, Player p) {
+	private double getMMAmount(String entityName, Player p) {
 		FileConfiguration config = plugin.getMMConfig().getConfig();
-		Double min = Double.valueOf(config.getString(EntityName + ".Min"));
-		Double max = Double.valueOf(config.getString(EntityName + ".Max"));
+		Double min = Double.valueOf(config.getString(entityName + ".Min"));
+		Double max = Double.valueOf(config.getString(entityName + ".Max"));
 		double amount;
 		amount = Utils.doubleRandomNumber(min, max);
 		
@@ -161,10 +156,10 @@ public class DeathListeners implements Listener{
 			
 			// times by permission multiplier
 			if (plugin.getManager().isPermissionMultiplierEnabled()) {
-				String PermissionPrefix = "moneyfrommobs.multiplier.";
+				String permissionPrefix = "moneyfrommobs.multiplier.";
 				for (PermissionAttachmentInfo attachmentInfo : p.getEffectivePermissions()) {
-					if (attachmentInfo.getPermission().startsWith(PermissionPrefix)) {
-				    	double permissionMultiplier = Double.valueOf(attachmentInfo.getPermission().replace("moneyfrommobs.multiplier.", ""));
+					if (attachmentInfo.getPermission().startsWith(permissionPrefix)) {
+				    	double permissionMultiplier = Double.parseDouble(attachmentInfo.getPermission().replace("moneyfrommobs.multiplier.", ""));
 				    	permissionMultiplier /= 100;
 				    	permissionMultiplier += 1;
 				    	amount *= permissionMultiplier;
@@ -184,7 +179,7 @@ public class DeathListeners implements Listener{
 		double amount;
 		
 		// if entity is a player
-		if ( entityName == "PLAYER") {
+		if ( entityName.equals("PLAYER")) {
 			double playersBalance = plugin.getEcon().getBalance((Player) entity);
 			String strAmount = config.getString("PLAYER.Amount");
 			if ( strAmount.contains("%")) {
@@ -213,10 +208,10 @@ public class DeathListeners implements Listener{
 				
 				// times by permission multiplier
 				if (plugin.getManager().isPermissionMultiplierEnabled()) {
-					String PermissionPrefix = "moneyfrommobs.multiplier.";
+					String permissionPrefix = "moneyfrommobs.multiplier.";
 					for (PermissionAttachmentInfo attachmentInfo : p.getEffectivePermissions()) {
-						if (attachmentInfo.getPermission().startsWith(PermissionPrefix)) {
-					    	double permissionMultiplier = Double.valueOf(attachmentInfo.getPermission().replace("moneyfrommobs.multiplier.", ""));
+						if (attachmentInfo.getPermission().startsWith(permissionPrefix)) {
+					    	double permissionMultiplier = Double.parseDouble(attachmentInfo.getPermission().replace(permissionPrefix, ""));
 					    	permissionMultiplier /= 100;
 					    	permissionMultiplier += 1;
 					    	amount *= permissionMultiplier;
@@ -260,31 +255,14 @@ public class DeathListeners implements Listener{
 	public String getMMName(Entity entity) {
 		FileConfiguration mfmMMConfig = plugin.getMMConfig().getConfig();
 		String mythicMobName = null;
-		if (mfmMMConfig.getBoolean("Enabled")) {
-			if (plugin.getServer().getPluginManager().getPlugin("MythicMobs") != null) {
-				if (MythicMobs.inst().getAPIHelper().isMythicMob(entity)) {
-					mythicMobName = MythicMobs.inst().getAPIHelper().getMythicMobInstance(entity).getType().getInternalName();
-					if (mfmMMConfig.contains(mythicMobName) && mfmMMConfig.getBoolean(mythicMobName+".Enabled")) return mythicMobName;
-				}
-			}
+		if (mfmMMConfig.getBoolean("Enabled") && plugin.getServer().getPluginManager().getPlugin("MythicMobs") != null && MythicMobs.inst().getAPIHelper().isMythicMob(entity)) {
+			mythicMobName = MythicMobs.inst().getAPIHelper().getMythicMobInstance(entity).getType().getInternalName();
+			if (mfmMMConfig.contains(mythicMobName) && mfmMMConfig.getBoolean(mythicMobName+".Enabled")) 
+				return mythicMobName;
 		}
 		return null;
 	}
 }
 
-// example events added by the plugin
-//@EventHandler
-//public void onAttemptToDropMoney(AttemptToDropMoneyEvent e) {
-//	
-//}
 
-//@EventHandler
-//public void onDropMoney(DropMoneyEvent e) {
-//	Player p = e.getKiller();
-//	if (p.isSneaking()) {
-//		return;
-//	}
-//	ItemStack item = new ItemStack(Material.EMERALD, 1);
-//	e.setItemToDrop(item);
-//}
 

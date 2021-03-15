@@ -36,7 +36,7 @@ private int radius;
 						ItemStack itemStack = item.getItemStack();
 						
 						// if item found is not money return
-						if (!plugin.getManager().CheckIfMoney(itemStack)) continue;
+						if (!plugin.getManager().checkIfMoney(itemStack)) continue;
 
 					    item.remove();
 					    List<String> itemLore = itemStack.getItemMeta().getLore();

@@ -29,7 +29,7 @@ private MoneyFromMobs plugin;
 		// gets item picked up
 		Item item = e.getItem();
 		ItemStack itemStack = item.getItemStack();
-		if (!manager.CheckIfMoney(itemStack)) return;
+		if (!manager.checkIfMoney(itemStack)) return;
 		
 		
 		e.setCancelled(true);
@@ -50,7 +50,7 @@ private MoneyFromMobs plugin;
 	@EventHandler
 	public void onHopperPickup(InventoryPickupItemEvent e) {
 		ItemStack item = e.getItem().getItemStack();
-		if (!plugin.getManager().CheckIfMoney(item)) return;
+		if (!plugin.getManager().checkIfMoney(item)) return;
 		e.setCancelled(true);
 	}
 }

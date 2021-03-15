@@ -29,7 +29,7 @@ public class PaperListeners implements Listener{
 		// gets item picked up
 		Item item = e.getItem();
 		ItemStack itemStack = item.getItemStack();
-		if (!manager.CheckIfMoney(itemStack)) return;
+		if (!manager.checkIfMoney(itemStack)) return;
 		
 		
 		e.setCancelled(true);
