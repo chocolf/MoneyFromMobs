@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.listeners;
+package me.chocolf.moneyfrommobs.listener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.events.GiveMoneyEvent;
+import me.chocolf.moneyfrommobs.event.GiveMoneyEvent;
 
 public class PlaceholderAPIListener implements Listener{
 	

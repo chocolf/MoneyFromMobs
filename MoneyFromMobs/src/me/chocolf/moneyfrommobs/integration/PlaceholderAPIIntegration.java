@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.integrations;
+package me.chocolf.moneyfrommobs.integration;
 
 import org.bukkit.entity.Player;
 

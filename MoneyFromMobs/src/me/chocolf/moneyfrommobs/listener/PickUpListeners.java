@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.listeners;
+package me.chocolf.moneyfrommobs.listener;
 
 import java.util.List;
 
@@ -7,24 +7,24 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.chocolf.moneyfrommobs.MfmManager;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 
-public class PaperListeners implements Listener{
+public class PickUpListeners implements Listener{
+private MoneyFromMobs plugin;
 	
-	private MoneyFromMobs plugin;
-	
-	public PaperListeners(MoneyFromMobs plugin) {
+	public PickUpListeners(MoneyFromMobs plugin) {
 		this.plugin = plugin;
-		
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
+	
 	@EventHandler
-	public void onAttemptToPickUp(PlayerAttemptPickupItemEvent e) {
+	public void onPickup(EntityPickupItemEvent e) {
 		MfmManager manager = plugin.getManager();
 		// gets item picked up
 		Item item = e.getItem();
@@ -33,7 +33,11 @@ public class PaperListeners implements Listener{
 		
 		
 		e.setCancelled(true);
-		Player p = e.getPlayer();
+		// stops mobs from picking up money
+		if (!(e.getEntity() instanceof Player) ) {
+			return;
+		}
+		Player p = (Player) e.getEntity();
 		// returns if player doesn't have permission to pickup money
 		if ( !p.hasPermission("MoneyFromMobs.use") ) return;
 		
@@ -41,5 +45,12 @@ public class PaperListeners implements Listener{
 	    double amount = Double.parseDouble(itemLore.get(1));
 	    manager.giveMoney(amount, p);
 	    item.remove();
+	}
+	
+	@EventHandler
+	public void onHopperPickup(InventoryPickupItemEvent e) {
+		ItemStack item = e.getItem().getItemStack();
+		if (!plugin.getManager().checkIfMoney(item)) return;
+		e.setCancelled(true);
 	}
 }

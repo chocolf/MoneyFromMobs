@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.commands;
+package me.chocolf.moneyfrommobs.command;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemStack;
 
 import me.chocolf.moneyfrommobs.MfmManager;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.events.DropMoneyEvent;
-import me.chocolf.moneyfrommobs.utils.Utils;
+import me.chocolf.moneyfrommobs.event.DropMoneyEvent;
+import me.chocolf.moneyfrommobs.util.Utils;
 
 public class DropMoneyCommand implements CommandExecutor{
 	

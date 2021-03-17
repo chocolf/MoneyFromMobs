@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.events;
+package me.chocolf.moneyfrommobs.event;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

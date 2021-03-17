@@ -29,8 +29,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStandV1_16_R3;
-import me.chocolf.moneyfrommobs.events.GiveMoneyEvent;
-import me.chocolf.moneyfrommobs.utils.Utils;
+import me.chocolf.moneyfrommobs.event.GiveMoneyEvent;
+import me.chocolf.moneyfrommobs.util.Utils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_16_R3.ChatComponentText;

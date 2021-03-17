@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.commands;
+package me.chocolf.moneyfrommobs.command;
 
 import java.util.ArrayList;
 import java.util.List;

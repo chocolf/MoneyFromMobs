@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.utils;
+package me.chocolf.moneyfrommobs.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

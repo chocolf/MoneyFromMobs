@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.commands;
+package me.chocolf.moneyfrommobs.command;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 
 import me.chocolf.moneyfrommobs.MfmManager;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.utils.Utils;
+import me.chocolf.moneyfrommobs.util.Utils;
 
 public class ReloadCommand implements CommandExecutor{
 	

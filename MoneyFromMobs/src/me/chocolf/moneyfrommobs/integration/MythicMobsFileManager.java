@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.integrations;
+package me.chocolf.moneyfrommobs.integration;
 
 import java.io.File;
 import java.io.IOException;

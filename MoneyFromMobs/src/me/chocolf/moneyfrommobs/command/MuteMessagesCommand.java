@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.commands;
+package me.chocolf.moneyfrommobs.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.utils.Utils;
+import me.chocolf.moneyfrommobs.util.Utils;
 
 public class MuteMessagesCommand implements CommandExecutor{
 	

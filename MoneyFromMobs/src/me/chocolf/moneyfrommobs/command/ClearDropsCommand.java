@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.commands;
+package me.chocolf.moneyfrommobs.command;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.utils.Utils;
+import me.chocolf.moneyfrommobs.util.Utils;
 
 public class ClearDropsCommand implements CommandExecutor{
 	

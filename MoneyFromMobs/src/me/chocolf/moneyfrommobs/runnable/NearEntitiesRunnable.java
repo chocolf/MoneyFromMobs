@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.runnables;
+package me.chocolf.moneyfrommobs.runnable;
 
 import java.util.List;
 

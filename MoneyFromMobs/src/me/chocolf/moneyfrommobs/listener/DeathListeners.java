@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.listeners;
+package me.chocolf.moneyfrommobs.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -16,12 +16,13 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
+import dev.rosewood.rosestacker.utils.PersistentDataUtils;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.chocolf.moneyfrommobs.MfmManager;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.events.AttemptToDropMoneyEvent;
-import me.chocolf.moneyfrommobs.events.DropMoneyEvent;
-import me.chocolf.moneyfrommobs.utils.Utils;
+import me.chocolf.moneyfrommobs.event.AttemptToDropMoneyEvent;
+import me.chocolf.moneyfrommobs.event.DropMoneyEvent;
+import me.chocolf.moneyfrommobs.util.Utils;
 
 public class DeathListeners implements Listener{
 	
@@ -35,10 +36,8 @@ public class DeathListeners implements Listener{
 	
 	@EventHandler
 	public void onMobSpawn(CreatureSpawnEvent e) {
-		String spawnReason = e.getSpawnReason().toString();
+		String spawnReason = e.getSpawnReason().name();
 	    LivingEntity entity = e.getEntity();
-//	    if (!spawnReason.equals("NATURAL"))
-//	    	Bukkit.broadcastMessage(strSpawnReason);
 	    entity.setMetadata("MfMSpawnReason", (MetadataValue)new FixedMetadataValue(this.plugin, spawnReason));
 	}
 	
@@ -151,6 +150,10 @@ public class DeathListeners implements Listener{
 				return true;
 			}
 			
+		}
+		else if (Bukkit.getServer().getPluginManager().isPluginEnabled("RoseStacker")) {
+			String spawnReason = PersistentDataUtils.getEntitySpawnReason((LivingEntity) entity).toString();
+			if (!manager.canDrop(spawnReason)) return false;
 		}
 		return true;
 	}
@@ -275,7 +278,7 @@ public class DeathListeners implements Listener{
 	public String getMMName(Entity entity) {
 		FileConfiguration mfmMMConfig = plugin.getMMConfig().getConfig();
 		String mythicMobName = null;
-		if (mfmMMConfig.getBoolean("Enabled") && plugin.getServer().getPluginManager().getPlugin("MythicMobs") != null && MythicMobs.inst().getAPIHelper().isMythicMob(entity)) {
+		if (mfmMMConfig.getBoolean("Enabled") && plugin.getServer().getPluginManager().isPluginEnabled("MythicMobs") && MythicMobs.inst().getAPIHelper().isMythicMob(entity)) {
 			mythicMobName = MythicMobs.inst().getAPIHelper().getMythicMobInstance(entity).getType().getInternalName();
 			if (mfmMMConfig.contains(mythicMobName) && mfmMMConfig.getBoolean(mythicMobName+".Enabled")) 
 				return mythicMobName;

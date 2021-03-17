@@ -20,6 +20,10 @@
   </build>
   <repositories>
   		<repository>
+        	<id>rosewood-repo</id>
+        	<url>https://repo.rosewooddev.io/repository/public/</url>
+    	</repository>
+  		<repository>
 		    <id>nexus</id>
 		    <name>Lumine Releases</name>
 		    <url>https://mvn.lumine.io/repository/maven-public/</url>
@@ -34,6 +38,11 @@
 		</repository>
     </repositories>
     <dependencies>
+    	<dependency>
+        	<groupId>dev.rosewood</groupId>
+        	<artifactId>rosestacker</artifactId>
+        	<version>1.2.1</version>
+    	</dependency>
 	    <dependency>
 		    <groupId>io.lumine.xikage</groupId>
 		    <artifactId>MythicMobs</artifactId>

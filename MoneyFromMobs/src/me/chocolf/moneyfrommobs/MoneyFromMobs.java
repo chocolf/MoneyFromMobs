@@ -10,23 +10,23 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.chocolf.moneyfrommobs.commands.ClearDropsCommand;
-import me.chocolf.moneyfrommobs.commands.DropMoneyCommand;
-import me.chocolf.moneyfrommobs.commands.DropMoneyTabCompleter;
-import me.chocolf.moneyfrommobs.commands.MuteMessagesCommand;
-import me.chocolf.moneyfrommobs.commands.ReloadCommand;
-import me.chocolf.moneyfrommobs.integrations.DropMoneyFlag;
-import me.chocolf.moneyfrommobs.integrations.MythicMobsFileManager;
-import me.chocolf.moneyfrommobs.integrations.PlaceholderAPIIntegration;
-import me.chocolf.moneyfrommobs.listeners.DeathListeners;
-import me.chocolf.moneyfrommobs.listeners.PaperListeners;
-import me.chocolf.moneyfrommobs.listeners.PickUpListeners;
-import me.chocolf.moneyfrommobs.listeners.PlaceholderAPIListener;
-import me.chocolf.moneyfrommobs.listeners.WorldGuardListener;
-import me.chocolf.moneyfrommobs.runnables.NearEntitiesRunnable;
-import me.chocolf.moneyfrommobs.utils.ConfigUpdater;
-import me.chocolf.moneyfrommobs.utils.Metrics;
-import me.chocolf.moneyfrommobs.utils.UpdateChecker;
+import me.chocolf.moneyfrommobs.command.ClearDropsCommand;
+import me.chocolf.moneyfrommobs.command.DropMoneyCommand;
+import me.chocolf.moneyfrommobs.command.DropMoneyTabCompleter;
+import me.chocolf.moneyfrommobs.command.MuteMessagesCommand;
+import me.chocolf.moneyfrommobs.command.ReloadCommand;
+import me.chocolf.moneyfrommobs.integration.DropMoneyFlag;
+import me.chocolf.moneyfrommobs.integration.MythicMobsFileManager;
+import me.chocolf.moneyfrommobs.integration.PlaceholderAPIIntegration;
+import me.chocolf.moneyfrommobs.listener.DeathListeners;
+import me.chocolf.moneyfrommobs.listener.PaperListeners;
+import me.chocolf.moneyfrommobs.listener.PickUpListeners;
+import me.chocolf.moneyfrommobs.listener.PlaceholderAPIListener;
+import me.chocolf.moneyfrommobs.listener.WorldGuardListener;
+import me.chocolf.moneyfrommobs.runnable.NearEntitiesRunnable;
+import me.chocolf.moneyfrommobs.util.ConfigUpdater;
+import me.chocolf.moneyfrommobs.util.Metrics;
+import me.chocolf.moneyfrommobs.util.UpdateChecker;
 import net.milkbowl.vault.economy.Economy;
 
 public class MoneyFromMobs extends JavaPlugin{
@@ -45,7 +45,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		new PickUpListeners(this);
 		new DeathListeners(this);
 		if (checkIfPaper()) new PaperListeners(this);
-		if(Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) new WorldGuardListener(this);
+		if(Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard")) new WorldGuardListener(this);
 		
 		
 		// Auto updates config
@@ -72,7 +72,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		manager = new MfmManager(this);
 		
 		// PlaceholderAPIIntegration integration
-		if(Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPIIntegration") != null){
+		if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceHolderAPI")){
 			new PlaceholderAPIIntegration(this).register();
 			placeholderListener = new PlaceholderAPIListener(this);
 		}
@@ -100,7 +100,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	// loads WorldGuard flag
 	@Override
 	public void onLoad() {
-		if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null)
+		if (Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard"))
 			new DropMoneyFlag();
 	}
 

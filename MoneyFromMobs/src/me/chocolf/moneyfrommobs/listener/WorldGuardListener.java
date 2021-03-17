@@ -1,4 +1,4 @@
-package me.chocolf.moneyfrommobs.listeners;
+package me.chocolf.moneyfrommobs.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,8 +12,8 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.events.AttemptToDropMoneyEvent;
-import me.chocolf.moneyfrommobs.integrations.DropMoneyFlag;
+import me.chocolf.moneyfrommobs.event.AttemptToDropMoneyEvent;
+import me.chocolf.moneyfrommobs.integration.DropMoneyFlag;
 
 public class WorldGuardListener implements Listener{
 	
