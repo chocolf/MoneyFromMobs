@@ -37,7 +37,7 @@ public class DropMoneyCommand implements CommandExecutor{
 					
 					Location location = p.getTargetBlock(null, 100).getLocation();
 					location.setY(location.getY()+1);
-					double amount = Double.valueOf(args[0]);
+					double amount = Double.parseDouble(args[0]);
 					int numberOfDrops = 1;
 					ItemStack itemToDrop = manager.getItemToDrop();
 					if (args.length >= 2) {

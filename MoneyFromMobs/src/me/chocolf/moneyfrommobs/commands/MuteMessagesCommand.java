@@ -36,7 +36,7 @@ public class MuteMessagesCommand implements CommandExecutor{
 				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 	
 }

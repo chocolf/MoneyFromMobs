@@ -13,7 +13,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Utils {
 	
-	private final static Pattern pattern = Pattern.compile("#([A-Fa-f0-9]){6}");
+	private static final Pattern pattern = Pattern.compile("#([A-Fa-f0-9]){6}");
 	static Random r = new Random();
 	
 	public static String applyColour (String msg) {
@@ -33,15 +33,13 @@ public class Utils {
 		// Min is included
 		// Max is Excluded
 		r = new Random();
-		int result = r.nextInt(max-min) + min;
-		return result;
+		return r.nextInt(max-min) + min;
 	}
 	
 	public static double doubleRandomNumber(Double min, Double max) {
 		// min and max are included
 		
-		double result = min + (max - min) *r.nextDouble();
-		return result;
+		return min + (max - min) *r.nextDouble();
 	}
 	
 	public static double round(double value, int places) {

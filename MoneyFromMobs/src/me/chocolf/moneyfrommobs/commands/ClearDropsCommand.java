@@ -26,29 +26,21 @@ public class ClearDropsCommand implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
-		if (label.equalsIgnoreCase("mfmclear")) {
+		if (label.equalsIgnoreCase("mfmclear") && sender.hasPermission("MoneyFromMobs.clear")) {
 			
-			if (sender.hasPermission("MoneyFromMobs.clear")) {
-				
-				List<World> worldList = Bukkit.getServer().getWorlds();
-				for (World world : worldList) {
-					List<Entity> entList = world.getEntities();
-					for (Entity entity : entList) {
-						if (entity instanceof Item) {
-							ItemStack item = ((Item) entity).getItemStack();
-							if (plugin.getManager().checkIfMoney(item)) entity.remove();
-							
-						}
+			List<World> worldList = Bukkit.getServer().getWorlds();
+			for (World world : worldList) {
+				List<Entity> entList = world.getEntities();
+				for (Entity entity : entList) {
+					if (entity instanceof Item) {
+						ItemStack item = ((Item) entity).getItemStack();
+						if (plugin.getManager().checkIfMoney(item)) entity.remove();				
 					}
 				}
-				sender.sendMessage(Utils.applyColour("&9All money was succesfully removed from the ground!"));
-				return true;
-				
 			}
-			
-		}
-			
-		
+			sender.sendMessage(Utils.applyColour("&9All money was succesfully removed from the ground!"));
+			return true;
+		}		
 		return false;
 	}
 

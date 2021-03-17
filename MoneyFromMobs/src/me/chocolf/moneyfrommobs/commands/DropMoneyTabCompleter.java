@@ -11,9 +11,9 @@ import org.bukkit.command.TabCompleter;
 
 public class DropMoneyTabCompleter implements TabCompleter{
 	
-	List<String> arguments1 = new ArrayList<String>();
-	List<String> arguments2 = new ArrayList<String>();
-	List<String> nothing = new ArrayList<String>();
+	List<String> arguments1 = new ArrayList<>();
+	List<String> arguments2 = new ArrayList<>();
+	List<String> nothing = new ArrayList<>();
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {

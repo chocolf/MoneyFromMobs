@@ -41,10 +41,10 @@ private MoneyFromMobs plugin;
 		// returns if player doesn't have permission to pickup money
 		if ( !p.hasPermission("MoneyFromMobs.use") ) return;
 		
-	    item.remove();
 	    List<String> itemLore = itemStack.getItemMeta().getLore();
-	    double amount = Double.valueOf(itemLore.get(1));
+	    double amount = Double.parseDouble(itemLore.get(1));
 	    manager.giveMoney(amount, p);
+	    item.remove();
 	}
 	
 	@EventHandler

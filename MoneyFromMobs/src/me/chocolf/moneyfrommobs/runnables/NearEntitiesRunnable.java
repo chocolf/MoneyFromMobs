@@ -37,11 +37,12 @@ private int radius;
 						
 						// if item found is not money return
 						if (!plugin.getManager().checkIfMoney(itemStack)) continue;
-
-					    item.remove();
+						
+					    
 					    List<String> itemLore = itemStack.getItemMeta().getLore();
-						double amount = Double.valueOf(itemLore.get(1));
+						double amount = Double.parseDouble(itemLore.get(1));
 					    plugin.getManager().giveMoney(amount, p);
+					    item.remove();
 					}
 				}
 			}

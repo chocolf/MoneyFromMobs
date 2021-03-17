@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -22,14 +23,18 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
+import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStandV1_16_R3;
 import me.chocolf.moneyfrommobs.events.GiveMoneyEvent;
 import me.chocolf.moneyfrommobs.utils.Utils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_16_R3.ChatComponentText;
+import net.minecraft.server.v1_16_R3.WorldServer;
 
 public class MfmManager {
 	
@@ -251,8 +256,6 @@ public class MfmManager {
 	}
 
 	public void giveMoney(Double amount,Player p) {
-		Location loc = p.getLocation();
-		
 		// call pickup money event
 		GiveMoneyEvent giveMoneyEvent = new GiveMoneyEvent(p, amount, sound, particleEffect);
 		Bukkit.getPluginManager().callEvent(giveMoneyEvent);
@@ -260,18 +263,13 @@ public class MfmManager {
 		amount = giveMoneyEvent.getAmount();
 		sound = giveMoneyEvent.getSound();
 		particleEffect = giveMoneyEvent.getParticle();
-		String strAmount = String.format("%.2f", amount);
-		String messageToSend = this.getMessage().replace("%amount%" ,strAmount);
-		
 		
 		if (amount == 0) return;
 		
-		// give money
-		plugin.getEcon().depositPlayer(p,amount);		
+		Location loc = p.getLocation();
 		
-		// take off decimal place if amount ends in .00
-		if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal") && strAmount.contains(".00"))
-			strAmount = String.format("%.0f", amount);
+		// give money
+		plugin.getEcon().depositPlayer(p,amount);	
 		
 		// play sound
 		if (sound != null) {
@@ -284,23 +282,91 @@ public class MfmManager {
 	    	p.getWorld().spawnParticle(this.getParticleEffect(), loc, this.getNumberOfParticles());
 	    }
 		
+		// convert amount to string ready to place it in message
+		String strAmount = String.format("%.2f", amount);
+		// take off decimal place if amount ends in .00
+		if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal") && strAmount.contains(".00"))
+			strAmount = String.format("%.0f", amount);
+		
+		sendMessage(strAmount,p);
+		
+	}
+	private void sendMessage(String strAmount, Player p) {
 		// send message
-		if (messageToSend.length() != 0) {
+		if (this.getMessage().length() != 0) {
+			String messageToSend = this.getMessage().replace("%amount%" ,strAmount);
 			FileConfiguration config = plugin.getConfig();
+			Location loc = p.getLocation();
 			if ( p.hasMetadata("MfmMuteMessages")) {
 				return;
 			}
-			if(config.getString("ShowMessageInChat").equalsIgnoreCase("true")) {
+			if(config.getBoolean("ShowMessageInChat")) {
 				p.sendMessage(messageToSend);
 			}
-			if (config.getString("ShowMessageInActionBar").equalsIgnoreCase("true")) {
+			if (config.getBoolean("ShowMessageInActionBar")) {
 				p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messageToSend));
 			}
-			if(config.getString("ShowMessageInTitle").equalsIgnoreCase("true")) {
+			if(config.getBoolean("ShowMessageInTitle")) {
 				p.sendTitle("", messageToSend, 1, 10, 1);
 			}
+			if(config.getBoolean("ShowMessageAsFloatingText")) {
+				sendFloatingTextMessage(messageToSend, loc);
+			}
 		}
+		
 	}
+
+	private void sendFloatingTextMessage(String messageToSend, Location loc) {
+		loc.setY(loc.getY()-1);
+		double rotation = loc.getYaw() - 180;
+		if (rotation < 0) rotation += 360.0;
+		
+		if (0 <= rotation && rotation < 22.5) {
+			// north
+            loc.setZ(loc.getZ()-2);
+        } else if (22.5 <= rotation && rotation < 67.5) {
+        	// north east
+        	loc.setZ(loc.getZ()-2.5);
+        	loc.setX(loc.getX()+2.5);
+        } else if (67.5 <= rotation && rotation < 112.5) {
+            // east
+        	loc.setX(loc.getX()+2.5);
+        } else if (112.5 <= rotation && rotation < 157.5) {
+            // south east
+        	loc.setZ(loc.getZ()+2.5);
+        	loc.setX(loc.getX()+2.5);
+        } else if (157.5 <= rotation && rotation < 202.5) {
+            // south
+        	loc.setZ(loc.getZ()+2.5);
+        } else if (202.5 <= rotation && rotation < 247.5) {
+            // south west
+        	loc.setZ(loc.getZ()+2.5);
+        	loc.setX(loc.getX()-2.5);
+        } else if (247.5 <= rotation && rotation < 292.5) {
+            // west
+        	loc.setX(loc.getX()-2.5);
+        } else if (292.5 <= rotation && rotation < 337.5) {
+            // north west
+        	loc.setZ(loc.getZ()-2.5);
+        	loc.setX(loc.getX()-2.5);
+        } else if (337.5 <= rotation && rotation < 360.0) {
+            // north
+        	loc.setZ(loc.getZ()-2.5);
+        }
+		
+		FloatingTextArmorStandV1_16_R3 armorstand = new FloatingTextArmorStandV1_16_R3(loc);
+		armorstand.setCustomName(new ChatComponentText(messageToSend));
+		WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
+		world.addEntity(armorstand);
+		
+		new BukkitRunnable() {
+		     @Override
+		     public void run() {
+		          armorstand.setHealth(0);
+		     }
+		}.runTaskTimer(plugin, 5, 5);
+	}
+
 	public void dropItem(ItemStack item, Double amount, Location location, int numberOfDrops) {
 		if (amount == 0) return;
 		amount = amount/numberOfDrops;

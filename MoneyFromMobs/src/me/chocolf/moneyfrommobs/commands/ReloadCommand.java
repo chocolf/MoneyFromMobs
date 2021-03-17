@@ -24,7 +24,7 @@ public class ReloadCommand implements CommandExecutor{
 		if (label.equalsIgnoreCase("mfmreload")) {
 			if (sender.hasPermission("MoneyFromMobs.reload")) {
 				MfmManager manager = plugin.getManager();
-				// reloads config
+				// reloads configs
 				plugin.reloadConfig();
 				plugin.getMMConfig().reloadConfig();
 				

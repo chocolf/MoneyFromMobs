@@ -34,6 +34,7 @@ Message: '&aYou picked up $%amount%!'
 ShowMessageInChat: false
 ShowMessageInActionBar: true
 ShowMessageInTitle: false
+ShowMessageAsFloatingText: false
 
 # Messages sent to player when they use /MfmMute
 MuteToggleOnMessage: '&cMessages will no longer be shown when you pick up money dropped by mobs!'

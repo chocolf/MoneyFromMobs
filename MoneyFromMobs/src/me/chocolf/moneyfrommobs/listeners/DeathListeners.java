@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -36,12 +35,12 @@ public class DeathListeners implements Listener{
 	
 	@EventHandler
 	public void onMobSpawn(CreatureSpawnEvent e) {
-		SpawnReason spawnReason = e.getSpawnReason();
-		String strSpawnReason = String.valueOf(spawnReason);
+		String spawnReason = e.getSpawnReason().toString();
 	    LivingEntity entity = e.getEntity();
-	    entity.setMetadata("MfMSpawnReason", (MetadataValue)new FixedMetadataValue(this.plugin, strSpawnReason));
+//	    if (!spawnReason.equals("NATURAL"))
+//	    	Bukkit.broadcastMessage(strSpawnReason);
+	    entity.setMetadata("MfMSpawnReason", (MetadataValue)new FixedMetadataValue(this.plugin, spawnReason));
 	}
-
 	
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent e) {
@@ -49,24 +48,15 @@ public class DeathListeners implements Listener{
 		FileConfiguration config = plugin.getConfig();
 		FileConfiguration mfmMMConfig = plugin.getMMConfig().getConfig();
 		Entity entity = e.getEntity();
-		String world = entity.getWorld().getName();
-		Player p = null;
-		String entityName = String.valueOf(entity.getType());
+		String entityName = entity.getType().toString();
 		String mythicMobName = getMMName(entity);
+		Player p = null;
 		double amount;
 		double dropChance;
 		int numberOfDrops;
 		
-		// checks if entity that died is in a disabled world
-		if (manager.getDisabledWorlds().contains(world))
-			return;
-		
-		// checks how entity spawned and if its disabled
-		if (entity.hasMetadata("MfMSpawnReason")) {
-			String spawnReason = entity.getMetadata("MfMSpawnReason").get(0).value().toString();
-			if (!manager.canDrop(spawnReason))
-				return;
-		}
+		// checks if money can drop
+		if (!canDropMoneyHere(entity)) return;
 
 		// if killer is a player set p = to killer
 		if ((e.getEntity().getKiller() instanceof Player)) {
@@ -101,12 +91,13 @@ public class DeathListeners implements Listener{
 		// if mob that isnt in the config died
 		else return;
 		
-		
+		// calls attempt to drop money event
 		AttemptToDropMoneyEvent attemptToDropMoneyEvent = new AttemptToDropMoneyEvent(dropChance, entity, p);
 		Bukkit.getPluginManager().callEvent(attemptToDropMoneyEvent);
 		if (attemptToDropMoneyEvent.isCancelled()) return;
-		
 		dropChance = attemptToDropMoneyEvent.getDropChance();
+		
+		// makes random number for drop chance
 		double randomNum = Utils.doubleRandomNumber(0.0, 100.0);
 		
 		if (randomNum < dropChance) {
@@ -115,6 +106,7 @@ public class DeathListeners implements Listener{
 			
 			// if drop money on ground
 			if ( config.getBoolean("MoneyDropsOnGround.Enabled") ){
+				// call drop money event
 				DropMoneyEvent dropMoneyEvent = new DropMoneyEvent(itemToDrop,amount, location, p, entity, numberOfDrops);
 				Bukkit.getPluginManager().callEvent(dropMoneyEvent);
 				if (dropMoneyEvent.isCancelled()) return;
@@ -142,6 +134,27 @@ public class DeathListeners implements Listener{
 	
 	// METHODS
 	
+	private boolean canDropMoneyHere(Entity entity) {
+		MfmManager manager = plugin.getManager();
+		// checks if entity that died is in a disabled world
+		if (manager.getDisabledWorlds().contains(entity.getWorld().getName()))
+			return false;
+		
+		
+		// checks how entity spawned and if its disabled
+		if (entity.hasMetadata("MfMSpawnReason")) {
+			try {
+				String spawnReason = entity.getMetadata("MfMSpawnReason").get(0).value().toString();
+				if (!manager.canDrop(spawnReason)) return false;
+			}
+			catch(Exception e) {
+				return true;
+			}
+			
+		}
+		return true;
+	}
+
 	// gets amount to give if entity is a MythicMob
 	private double getMMAmount(String entityName, Player p) {
 		FileConfiguration config = plugin.getMMConfig().getConfig();

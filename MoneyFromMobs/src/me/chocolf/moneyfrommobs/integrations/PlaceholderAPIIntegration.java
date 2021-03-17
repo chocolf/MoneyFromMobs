@@ -9,11 +9,11 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
  * This class will be registered through the register-method in the 
  * plugins onEnable-method.
  */
-public class PlaceholderAPI extends PlaceholderExpansion {
+public class PlaceholderAPIIntegration extends PlaceholderExpansion {
 
     private MoneyFromMobs plugin;
 
-    public PlaceholderAPI(MoneyFromMobs plugin){
+    public PlaceholderAPIIntegration(MoneyFromMobs plugin){
         this.plugin = plugin;
     }
 
@@ -53,8 +53,8 @@ public class PlaceholderAPI extends PlaceholderExpansion {
 
         // %moneyfrommobs_latest_picked_up%
         if(identifier.equals("latest_picked_up")){
-        	if (plugin.getPlaceholdersListener().latestPickedUp.containsKey(p.getUniqueId())) {
-        		return plugin.getPlaceholdersListener().latestPickedUp.get(p.getUniqueId());
+        	if (plugin.getPlaceholdersListener().getLatestPickedUp().containsKey(p.getUniqueId())) {
+        		return plugin.getPlaceholdersListener().getLatestPickedUp().get(p.getUniqueId());
         	}
         	else {
         		String itemName = plugin.getManager().getItemName();

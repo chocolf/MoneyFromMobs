@@ -1,6 +1,7 @@
 package me.chocolf.moneyfrommobs.listeners;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -13,7 +14,8 @@ import me.chocolf.moneyfrommobs.events.GiveMoneyEvent;
 public class PlaceholderAPIListener implements Listener{
 	
 	private MoneyFromMobs plugin;
-	public HashMap<UUID, String> latestPickedUp = new HashMap<>();
+	private HashMap<UUID, String> latestPickedUp = new HashMap<>();
+	
 	
 	
 	public PlaceholderAPIListener(MoneyFromMobs plugin) {
@@ -34,6 +36,10 @@ public class PlaceholderAPIListener implements Listener{
 		}
 		latestPickedUp.put(uuid, itemName);
 		
+	}
+	
+	public Map<UUID, String> getLatestPickedUp(){
+		return latestPickedUp;
 	}
 
 }

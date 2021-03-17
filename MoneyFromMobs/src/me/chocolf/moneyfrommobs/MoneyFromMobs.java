@@ -17,7 +17,7 @@ import me.chocolf.moneyfrommobs.commands.MuteMessagesCommand;
 import me.chocolf.moneyfrommobs.commands.ReloadCommand;
 import me.chocolf.moneyfrommobs.integrations.DropMoneyFlag;
 import me.chocolf.moneyfrommobs.integrations.MythicMobsFileManager;
-import me.chocolf.moneyfrommobs.integrations.PlaceholderAPI;
+import me.chocolf.moneyfrommobs.integrations.PlaceholderAPIIntegration;
 import me.chocolf.moneyfrommobs.listeners.DeathListeners;
 import me.chocolf.moneyfrommobs.listeners.PaperListeners;
 import me.chocolf.moneyfrommobs.listeners.PickUpListeners;
@@ -71,9 +71,9 @@ public class MoneyFromMobs extends JavaPlugin{
 		// Manager
 		manager = new MfmManager(this);
 		
-		// PlaceholderAPI integration
-		if(Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPI") != null){
-			new PlaceholderAPI(this).register();
+		// PlaceholderAPIIntegration integration
+		if(Bukkit.getServer().getPluginManager().getPlugin("PlaceholderAPIIntegration") != null){
+			new PlaceholderAPIIntegration(this).register();
 			placeholderListener = new PlaceholderAPIListener(this);
 		}
 	

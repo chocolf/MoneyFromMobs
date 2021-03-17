@@ -26,26 +26,16 @@ public class WorldGuardListener implements Listener{
 	public void onAttemptToDropMoney(AttemptToDropMoneyEvent e) {
 		Location loc = e.getEntity().getLocation();
 		// if drop-money flag is deny cancel the drop
-		if (!checkWorldGuardFlag(loc)) {
-			e.setCancelled(true);
-		}
-	}
-	
-	public boolean checkWorldGuardFlag(Location location) {
 		try {
 			RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 			RegionQuery query = container.createQuery();
-			ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(location));
-			
-			if (set.testState(null, DropMoneyFlag.MONEY_DROPS)) {
-				return true;
-			}
-			else return false;
-			
+			ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(loc));
+			if (!set.testState(null, DropMoneyFlag.MONEY_DROPS))
+				e.setCancelled(true);			
 		}
-		catch(Exception e) {
-			return false;
-		}		
+		catch(Exception exception) {
+			// do nothing if drop-money flag is not found
+		}	
 	}
 
 }
