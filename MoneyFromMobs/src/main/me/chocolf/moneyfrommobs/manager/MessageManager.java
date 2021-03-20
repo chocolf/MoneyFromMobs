@@ -50,8 +50,7 @@ public class MessageManager {
 			p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messageToSend));
 		}
 		if (sendFloatingTextMessage) {
-			Location loc = p.getLocation();
-			sendFloatingTextMessage(messageToSend, loc);
+			sendFloatingTextMessage(messageToSend, p.getLocation());
 		}
 		
 	}

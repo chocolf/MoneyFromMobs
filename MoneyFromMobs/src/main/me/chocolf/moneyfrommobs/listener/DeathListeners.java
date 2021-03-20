@@ -58,7 +58,11 @@ public class DeathListeners implements Listener{
 		
 		if (!dropsManager.isEntityEnabled(entityName)) return;
 		
-		amount = numbersManager.getAmount(p, entityName);
+		if (entityName.equals("PLAYER"))
+			amount = numbersManager.getPlayerAmount(entity);
+		else
+			amount = numbersManager.getAmount(p, entityName);
+		
 		dropChance = numbersManager.getDropChance(entityName);
 		numberOfDrops = numbersManager.getNumberOfDrops(entityName);
 		
@@ -92,7 +96,6 @@ public class DeathListeners implements Listener{
 			numberOfDrops = dropMoneyEvent.getNumberOfDrops();
 			
 			dropsManager.dropItem(itemToDrop, amount, location, numberOfDrops);
-			return;
 		}
 		// if money goes straight into players account
 		else {

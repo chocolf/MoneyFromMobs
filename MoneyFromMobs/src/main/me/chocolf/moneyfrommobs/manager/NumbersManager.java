@@ -3,10 +3,10 @@ package me.chocolf.moneyfrommobs.manager;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -86,9 +86,6 @@ public class NumbersManager {
 	}
 	
 	public double getAmount(Player p, String entityName) {
-		if (entityName.equals("PLAYER")) {
-			getPlayerAmount(entityName);
-		}
 		double min = minAmounts.get(entityName);
 		double max = maxAmounts.get(entityName);
 		double amount = Utils.doubleRandomNumber(min, max);
@@ -116,8 +113,8 @@ public class NumbersManager {
 		return dropChances.get(entityName);
 	}
 	
-	private double getPlayerAmount(String entityName) {
-		Player p = Bukkit.getPlayer(entityName);
+	public double getPlayerAmount(Entity entity) {
+		Player p = (Player) entity;
 		double playersBalance = plugin.getEcon().getBalance(p);
 		String strAmount = this.playerAmount;
 		double amount;
