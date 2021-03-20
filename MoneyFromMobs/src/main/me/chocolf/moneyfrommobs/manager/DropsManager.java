@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -26,6 +27,7 @@ public class DropsManager {
 	
 	private MoneyFromMobs plugin;
 	private HashSet<String> disabledWorlds = new HashSet<>();
+	private HashSet<String> onlyOnKillMobs = new HashSet<>();
 	private boolean canDropIfNatural;
 	private boolean canDropIfSpawner;
 	private boolean canDropIfSpawnEgg;
@@ -35,8 +37,20 @@ public class DropsManager {
 		this.plugin = plugin;
 		loadDisabledWorlds();
 		loadSpawnReasonBooleans();
+		loadOnlyOnKill();
 	}
 	
+	public void loadOnlyOnKill() {
+		this.onlyOnKillMobs.clear();
+		FileConfiguration config = plugin.getConfig();
+		for (String mob : config.getKeys(false)){
+			//ConfigurationSection mobConfigSection = config.getConfigurationSection(mob);
+			if (config.getBoolean(mob+".Enabled") && config.getBoolean(mob+".OnlyOnKill")){
+				onlyOnKillMobs.add(mob);
+			}
+		}
+	}
+
 	public void loadDisabledWorlds() {
 		this.disabledWorlds.clear();
 		@SuppressWarnings("unchecked")
@@ -53,13 +67,23 @@ public class DropsManager {
 	    this.canDropIfSplitSlimes = config.getBoolean("MoneyDropsFromSplitSlimes");
 	}
 	
-	public boolean canDropMoneyHere(Entity entity) {
+	public boolean canDropMoneyHere(Entity entity, String entityName, Player p) {
+		if (onlyOnKill(p,entityName))
+			return false;
+			
 		if (canDropInWorld(entity.getWorld().getName()))
+			return false;
+		
+		if (!isEntityEnabled(entityName))
 			return false;
 		
 		return canDropWithSpawnReason(entity);
 	}
 	
+	private boolean onlyOnKill(Player p, String entityName) {		
+		return (p==null && onlyOnKillMobs.contains(entityName));
+	}
+
 	public void dropItem(ItemStack item, Double amount, Location location, int numberOfDrops) {
 		if (amount == 0) return;
 		amount = amount/numberOfDrops;
@@ -119,7 +143,7 @@ public class DropsManager {
 		return getDisabledWorlds().contains(worldName);
 	}
 
-	public boolean isEntityEnabled(String entityName) {
+	private boolean isEntityEnabled(String entityName) {
 		return plugin.getNumbersManager().getDropChances().containsKey(entityName);
 	}
 	

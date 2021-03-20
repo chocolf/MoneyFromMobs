@@ -43,6 +43,7 @@ public class ReloadCommand implements CommandExecutor{
 				
 				dropsManager.loadSpawnReasonBooleans();
 				dropsManager.loadDisabledWorlds();
+				dropsManager.loadOnlyOnKill();
 				
 				numbersManager.init();
 				

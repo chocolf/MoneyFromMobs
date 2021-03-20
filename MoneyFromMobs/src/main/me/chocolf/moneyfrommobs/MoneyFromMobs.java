@@ -19,6 +19,7 @@ import me.chocolf.moneyfrommobs.integration.DropMoneyFlag;
 import me.chocolf.moneyfrommobs.integration.MythicMobsFileManager;
 import me.chocolf.moneyfrommobs.integration.PlaceholderAPIIntegration;
 import me.chocolf.moneyfrommobs.listener.DeathListeners;
+import me.chocolf.moneyfrommobs.listener.MobSpawnListener;
 import me.chocolf.moneyfrommobs.listener.PaperListeners;
 import me.chocolf.moneyfrommobs.listener.PickUpListeners;
 import me.chocolf.moneyfrommobs.listener.PlaceholderAPIListener;
@@ -52,6 +53,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		// listeners
 		new PickUpListeners(this);
 		new DeathListeners(this);
+		new MobSpawnListener(this);
 		if (isUsingPaper()) new PaperListeners(this);
 		if(Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard")) new WorldGuardListener(this);
 		
