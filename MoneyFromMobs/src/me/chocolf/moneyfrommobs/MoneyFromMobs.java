@@ -23,16 +23,24 @@ import me.chocolf.moneyfrommobs.listener.PaperListeners;
 import me.chocolf.moneyfrommobs.listener.PickUpListeners;
 import me.chocolf.moneyfrommobs.listener.PlaceholderAPIListener;
 import me.chocolf.moneyfrommobs.listener.WorldGuardListener;
+import me.chocolf.moneyfrommobs.manager.DropsManager;
+import me.chocolf.moneyfrommobs.manager.MessageManager;
+import me.chocolf.moneyfrommobs.manager.NumbersManager;
+import me.chocolf.moneyfrommobs.manager.PickUpManager;
 import me.chocolf.moneyfrommobs.runnable.NearEntitiesRunnable;
 import me.chocolf.moneyfrommobs.util.ConfigUpdater;
 import me.chocolf.moneyfrommobs.util.Metrics;
 import me.chocolf.moneyfrommobs.util.UpdateChecker;
+import me.chocolf.moneyfrommobs.util.VersionUtils;
 import net.milkbowl.vault.economy.Economy;
 
 public class MoneyFromMobs extends JavaPlugin{
 	private Economy econ = null;
 	private MythicMobsFileManager mmConfig;
-	private MfmManager manager;
+	private PickUpManager pickUpManager;
+	private MessageManager messageManager;
+	private DropsManager dropsManager;
+	private NumbersManager numbersManager;
 	private BukkitTask inventoryIsFullRunnable;
 	private PlaceholderAPIListener placeholderListener;
 	
@@ -44,7 +52,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		// listeners
 		new PickUpListeners(this);
 		new DeathListeners(this);
-		if (checkIfPaper()) new PaperListeners(this);
+		if (isUsingPaper()) new PaperListeners(this);
 		if(Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard")) new WorldGuardListener(this);
 		
 		
@@ -68,10 +76,13 @@ public class MoneyFromMobs extends JavaPlugin{
 		new MuteMessagesCommand(this);
 		this.getCommand("mfmdrop").setTabCompleter(new DropMoneyTabCompleter());
 		
-		// Manager
-		manager = new MfmManager(this);
+		// Managers
+		pickUpManager = new PickUpManager(this);
+		messageManager = new MessageManager(this);
+		dropsManager = new DropsManager(this);
+		numbersManager = new NumbersManager(this);
 		
-		// PlaceholderAPIIntegration integration
+		// PlaceholderAPI integration
 		if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceHolderAPI")){
 			new PlaceholderAPIIntegration(this).register();
 			placeholderListener = new PlaceholderAPIListener(this);
@@ -100,8 +111,13 @@ public class MoneyFromMobs extends JavaPlugin{
 	// loads WorldGuard flag
 	@Override
 	public void onLoad() {
-		if (Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard"))
-			new DropMoneyFlag();
+		if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null)
+			try {
+				DropMoneyFlag.registerFlag();
+			}
+			catch (Exception e) {
+				Bukkit.getLogger().warning("[MoneyFromMobs] Unable to load custom world guard flag. Make sure you have the latest version of WorldGuard and WorldEdit installed.");
+			}
 	}
 
 	// sets up economy if server has Vault and an Economy plugin
@@ -119,7 +135,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	
 	// loads runnable that allows players to pick up money when their inventory is full
 	public void loadInventoryIsFullRunnable() {
-		if (checkIfPaper()) return;
+		if (isUsingPaper()) return;
 		
 		if ( this.getConfig().getBoolean("PickupMoneyWhenInventoryIsFull.Enabled")) {
 			int interval = this.getConfig().getInt("PickupMoneyWhenInventoryIsFull.Interval");
@@ -128,17 +144,11 @@ public class MoneyFromMobs extends JavaPlugin{
 	}
 	
 	// checks if server is running Paper 1.13+
-	public boolean checkIfPaper() {
-		boolean isPaper;
-		try {
-        	isPaper = Class.forName("com.destroystokyo.paper.VersionHistoryManager$VersionData") != null;	
-        }
-        catch (Exception e) {
-        	isPaper = false;
-        }
-		if (isPaper && Bukkit.getVersion().contains("1.12"))
-			isPaper = false;
-		
+	public boolean isUsingPaper() {
+		boolean isPaper = false;
+		if ( Bukkit.getServer().getVersion().contains("Paper") && !VersionUtils.getBukkitVersion().contains("1.12") ) {
+			isPaper = true;
+		}
 		return isPaper;
 	}
 
@@ -148,9 +158,21 @@ public class MoneyFromMobs extends JavaPlugin{
 	public Economy getEcon() {
 		return econ;
 	}
-	public MfmManager getManager() {
-		return manager;
+	public PickUpManager getPickUpManager() {
+		return pickUpManager;
 	}
+	public MessageManager getMessageManager() {
+		return messageManager;
+	}
+
+	public DropsManager getDropsManager() {
+		return dropsManager;
+	}
+
+	public NumbersManager getNumbersManager() {
+		return numbersManager;
+	}
+
 	public PlaceholderAPIListener getPlaceholdersListener() {
 		return placeholderListener;
 	}

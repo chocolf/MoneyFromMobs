@@ -11,8 +11,8 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.chocolf.moneyfrommobs.MfmManager;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
+import me.chocolf.moneyfrommobs.manager.PickUpManager;
 
 public class PickUpListeners implements Listener{
 private MoneyFromMobs plugin;
@@ -25,11 +25,11 @@ private MoneyFromMobs plugin;
 	
 	@EventHandler
 	public void onPickup(EntityPickupItemEvent e) {
-		MfmManager manager = plugin.getManager();
+		PickUpManager manager = plugin.getPickUpManager();
 		// gets item picked up
 		Item item = e.getItem();
 		ItemStack itemStack = item.getItemStack();
-		if (!manager.checkIfMoney(itemStack)) return;
+		if (!manager.isMoneyPickedUp(itemStack)) return;
 		
 		
 		e.setCancelled(true);
@@ -50,7 +50,7 @@ private MoneyFromMobs plugin;
 	@EventHandler
 	public void onHopperPickup(InventoryPickupItemEvent e) {
 		ItemStack item = e.getItem().getItemStack();
-		if (!plugin.getManager().checkIfMoney(item)) return;
+		if (!plugin.getPickUpManager().isMoneyPickedUp(item)) return;
 		e.setCancelled(true);
 	}
 }

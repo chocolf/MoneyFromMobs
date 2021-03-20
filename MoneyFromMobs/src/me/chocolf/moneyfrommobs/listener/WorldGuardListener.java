@@ -30,7 +30,7 @@ public class WorldGuardListener implements Listener{
 			RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 			RegionQuery query = container.createQuery();
 			ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(loc));
-			if (!set.testState(null, DropMoneyFlag.MONEY_DROPS))
+			if (!set.testState(null, DropMoneyFlag.getDropMoney()))
 				e.setCancelled(true);			
 		}
 		catch(Exception exception) {

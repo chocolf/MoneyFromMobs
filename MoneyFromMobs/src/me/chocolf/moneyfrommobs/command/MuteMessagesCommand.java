@@ -31,6 +31,7 @@ public class MuteMessagesCommand implements CommandExecutor{
 					p.setMetadata("MfmMuteMessages", new FixedMetadataValue(plugin, 0));
 					p.sendMessage(Utils.applyColour(plugin.getConfig().getString("MuteToggleOnMessage")));
 				}
+				return true;
 			}else {
 				sender.sendMessage(Utils.applyColour("&cYou don't have permission to use this command!"));
 				return true;

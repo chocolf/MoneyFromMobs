@@ -7,8 +7,6 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bukkit.Bukkit;
-
 import net.md_5.bungee.api.ChatColor;
 
 public class Utils {
@@ -17,7 +15,7 @@ public class Utils {
 	static Random r = new Random();
 	
 	public static String applyColour (String msg) {
-		if ( Bukkit.getVersion().contains("1.16")) {
+		if ( VersionUtils.getVersionNumber() > 15) {
 			Matcher match = pattern.matcher(msg);
 			while (match.find()) {
 				String color = msg.substring(match.start(), match.end());

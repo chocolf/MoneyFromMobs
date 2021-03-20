@@ -57,7 +57,7 @@ public class PlaceholderAPIIntegration extends PlaceholderExpansion {
         		return plugin.getPlaceholdersListener().getLatestPickedUp().get(p.getUniqueId());
         	}
         	else {
-        		String itemName = plugin.getManager().getItemName();
+        		String itemName = plugin.getPickUpManager().getItemName();
         		itemName = itemName.replace("%amount%", "0.00");
         		return itemName;
         	}

@@ -36,12 +36,12 @@ private int radius;
 						ItemStack itemStack = item.getItemStack();
 						
 						// if item found is not money return
-						if (!plugin.getManager().checkIfMoney(itemStack)) continue;
+						if (!plugin.getPickUpManager().isMoneyPickedUp(itemStack)) continue;
 						
 					    
 					    List<String> itemLore = itemStack.getItemMeta().getLore();
 						double amount = Double.parseDouble(itemLore.get(1));
-					    plugin.getManager().giveMoney(amount, p);
+					    plugin.getPickUpManager().giveMoney(amount, p);
 					    item.remove();
 					}
 				}

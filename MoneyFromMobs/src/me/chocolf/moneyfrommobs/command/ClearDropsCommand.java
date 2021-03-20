@@ -34,7 +34,7 @@ public class ClearDropsCommand implements CommandExecutor{
 				for (Entity entity : entList) {
 					if (entity instanceof Item) {
 						ItemStack item = ((Item) entity).getItemStack();
-						if (plugin.getManager().checkIfMoney(item)) entity.remove();				
+						if (plugin.getPickUpManager().isMoneyPickedUp(item)) entity.remove();				
 					}
 				}
 			}

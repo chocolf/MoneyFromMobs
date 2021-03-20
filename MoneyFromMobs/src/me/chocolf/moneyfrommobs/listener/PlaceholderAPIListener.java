@@ -25,7 +25,7 @@ public class PlaceholderAPIListener implements Listener{
 	
 	@EventHandler
 	public void onPickUpMoney(GiveMoneyEvent e) {
-		String itemName = plugin.getManager().getItemName();
+		String itemName = plugin.getPickUpManager().getItemName();
 		String strAmount = String.format("%.2f", e.getAmount());
 		itemName = itemName.replace("%amount%", strAmount);
 		

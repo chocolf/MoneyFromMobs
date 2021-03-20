@@ -10,8 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.chocolf.moneyfrommobs.MfmManager;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
+import me.chocolf.moneyfrommobs.manager.PickUpManager;
 
 public class PaperListeners implements Listener{
 	
@@ -25,11 +25,11 @@ public class PaperListeners implements Listener{
 	
 	@EventHandler
 	public void onAttemptToPickUp(PlayerAttemptPickupItemEvent e) {
-		MfmManager manager = plugin.getManager();
+		PickUpManager manager = plugin.getPickUpManager();
 		// gets item picked up
 		Item item = e.getItem();
 		ItemStack itemStack = item.getItemStack();
-		if (!manager.checkIfMoney(itemStack)) return;
+		if (!manager.isMoneyPickedUp(itemStack)) return;
 		
 		
 		e.setCancelled(true);

@@ -8,9 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.chocolf.moneyfrommobs.MfmManager;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.event.DropMoneyEvent;
+import me.chocolf.moneyfrommobs.manager.DropsManager;
+import me.chocolf.moneyfrommobs.manager.PickUpManager;
 import me.chocolf.moneyfrommobs.util.Utils;
 
 public class DropMoneyCommand implements CommandExecutor{
@@ -27,7 +28,9 @@ public class DropMoneyCommand implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (label.equalsIgnoreCase("mfmdrop")) {
 			if (sender.hasPermission("MoneyFromMobs.drop")) {
-				MfmManager manager = plugin.getManager();
+				PickUpManager pickUpManager = plugin.getPickUpManager();
+				DropsManager dropsManager = plugin.getDropsManager();
+				
 				if(args.length > 0) {
 					if (!(sender instanceof Player)) {
 						sender.sendMessage(Utils.applyColour("&cThis command must be ran by a player."));
@@ -39,7 +42,7 @@ public class DropMoneyCommand implements CommandExecutor{
 					location.setY(location.getY()+1);
 					double amount = Double.parseDouble(args[0]);
 					int numberOfDrops = 1;
-					ItemStack itemToDrop = manager.getItemToDrop();
+					ItemStack itemToDrop = pickUpManager.getItemToDrop();
 					if (args.length >= 2) {
 						try {
 							Integer.parseInt(args[1]);
@@ -61,7 +64,7 @@ public class DropMoneyCommand implements CommandExecutor{
 					location = dropMoneyEvent.getLocation();
 					numberOfDrops = dropMoneyEvent.getNumberOfDrops();
 					
-					manager.dropItem(itemToDrop, amount*numberOfDrops, location, numberOfDrops);
+					dropsManager.dropItem(itemToDrop, amount*numberOfDrops, location, numberOfDrops);
 					return true;
 				}
 				

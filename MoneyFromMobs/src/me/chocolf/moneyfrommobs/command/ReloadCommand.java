@@ -5,8 +5,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import me.chocolf.moneyfrommobs.MfmManager;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
+import me.chocolf.moneyfrommobs.manager.DropsManager;
+import me.chocolf.moneyfrommobs.manager.MessageManager;
+import me.chocolf.moneyfrommobs.manager.NumbersManager;
+import me.chocolf.moneyfrommobs.manager.PickUpManager;
 import me.chocolf.moneyfrommobs.util.Utils;
 
 public class ReloadCommand implements CommandExecutor{
@@ -23,21 +26,28 @@ public class ReloadCommand implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (label.equalsIgnoreCase("mfmreload")) {
 			if (sender.hasPermission("MoneyFromMobs.reload")) {
-				MfmManager manager = plugin.getManager();
+				PickUpManager pickUpManager = plugin.getPickUpManager();
+				DropsManager dropsManager = plugin.getDropsManager();
+				NumbersManager numbersManager = plugin.getNumbersManager();
+				MessageManager messageManager = plugin.getMessageManager();
 				// reloads configs
 				plugin.reloadConfig();
 				plugin.getMMConfig().reloadConfig();
 				
 				// reloads things
-				manager.loadItem();
-				manager.loadMessage();
-				manager.loadParticlesAndSound();
-				manager.loadMultipliers();
-				manager.loadCanDropBooleans();
-				manager.loadDisabledWorlds();
+				messageManager.loadMessage();
+				
+				pickUpManager.loadItem();
+				pickUpManager.loadParticles();
+				pickUpManager.loadSound();
+				
+				dropsManager.loadSpawnReasonBooleans();
+				dropsManager.loadDisabledWorlds();
+				
+				numbersManager.init();
 				
 				// reloads bukkit runnable if user is not using paper
-				if (!plugin.checkIfPaper()) {
+				if (!plugin.isUsingPaper()) {
 					if (plugin.getInventoryIsFullRunnable() != null) {
 						Bukkit.getScheduler().cancelTask(plugin.getInventoryIsFullRunnable().getTaskId());
 					}
