@@ -43,9 +43,16 @@ public class DropsManager {
 	public void loadOnlyOnKill() {
 		this.onlyOnKillMobs.clear();
 		FileConfiguration config = plugin.getConfig();
+		FileConfiguration MMConfig = plugin.getMMConfig().getConfig();
 		for (String mob : config.getKeys(false)){
 			//ConfigurationSection mobConfigSection = config.getConfigurationSection(mob);
 			if (config.getBoolean(mob+".Enabled") && config.getBoolean(mob+".OnlyOnKill")){
+				onlyOnKillMobs.add(mob);
+			}
+		}
+		for (String mob : MMConfig.getKeys(false)){
+			//ConfigurationSection mobConfigSection = config.getConfigurationSection(mob);
+			if (MMConfig.getBoolean(mob+".Enabled") && MMConfig.getBoolean(mob+".OnlyOnKill")){
 				onlyOnKillMobs.add(mob);
 			}
 		}
@@ -68,13 +75,13 @@ public class DropsManager {
 	}
 	
 	public boolean canDropMoneyHere(Entity entity, String entityName, Player p) {
+		if (!isEntityEnabled(entityName))
+			return false;
+		
 		if (onlyOnKill(p,entityName))
 			return false;
 			
 		if (canDropInWorld(entity.getWorld().getName()))
-			return false;
-		
-		if (!isEntityEnabled(entityName))
 			return false;
 		
 		return canDropWithSpawnReason(entity);

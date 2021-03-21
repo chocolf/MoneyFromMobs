@@ -3,7 +3,6 @@ package me.chocolf.moneyfrommobs.armorstand;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import net.minecraft.server.v1_16_R3.ChatComponentText;
 import net.minecraft.server.v1_16_R3.EntityArmorStand;
@@ -25,13 +24,13 @@ public class FloatingTextArmorStandV1_16_R3 extends EntityArmorStand{
 		armorstand.setCustomName(new ChatComponentText(messageToSend));
 		WorldServer world = ((CraftWorld) loc.getWorld()).getHandle();
 		world.addEntity(armorstand);
-		new BukkitRunnable() {
-		     @Override
-		     public void run() {
-		    	 armorstand.killEntity();
-		     }
-		}.runTaskTimer(Bukkit.getPluginManager().getPlugin("MoneyFromMobs"), 20, 20);
 		
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("MoneyFromMobs"), new Runnable() {
+		    @Override
+		    public void run() {
+		    	armorstand.killEntity();
+		    }
+		}, 20L);
 		
 	}
 }

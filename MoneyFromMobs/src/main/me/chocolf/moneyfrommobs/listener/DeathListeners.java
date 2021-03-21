@@ -59,8 +59,6 @@ public class DeathListeners implements Listener{
 		dropChance = numbersManager.getDropChance(entityName);
 		numberOfDrops = numbersManager.getNumberOfDrops(entityName);
 		
-		
-		
 		// calls attempt to drop money event
 		AttemptToDropMoneyEvent attemptToDropMoneyEvent = new AttemptToDropMoneyEvent(dropChance, entity, p);
 		Bukkit.getPluginManager().callEvent(attemptToDropMoneyEvent);
