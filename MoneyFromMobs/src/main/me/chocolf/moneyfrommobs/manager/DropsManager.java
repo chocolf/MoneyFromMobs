@@ -32,14 +32,20 @@ public class DropsManager {
 	private boolean canDropIfSpawner;
 	private boolean canDropIfSpawnEgg;
 	private boolean canDropIfSplitSlimes;
+	private boolean dropMoneyOnGround;
 	
 	public DropsManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
+		loadDropMoneyOnGround();
 		loadDisabledWorlds();
 		loadSpawnReasonBooleans();
 		loadOnlyOnKill();
 	}
 	
+	private void loadDropMoneyOnGround() {
+		dropMoneyOnGround = plugin.getConfig().getBoolean("MoneyDropsOnGround.Enabled");
+	}
+
 	public void loadOnlyOnKill() {
 		this.onlyOnKillMobs.clear();
 		FileConfiguration config = plugin.getConfig();
@@ -187,6 +193,10 @@ public class DropsManager {
 		default:
 			return true;
 		}
+	}
+
+	public boolean doesMoneyDropOnGround() {
+		return dropMoneyOnGround;
 	}
 
 	

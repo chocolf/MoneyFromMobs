@@ -24,18 +24,13 @@ public class WorldGuardListener implements Listener{
 	
 	@EventHandler
 	public void onAttemptToDropMoney(AttemptToDropMoneyEvent e) {
-		Location loc = e.getEntity().getLocation();
 		// if drop-money flag is deny cancel the drop
-		try {
-			RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
-			RegionQuery query = container.createQuery();
-			ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(loc));
-			if (!set.testState(null, DropMoneyFlag.getDropMoney()))
-				e.setCancelled(true);			
-		}
-		catch(Exception exception) {
-			// do nothing if drop-money flag is not found
-		}	
+		Location loc = e.getEntity().getLocation();
+		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+		RegionQuery query = container.createQuery();
+		ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(loc));
+		if (!set.testState(null, DropMoneyFlag.getDropMoneyFlag()))
+			e.setCancelled(true);	
 	}
 
 }

@@ -96,9 +96,7 @@ public class NumbersManager {
 				amount = applyPermissionMultiplier(amount, p);
 			}
 		}
-		
-		amount = Utils.round(amount, 2);
-		return amount;
+		return Utils.round(amount, 2);
 	}
 	
 	public int getNumberOfDrops(String entityName) {
@@ -127,8 +125,7 @@ public class NumbersManager {
 				amount = playersBalance;
 			}
 		}
-		amount = Utils.round(amount, 2);
-		return amount;
+		return Utils.round(amount, 2);
 	}
 	
 	private double applyLootingMultiplier(double amount, Player p) {

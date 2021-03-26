@@ -24,46 +24,42 @@ public class ReloadCommand implements CommandExecutor{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (label.equalsIgnoreCase("mfmreload")) {
-			if (sender.hasPermission("MoneyFromMobs.reload")) {
-				PickUpManager pickUpManager = plugin.getPickUpManager();
-				DropsManager dropsManager = plugin.getDropsManager();
-				NumbersManager numbersManager = plugin.getNumbersManager();
-				MessageManager messageManager = plugin.getMessageManager();
-				// reloads configs
-				plugin.reloadConfig();
-				plugin.getMMConfig().reloadConfig();
-				
-				// reloads things
-				messageManager.loadMessage();
-				
-				pickUpManager.loadItem();
-				pickUpManager.loadParticles();
-				pickUpManager.loadSound();
-				
-				dropsManager.loadSpawnReasonBooleans();
-				dropsManager.loadDisabledWorlds();
-				dropsManager.loadOnlyOnKill();
-				
-				numbersManager.init();
-				
-				// reloads bukkit runnable if user is not using paper
-				if (!plugin.isUsingPaper()) {
-					if (plugin.getInventoryIsFullRunnable() != null) {
-						Bukkit.getScheduler().cancelTask(plugin.getInventoryIsFullRunnable().getTaskId());
-					}
-					plugin.loadInventoryIsFullRunnable();
-					
+		if (sender.hasPermission("MoneyFromMobs.reload")) {
+			PickUpManager pickUpManager = plugin.getPickUpManager();
+			DropsManager dropsManager = plugin.getDropsManager();
+			NumbersManager numbersManager = plugin.getNumbersManager();
+			MessageManager messageManager = plugin.getMessageManager();
+			// reloads configs
+			plugin.reloadConfig();
+			plugin.getMMConfig().reloadConfig();
+			
+			// reloads things
+			messageManager.loadMessage();
+			
+			pickUpManager.loadItem();
+			pickUpManager.loadParticles();
+			pickUpManager.loadSound();
+			
+			dropsManager.loadSpawnReasonBooleans();
+			dropsManager.loadDisabledWorlds();
+			dropsManager.loadOnlyOnKill();
+			
+			numbersManager.init();
+			
+			// reloads bukkit runnable if user is not using paper
+			if (!plugin.isUsingPaper()) {
+				if (plugin.getInventoryIsFullRunnable() != null) {
+					Bukkit.getScheduler().cancelTask(plugin.getInventoryIsFullRunnable().getTaskId());
 				}
-				// sends message saying it loaded correctly
-				sender.sendMessage(Utils.applyColour("&9Money From Mobs was reloaded!"));
-				return true;
-			}else {
-				sender.sendMessage(Utils.applyColour("&cYou don't have permission to use this command!"));
-				return true;
+				plugin.loadInventoryIsFullRunnable();
+				
 			}
+			// sends message saying it loaded correctly
+			sender.sendMessage(Utils.applyColour("&9Money From Mobs was reloaded!"));
+		}else {
+			sender.sendMessage(Utils.applyColour("&cYou don't have permission to use this command!"));
 		}
-		return false;
+		return true;
 	}
 	
 }

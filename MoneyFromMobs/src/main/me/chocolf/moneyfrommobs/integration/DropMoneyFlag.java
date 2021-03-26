@@ -23,7 +23,7 @@ public class DropMoneyFlag {
 	    }
 	}
 
-	public static StateFlag getDropMoney() {
+	public static StateFlag getDropMoneyFlag() {
 		return dropMoney;
 	}
 	    

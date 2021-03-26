@@ -2,7 +2,6 @@ package me.chocolf.moneyfrommobs.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,8 +44,6 @@ public class DeathListeners implements Listener{
 		NumbersManager numbersManager = plugin.getNumbersManager();
 		String entityName = dropsManager.getEntityName(entity);
 		double amount;
-		double dropChance;
-		int numberOfDrops;
 		
 		if (!dropsManager.canDropMoneyHere(entity, entityName, p))
 			return;
@@ -56,8 +53,8 @@ public class DeathListeners implements Listener{
 		else
 			amount = numbersManager.getAmount(p, entityName);
 		
-		dropChance = numbersManager.getDropChance(entityName);
-		numberOfDrops = numbersManager.getNumberOfDrops(entityName);
+		double dropChance = numbersManager.getDropChance(entityName);
+		int numberOfDrops = numbersManager.getNumberOfDrops(entityName);
 		
 		// calls attempt to drop money event
 		AttemptToDropMoneyEvent attemptToDropMoneyEvent = new AttemptToDropMoneyEvent(dropChance, entity, p);
@@ -65,15 +62,14 @@ public class DeathListeners implements Listener{
 		if (attemptToDropMoneyEvent.isCancelled()) return;
 		dropChance = attemptToDropMoneyEvent.getDropChance();
 		
-		// makes random number for drop chance
+		// makes random number and compares it to drop chance
 		double randomNum = Utils.doubleRandomNumber(0.0, 100.0);
-		
 		if (randomNum > dropChance) return;
+		
 		PickUpManager pickUpManager = plugin.getPickUpManager();
-		FileConfiguration config = plugin.getConfig();
 		
 		// if drop money on ground
-		if ( config.getBoolean("MoneyDropsOnGround.Enabled") ){
+		if ( dropsManager.doesMoneyDropOnGround() ){
 			ItemStack itemToDrop = pickUpManager.getItemToDrop();
 			Location location = entity.getLocation();
 			
@@ -98,7 +94,7 @@ public class DeathListeners implements Listener{
 		if (entity instanceof Player) {
 			if (amount == 0) return;
 			plugin.getEcon().withdrawPlayer((Player) entity, amount);
-			entity.sendMessage(Utils.applyColour(config.getString("PLAYER.Message") ).replace("%amount%", String.format("%.2f", amount)) );
+			plugin.getMessageManager().sendPlayerMessage(amount, (Player) entity);
 		}
 	}	
 }

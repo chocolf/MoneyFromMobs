@@ -45,12 +45,11 @@ public class DropMoneyCommand implements CommandExecutor{
 					ItemStack itemToDrop = pickUpManager.getItemToDrop();
 					if (args.length >= 2) {
 						try {
-							Integer.parseInt(args[1]);
+							numberOfDrops = Integer.valueOf(args[1]);
 						}
 						catch (Exception e) {
 							return false;
 						}
-						numberOfDrops = Integer.valueOf(args[1]);
 						if (numberOfDrops > 100) {
 							sender.sendMessage(Utils.applyColour("&9Number of drops can not be above 100."));
 							numberOfDrops = 100;
@@ -67,8 +66,6 @@ public class DropMoneyCommand implements CommandExecutor{
 					dropsManager.dropItem(itemToDrop, amount*numberOfDrops, location, numberOfDrops);
 					return true;
 				}
-				
-				
 			}else {
 				sender.sendMessage(Utils.applyColour("&cYou don't have permission to use this command!"));
 				return true;

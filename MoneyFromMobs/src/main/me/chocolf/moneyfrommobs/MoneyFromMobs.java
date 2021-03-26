@@ -17,7 +17,7 @@ import me.chocolf.moneyfrommobs.command.MuteMessagesCommand;
 import me.chocolf.moneyfrommobs.command.ReloadCommand;
 import me.chocolf.moneyfrommobs.integration.DropMoneyFlag;
 import me.chocolf.moneyfrommobs.integration.MythicMobsFileManager;
-import me.chocolf.moneyfrommobs.integration.PlaceholderAPIIntegration;
+import me.chocolf.moneyfrommobs.integration.MoneyFromMobsPlaceholderExpansion;
 import me.chocolf.moneyfrommobs.listener.DeathListeners;
 import me.chocolf.moneyfrommobs.listener.MobSpawnListener;
 import me.chocolf.moneyfrommobs.listener.PaperListeners;
@@ -44,9 +44,12 @@ public class MoneyFromMobs extends JavaPlugin{
 	private NumbersManager numbersManager;
 	private BukkitTask inventoryIsFullRunnable;
 	private PlaceholderAPIListener placeholderListener;
+	private static MoneyFromMobs instance;
 	
 	@Override
 	public void onEnable() {
+		instance = this;
+		
 		// bstats
 		new Metrics(this, 8361); // 8361 is this plugins id
 		
@@ -55,7 +58,8 @@ public class MoneyFromMobs extends JavaPlugin{
 		new DeathListeners(this);
 		new MobSpawnListener(this);
 		if (isUsingPaper()) new PaperListeners(this);
-		if(Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard")) new WorldGuardListener(this);
+		if(Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard") && VersionUtils.getVersionNumber() > 15)
+			new WorldGuardListener(this);
 		
 		
 		// Auto updates config
@@ -84,9 +88,11 @@ public class MoneyFromMobs extends JavaPlugin{
 		dropsManager = new DropsManager(this);
 		numbersManager = new NumbersManager(this);
 		
+		
+		
 		// PlaceholderAPI integration
 		if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceHolderAPI")){
-			new PlaceholderAPIIntegration(this).register();
+			new MoneyFromMobsPlaceholderExpansion(this).register();
 			placeholderListener = new PlaceholderAPIListener(this);
 		}
 	
@@ -94,7 +100,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		loadInventoryIsFullRunnable();
 		
 		// Disables plugin if economy set up failed
-		if (!setupEconomy()) {
+		if ( !setupEconomy() ) {
 			getLogger().severe("Disabled becuase you don't have Vault or an economy plugin installed");
 			getServer().getPluginManager().disablePlugin(this);
 		}
@@ -102,37 +108,31 @@ public class MoneyFromMobs extends JavaPlugin{
 		// Checks for updates to plugin
 		try {
 			UpdateChecker updateChecker = new UpdateChecker(this);
-			if (updateChecker.checkForUpdate() && this.getConfig().getBoolean("UpdateNotification")) 
-				Bukkit.getLogger().info("Update Available for MoneyFromMobs: https://www.spigotmc.org/resources/money-from-mobs-1-9-1-16-4.79137/");			
+			if (updateChecker.checkForUpdate() && getConfig().getBoolean("UpdateNotification"))
+				getLogger().info("Update Available for MoneyFromMobs: https://www.spigotmc.org/resources/money-from-mobs-1-9-1-16-4.79137/");			
 		}
 		catch (Exception e) {
-			Bukkit.getLogger().warning("[MoneyFromMobs] Unable to retrieve latest update from SpigotMC.org");
+			getLogger().warning("Unable to retrieve latest update from SpigotMC.org");
 		}
 	}
 	
 	// loads WorldGuard flag
 	@Override
 	public void onLoad() {
-		if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null)
-			try {
-				DropMoneyFlag.registerFlag();
-			}
-			catch (Exception e) {
-				Bukkit.getLogger().warning("[MoneyFromMobs] Unable to load custom world guard flag. Make sure you have the latest version of WorldGuard and WorldEdit installed.");
-			}
+		if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null && VersionUtils.getVersionNumber() > 15)
+			DropMoneyFlag.registerFlag();
 	}
 
 	// sets up economy if server has Vault and an Economy plugin
 	private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+        if (getServer().getPluginManager().getPlugin("Vault") == null)
             return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
+        
+    	RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+    	if (rsp != null)
+    		econ = rsp.getProvider();
         return econ != null;
+
     }
 	
 	// loads runnable that allows players to pick up money when their inventory is full
@@ -147,11 +147,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	
 	// checks if server is running Paper 1.13+
 	public boolean isUsingPaper() {
-		boolean isPaper = false;
-		if ( Bukkit.getServer().getVersion().contains("Paper") && !VersionUtils.getBukkitVersion().contains("1.12") ) {
-			isPaper = true;
-		}
-		return isPaper;
+		return getServer().getVersion().contains("Paper") && !VersionUtils.getBukkitVersion().contains("1.12");
 	}
 
 	public MythicMobsFileManager getMMConfig() {
@@ -180,6 +176,9 @@ public class MoneyFromMobs extends JavaPlugin{
 	}
 	public BukkitTask getInventoryIsFullRunnable() {
 		return inventoryIsFullRunnable;
+	}
+	public static MoneyFromMobs getInstance() {
+		return instance;
 	}
 
 }

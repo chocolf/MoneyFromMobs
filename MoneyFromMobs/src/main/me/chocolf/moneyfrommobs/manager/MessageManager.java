@@ -1,15 +1,14 @@
 package me.chocolf.moneyfrommobs.manager;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStandV1_12_R1;
-import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStandV1_16_R2;
-import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStandV1_16_R3;
+import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_12_R1;
+import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_16_R2;
+import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_16_R3;
 import me.chocolf.moneyfrommobs.util.Utils;
 import me.chocolf.moneyfrommobs.util.VersionUtils;
 import net.md_5.bungee.api.ChatMessageType;
@@ -21,7 +20,10 @@ public class MessageManager {
 	private boolean sendChatMessage;
 	private boolean sendActionBarMessage;
 	private boolean sendFloatingTextMessage;
-	private String message;
+	private String playerMessage;
+	private String chatMessage;
+	private String actionBarMessage;
+	private String floatingTextMessage;
 	
 	public MessageManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
@@ -30,89 +32,62 @@ public class MessageManager {
 
 	public void loadMessage() {
 		FileConfiguration config = plugin.getConfig();
-		sendChatMessage = config.getBoolean("ShowMessageInChat");
-		sendActionBarMessage = config.getBoolean("ShowMessageInActionBar");
-		sendFloatingTextMessage = config.getBoolean("ShowMessageAsFloatingText");
-		message = Utils.applyColour( config.getString("Message") );
+		
+		sendChatMessage = config.getBoolean("ShowMessageInChat.Enabled");
+		sendActionBarMessage = config.getBoolean("ShowMessageInActionBar.Enabled");
+		sendFloatingTextMessage = config.getBoolean("ShowMessageAsFloatingText.Enabled");
+		
+		chatMessage = Utils.applyColour( config.getString("ShowMessageInChat.Message") );
+		actionBarMessage = Utils.applyColour( config.getString("ShowMessageInActionBar.Message") );
+		floatingTextMessage = Utils.applyColour( config.getString("ShowMessageAsFloatingText.Message") );
+		playerMessage = Utils.applyColour( config.getString("PLAYER.Message") );
 	}
 	
 	public void sendMessage(String strAmount, Player p) {
-		String messageToSend = message.replace("%amount%", strAmount);
-		
-		if ( p.hasMetadata("MfmMuteMessages")) {
+		String messageToSend;
+		if ( p.hasMetadata("MfmMuteMessages")) 
 			return;
-		}
 		
+		double balance = plugin.getEcon().getBalance(p);
 		if (sendChatMessage) {
+			messageToSend = chatMessage.replace("%amount%", strAmount).replace("%balance%", String.format("%.2f", balance) );
 			p.sendMessage(messageToSend);
 		}
+		
 		if (sendActionBarMessage) {
+			messageToSend = actionBarMessage.replace("%amount%", strAmount).replace("%balance%", String.format("%.2f", balance) );
 			p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messageToSend));
 		}
+		
 		if (sendFloatingTextMessage) {
+			messageToSend = floatingTextMessage.replace("%amount%", strAmount).replace("%balance%", String.format("%.2f", balance) );
 			sendFloatingTextMessage(messageToSend, p.getLocation());
 		}
-		
+	}
+	
+	public void sendPlayerMessage(double amount, Player p) {
+		String strAmount = String.format("%.2f", amount);
+		String messageToSend = playerMessage.replace("%amount%", strAmount).replace("%balance%", String.format("%.2f", plugin.getEcon().getBalance(p)) );
+		p.sendMessage(messageToSend);
 	}
 
 	private void sendFloatingTextMessage(String messageToSend, Location loc) {
-		double rotation = (loc.getYaw() + 180) % 360.0F;
-		if (rotation < 0.0D) rotation += 360.0D;
-		
-		if ((0D <= rotation && rotation < 22.5D) || (337.5D <= rotation && rotation < 360.0D)) {
-			// north
-            loc.setZ(loc.getZ()-2.5);
-        } else if (22.5D <= rotation && rotation < 67.5D) {
-        	// north east
-        	loc.setZ(loc.getZ()-2.5);
-        	loc.setX(loc.getX()+2.5);
-        } else if (67.5D <= rotation && rotation < 112.5D) {
-            // east
-        	loc.setX(loc.getX()+2.5);
-        } else if (112.5D <= rotation && rotation < 157.5D) {
-            // south east
-        	loc.setZ(loc.getZ()+2.5);
-        	loc.setX(loc.getX()+2.5);
-        } else if (157.5D <= rotation && rotation < 202.5D) {
-            // south
-        	loc.setZ(loc.getZ()+2.5);
-        } else if (202.5D <= rotation && rotation < 247.5D) {
-            // south west
-        	loc.setZ(loc.getZ()+2.5);
-        	loc.setX(loc.getX()-2.5);
-        } else if (247.5D <= rotation && rotation < 292.5D) {
-            // west
-        	loc.setX(loc.getX()-2.5);
-        } else if (292.5D <= rotation && rotation < 337.5D) {
-            // north west
-        	loc.setZ(loc.getZ()-2.5);
-        	loc.setX(loc.getX()-2.5);
-        }
+		Vector directionVector = loc.getDirection();
+		directionVector.setY(0.1);
+		loc.add(directionVector.multiply(4));
 		
 		switch (VersionUtils.getNMSVersion()) {
 		case "v1_16_R3":
-			new FloatingTextArmorStandV1_16_R3(loc, messageToSend);
+			new FloatingTextArmorStand_1_16_R3(loc, messageToSend);
 			break;
 		case "v1_16_R2":
-			FloatingTextArmorStandV1_16_R2 armorstandV1_16_R2 = new FloatingTextArmorStandV1_16_R2(loc, messageToSend);
-			new BukkitRunnable() {
-			     @Override
-			     public void run() {
-			          armorstandV1_16_R2.killEntity();
-			     }
-			}.runTaskTimer(plugin, 20, 20);
+			new FloatingTextArmorStand_1_16_R2(loc, messageToSend);
 			break;
 		case "v1_12_R1":
-			FloatingTextArmorStandV1_12_R1 armorstandV1_12_R1 = new FloatingTextArmorStandV1_12_R1(loc, messageToSend);
-			new BukkitRunnable() {
-			     @Override
-			     public void run() {
-			    	 armorstandV1_12_R1.killEntity();
-			     }
-			}.runTaskTimer(plugin, 20, 20);
+			new FloatingTextArmorStand_1_12_R1(loc, messageToSend);
 			break;
 		default:
-			Bukkit.getLogger().warning("[MoneyFromMobs] Floating Text Messages are not compatible with your version. Versions Supported: 1.12.2 and 1.16.2-1.16.5. Please disable this in your config to avoid this error message!");
+			plugin.getLogger().warning("Floating Text Messages are not compatible with your version. Versions Supported: 1.12.2 and 1.16.2-1.16.5. Please disable Floating Text Messages in your config to avoid this error message!");
 		}
 	}
 

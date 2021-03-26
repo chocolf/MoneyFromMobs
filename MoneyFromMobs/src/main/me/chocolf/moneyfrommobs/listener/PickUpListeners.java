@@ -25,32 +25,31 @@ private MoneyFromMobs plugin;
 	
 	@EventHandler
 	public void onPickup(EntityPickupItemEvent e) {
-		PickUpManager manager = plugin.getPickUpManager();
+		PickUpManager pickUpManager = plugin.getPickUpManager();
 		// gets item picked up
 		Item item = e.getItem();
 		ItemStack itemStack = item.getItemStack();
-		if (!manager.isMoneyPickedUp(itemStack)) return;
-		
+		// return if item picked up isnt money
+		if (!pickUpManager.isMoneyPickedUp(itemStack)) return;
 		
 		e.setCancelled(true);
 		// stops mobs from picking up money
-		if (!(e.getEntity() instanceof Player) ) {
-			return;
-		}
+		if (!(e.getEntity() instanceof Player) ) return;
+		
 		Player p = (Player) e.getEntity();
 		// returns if player doesn't have permission to pickup money
 		if ( !p.hasPermission("MoneyFromMobs.use") ) return;
 		
 	    List<String> itemLore = itemStack.getItemMeta().getLore();
 	    double amount = Double.parseDouble(itemLore.get(1));
-	    manager.giveMoney(amount, p);
+	    pickUpManager.giveMoney(amount, p);
 	    item.remove();
 	}
 	
 	@EventHandler
 	public void onHopperPickup(InventoryPickupItemEvent e) {
 		ItemStack item = e.getItem().getItemStack();
-		if (!plugin.getPickUpManager().isMoneyPickedUp(item)) return;
-		e.setCancelled(true);
+		if (plugin.getPickUpManager().isMoneyPickedUp(item))
+			e.setCancelled(true);
 	}
 }

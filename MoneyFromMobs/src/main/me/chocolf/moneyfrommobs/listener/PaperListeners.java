@@ -29,8 +29,8 @@ public class PaperListeners implements Listener{
 		// gets item picked up
 		Item item = e.getItem();
 		ItemStack itemStack = item.getItemStack();
+		// return if item picked up isnt money
 		if (!manager.isMoneyPickedUp(itemStack)) return;
-		
 		
 		e.setCancelled(true);
 		Player p = e.getPlayer();

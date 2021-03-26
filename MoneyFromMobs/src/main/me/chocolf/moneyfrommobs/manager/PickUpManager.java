@@ -29,6 +29,7 @@ import me.chocolf.moneyfrommobs.util.VersionUtils;
 
 public class PickUpManager {
 	
+	private static final Pattern pattern = Pattern.compile("([0-9]){6}mfm");
 	private MoneyFromMobs plugin;	
 	private ItemStack itemToDrop;
 	private String itemName;
@@ -56,7 +57,7 @@ public class PickUpManager {
 			}
 		}
 		catch(Exception e) {
-			Bukkit.getLogger().warning("[MoneyFromMobs] Make sure you have entered a valid ItemType in your config. Setting ItemType to Emerald until fixed");
+			plugin.getLogger().warning("Make sure you have entered a valid ItemType in your config. Setting ItemType to Emerald until fixed");
 			itemToDrop = (new ItemStack(Material.EMERALD, 1));
 		}
 
@@ -90,7 +91,7 @@ public class PickUpManager {
 				numberOfParticles = config.getInt("AmountOfParticles");
 			}
 			catch(Exception e) {
-				Bukkit.getLogger().warning("[MoneyFromMobs] Disabling particles on pickup. Make sure you have entered a valid Particle Effect in your config");
+				plugin.getLogger().warning("Disabling particles on pickup. Make sure you have entered a valid Particle Effect in your config");
 				particleEffect = null;
 			}
 		}
@@ -106,7 +107,7 @@ public class PickUpManager {
 				sound = Sound.valueOf( config.getString("Sound").toUpperCase().replace(".", "_") ) ;
 			}
 			catch (Exception e) {
-				Bukkit.getLogger().warning("[MoneyFromMobs] Disabling sound on pick up. Make sure you have entered a valid Sound in your config");
+				plugin.getLogger().warning("Disabling sound on pick up. Make sure you have entered a valid Sound in your config");
 				sound = null;
 			}
 		}
@@ -186,6 +187,7 @@ public class PickUpManager {
 		
 		// convert amount to string ready to place it in message
 		String strAmount = String.format("%.2f", amount);
+		
 		// take off decimal place if amount ends in .00
 		if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal") && strAmount.contains(".00"))
 			strAmount = String.format("%.0f", amount);
@@ -193,9 +195,7 @@ public class PickUpManager {
 		plugin.getMessageManager().sendMessage(strAmount,p);
 		
 	}
-	
-	private static final Pattern pattern = Pattern.compile("([0-9]){6}mfm");
-	
+		
 	public boolean isMoneyPickedUp(ItemStack itemStack) {
 		// checks if item picked up is money
 		if (itemStack == null) return false;
