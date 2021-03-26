@@ -26,9 +26,6 @@ Sound: entity.item.pickup
 # ParticleEffect = Particle effect spawned on pickup. Change to "NONE" if you don't want a particle to spawn.
 ParticleEffect: VILLAGER_HAPPY
 AmountOfParticles: 5
-  
-# Message to be sent when a player picks up/receives money. %amount% is the placeholder for the amount to be given
-Message: '&aYou picked up $%amount%!'
 
 # Where the message is shown when a player picks up money. Usable Placeholders: %amount% and %balance%
 ShowMessageInChat:

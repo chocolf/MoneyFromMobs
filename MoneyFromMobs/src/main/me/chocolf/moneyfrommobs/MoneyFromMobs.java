@@ -61,7 +61,6 @@ public class MoneyFromMobs extends JavaPlugin{
 		if(Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard") && VersionUtils.getVersionNumber() > 15)
 			new WorldGuardListener(this);
 		
-		
 		// Auto updates config
 		saveDefaultConfig();
 		try {
@@ -73,7 +72,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		reloadConfig();
 		
 		// Makes MythicMobs Config
-		this.mmConfig = new MythicMobsFileManager(this);
+		mmConfig = new MythicMobsFileManager(this);
 		
 		// Commands
 		new ReloadCommand(this);
@@ -87,8 +86,6 @@ public class MoneyFromMobs extends JavaPlugin{
 		messageManager = new MessageManager(this);
 		dropsManager = new DropsManager(this);
 		numbersManager = new NumbersManager(this);
-		
-		
 		
 		// PlaceholderAPI integration
 		if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceHolderAPI")){
@@ -132,7 +129,6 @@ public class MoneyFromMobs extends JavaPlugin{
     	if (rsp != null)
     		econ = rsp.getProvider();
         return econ != null;
-
     }
 	
 	// loads runnable that allows players to pick up money when their inventory is full
