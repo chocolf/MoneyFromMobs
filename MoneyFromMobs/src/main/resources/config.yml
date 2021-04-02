@@ -1,4 +1,4 @@
-# Whether to notify players with OP when there is an update for MoneyForMobs
+# Whether to notify players with OP when there is an update for MoneyFromMobs
 UpdateNotification: true
 
 # Extra money based on percentage per level of looting
@@ -48,8 +48,8 @@ MoneyDropsFromSplitSlimes: true
 # Disable money drops in a certain world by adding the world name to this list
 # To disable money drops in a WorldGuard region set the flag 'drop-money' to deny. This only works with the latest version of WorldGuard
 DisabledWorlds:
-  - 'world1'
-  - 'world2'
+  - world1
+  - world2
 
 # This option loops through all players and checks for dropped items every so many ticks to see if there is money next to a player so if you have a lot of players it could cause lag.
 # You only need to enable this option if you are not using PaperMC 1.13+, as PaperMC allows you to pick up money when your inventory is full without this option. https://papermc.io/downloads

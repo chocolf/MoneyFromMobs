@@ -2,6 +2,8 @@ package me.chocolf.moneyfrommobs.util;
 
 import org.bukkit.Bukkit;
 
+import me.chocolf.moneyfrommobs.MoneyFromMobs;
+
 public class VersionUtils {
 	
 	private static String v = Bukkit.getServer().getClass().getPackage().getName();
@@ -19,6 +21,10 @@ public class VersionUtils {
 	
 	public static int getVersionNumber() {
 		return versionNumber;
+	}
+
+	public static double getPluginVersion() {
+		return Double.parseDouble(MoneyFromMobs.getInstance().getDescription().getVersion());
 	}
 	
 }

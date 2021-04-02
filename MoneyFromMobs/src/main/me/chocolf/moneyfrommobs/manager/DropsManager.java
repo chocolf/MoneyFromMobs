@@ -65,11 +65,11 @@ public class DropsManager {
 	}
 
 	public void loadDisabledWorlds() {
-		this.disabledWorlds.clear();
+		disabledWorlds.clear();
 		@SuppressWarnings("unchecked")
 		List<String> disabledWorldsInConfig = (List<String>) this.plugin.getConfig().getList("DisabledWorlds");
 		for (String world : disabledWorldsInConfig)
-		  this.disabledWorlds.add(world); 
+		  disabledWorlds.add(world); 
 	}
 	
 	public void loadSpawnReasonBooleans() {

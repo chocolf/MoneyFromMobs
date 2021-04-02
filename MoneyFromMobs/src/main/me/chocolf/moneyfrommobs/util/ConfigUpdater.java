@@ -157,11 +157,11 @@ public class ConfigUpdater {
             Object o = list.get(i);
 
             if (o instanceof String || o instanceof Character) {
-                builder.append(prefixSpaces).append("- '").append(o).append("'");
+                builder.append(prefixSpaces).append("  - ").append(o);
             } else if (o instanceof List) {
-                builder.append(prefixSpaces).append("- ").append(yaml.dump(o));
+                builder.append(prefixSpaces).append("  - ").append(yaml.dump(o));
             } else {
-                builder.append(prefixSpaces).append("- ").append(o);
+                builder.append(prefixSpaces).append("  - ").append(o);
             }
 
             if (i != list.size()) {
