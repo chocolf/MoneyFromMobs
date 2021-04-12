@@ -12,7 +12,7 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.event.AttemptToDropMoneyEvent;
+import me.chocolf.moneyfrommobs.api.event.AttemptToDropMoneyEvent;
 import me.chocolf.moneyfrommobs.integration.DropMoneyFlag;
 
 public class WorldGuardListener implements Listener{

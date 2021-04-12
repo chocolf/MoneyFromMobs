@@ -20,7 +20,7 @@ import org.bukkit.persistence.PersistentDataType;
 import dev.rosewood.rosestacker.utils.PersistentDataUtils;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.util.Utils;
+import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
 import me.chocolf.moneyfrommobs.util.VersionUtils;
 
 public class DropsManager {
@@ -36,6 +36,11 @@ public class DropsManager {
 	
 	public DropsManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
+		init();
+		
+	}
+	
+	public void init() {
 		loadDropMoneyOnGround();
 		loadDisabledWorlds();
 		loadSpawnReasonBooleans();
@@ -46,7 +51,7 @@ public class DropsManager {
 		dropMoneyOnGround = plugin.getConfig().getBoolean("MoneyDropsOnGround.Enabled");
 	}
 
-	public void loadOnlyOnKill() {
+	private void loadOnlyOnKill() {
 		this.onlyOnKillMobs.clear();
 		FileConfiguration config = plugin.getConfig();
 		FileConfiguration MMConfig = plugin.getMMConfig().getConfig();
@@ -64,7 +69,7 @@ public class DropsManager {
 		}
 	}
 
-	public void loadDisabledWorlds() {
+	private void loadDisabledWorlds() {
 		disabledWorlds.clear();
 		@SuppressWarnings("unchecked")
 		List<String> disabledWorldsInConfig = (List<String>) this.plugin.getConfig().getList("DisabledWorlds");
@@ -72,12 +77,37 @@ public class DropsManager {
 		  disabledWorlds.add(world); 
 	}
 	
-	public void loadSpawnReasonBooleans() {
+	private void loadSpawnReasonBooleans() {
 	    FileConfiguration config = this.plugin.getConfig();
 	    this.canDropIfNatural = config.getBoolean("MoneyDropsFromNaturalMobs");
 	    this.canDropIfSpawner = config.getBoolean("MoneyDropsFromSpawnerMobs");
 	    this.canDropIfSpawnEgg = config.getBoolean("MoneyDropsFromSpawnEggMobs");
 	    this.canDropIfSplitSlimes = config.getBoolean("MoneyDropsFromSplitSlimes");
+	}
+	
+	public void dropItem(ItemStack item, Double amount, Location location, int numberOfDrops) {
+		if (amount == 0) return;
+		amount = amount/numberOfDrops;
+		for ( int i=0; i<numberOfDrops;i++ ) {
+			ItemMeta meta = item.getItemMeta();
+			List<String> lore = new ArrayList<>();
+			lore.add(String.valueOf(RandomNumberUtils.intRandomNumber(1000000,9999999) + "mfm"));
+						
+			// adds lore so when picked up plugin knows how much money to give
+			lore.add(String.valueOf(amount));
+			meta.setLore(lore);
+			item.setItemMeta(meta);
+			
+			Item itemDropped = location.getWorld().dropItemNaturally(location, item );
+			String strAmount = String.format("%.2f", amount);
+			
+			// removes decimal place
+			if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal") && strAmount.contains(".00"))
+				strAmount = String.format("%.0f", amount);
+			
+			itemDropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", strAmount));
+			itemDropped.setCustomNameVisible(true);
+		}
 	}
 	
 	public boolean canDropMoneyHere(Entity entity, String entityName, Player p) {
@@ -93,35 +123,10 @@ public class DropsManager {
 		return canDropWithSpawnReason(entity);
 	}
 	
-	private boolean onlyOnKill(Player p, String entityName) {		
-		return (p==null && onlyOnKillMobs.contains(entityName));
+	private boolean onlyOnKill(Player p, String entityName) {
+		return p==null && onlyOnKillMobs.contains(entityName);
 	}
 
-	public void dropItem(ItemStack item, Double amount, Location location, int numberOfDrops) {
-		if (amount == 0) return;
-		amount = amount/numberOfDrops;
-		for ( int i=0; i<numberOfDrops;i++ ) {
-			ItemMeta meta = item.getItemMeta();
-			List<String> lore = new ArrayList<>();
-			lore.add(String.valueOf(Utils.intRandomNumber(1000000,9999999) + "mfm"));
-						
-			// adds lore so when picked up plugin knows how much money to give
-			lore.add(String.valueOf(amount));
-			meta.setLore(lore);
-			item.setItemMeta(meta);
-			
-			Item itemDropped = location.getWorld().dropItemNaturally(location, item );
-			String strAmount = String.format("%.2f", amount);
-			
-			// removes decimal place
-			if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal") && strAmount.contains(".00"))
-				strAmount = String.format("%.0f", amount);
-			
-			
-			itemDropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", strAmount));
-			itemDropped.setCustomNameVisible(true);
-		}
-	}
 	
 	private boolean canDropWithSpawnReason(Entity entity) {
 		if (VersionUtils.getVersionNumber() > 13 ){

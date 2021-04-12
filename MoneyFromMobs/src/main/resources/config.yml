@@ -1,10 +1,6 @@
 # Whether to notify players with OP when there is an update for MoneyFromMobs
 UpdateNotification: true
 
-# Extra money based on percentage per level of looting
-# 0.05 = 5% extra money per looting level so looting 10 gives 50% more money
-MoneyAddedPerLevel: 0.05
-
 # Set Enabled to false if you want money to go straight into players account instead of dropping as an item.
 # RGB Support for 1.16+ e.g. #62d180 instead of &a will give you a green
 # Item: can be set to a custom head from websites like https://minecraft-heads.com/custom-heads by copying the VALUE from the website. Example: 'CustomHead:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzUxMTM3ZTExNDQzYThmYmIwNWZjZDNjY2MxYWY5YmQyMzAzOTE4ZjM1NDQ4MTg1ZTNlZDk2ZWYxODRkYSJ9fX0='
@@ -60,13 +56,24 @@ PickupMoneyWhenInventoryIsFull:
   Interval: 5
   Radius: 1
 
-# Whether permission multipliers are enabled. An example of this is if a player has the permission moneyfrommobs.multiplier.50 they will receive 50% more money when money drops
-# Remember to disable this if you are not using it because it will save some time
-PermissionMultipliersEnabled: true
+# Extra money based on a percentage per level of Looting. e.g. LootingMultiplier: 10% means a player with Looting 3 will get 30% more money
+LootingMultiplier: 10%
+
+# Players in these Permission Groups will gain extra money based on the percentages next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable Permission Multipliers.
+PermissionGroupMultipliers:
+ - PermissionGroup1 5%
+ - PermissionGroup2 10%
+ 
+# Players in these Worlds will gain extra money based on the percentage next to the World name. Set the first World to "NONE" if you want to disable World Multipliers
+WorldMultipliers:
+ - world1 5%
+ - world2 10%
+ 
 
 # Messages sent to player when they use /MfmMute
 MuteToggleOnMessage: '&cMessages will no longer be shown when you pick up money dropped by mobs!'
 MuteToggleOffMessage: '&aMessages will now be shown when you pick up money dropped by mobs!'
+
 
 # Min = Lowest amount of money to be dropped.
 # Max = Highest amount of money to be dropped.

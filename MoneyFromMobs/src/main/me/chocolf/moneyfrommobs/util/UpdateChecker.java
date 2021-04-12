@@ -5,9 +5,15 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+import me.chocolf.moneyfrommobs.MoneyFromMobs;
+
 public class UpdateChecker {
 	
 	public static boolean checkForUpdate() {
+		MoneyFromMobs plugin = MoneyFromMobs.getInstance();
+		if (!plugin.getConfig().getBoolean("UpdateNotification"))
+			return false;
+		
 		double currentVersion = VersionUtils.getPluginVersion();
 		double latestVersion = Double.parseDouble(getLatestVersion());
 		

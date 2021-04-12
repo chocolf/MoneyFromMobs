@@ -1,6 +1,6 @@
 main: me.chocolf.moneyfrommobs.MoneyFromMobs
 name: MoneyFromMobs
-version: 3.65
+version: 3.7
 api-version: 1.16
 author: Chocolf
 description: Makes mobs drop money with looting multiplier
@@ -14,7 +14,7 @@ commands:
   MfmDrop:
     description: Drops a specified amount of money on the ground
     permission: MoneyFromMobs.drop
-    usage: "Usage: /MfmDrop <AmountToDrop> <NumberOfDrops>"
+    usage: "Usage: /MfmDrop <AmountToDrop> [NumberOfDrops]"
   MfmMute:
     description: Mutes messages sent by the plugin when a player picks up money
     permission: MoneyFromMobs.mute

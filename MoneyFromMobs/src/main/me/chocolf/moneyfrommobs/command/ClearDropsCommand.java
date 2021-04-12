@@ -12,7 +12,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.util.Utils;
+import me.chocolf.moneyfrommobs.manager.MessageManager;
 
 public class ClearDropsCommand implements CommandExecutor{
 	
@@ -25,23 +25,18 @@ public class ClearDropsCommand implements CommandExecutor{
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		
-		if (label.equalsIgnoreCase("mfmclear") && sender.hasPermission("MoneyFromMobs.clear")) {
-			
-			List<World> worldList = Bukkit.getServer().getWorlds();
-			for (World world : worldList) {
-				List<Entity> entList = world.getEntities();
-				for (Entity entity : entList) {
-					if (entity instanceof Item) {
-						ItemStack item = ((Item) entity).getItemStack();
-						if (plugin.getPickUpManager().isMoneyPickedUp(item)) entity.remove();				
-					}
+		List<World> worldList = Bukkit.getServer().getWorlds();
+		for (World world : worldList) {
+			List<Entity> entList = world.getEntities();
+			for (Entity entity : entList) {
+				if (entity instanceof Item) {
+					ItemStack item = ((Item) entity).getItemStack();
+					if (plugin.getPickUpManager().isMoneyPickedUp(item)) entity.remove();				
 				}
 			}
-			sender.sendMessage(Utils.applyColour("&9All money was succesfully removed from the ground!"));
-			return true;
-		}		
-		return false;
+		}
+		sender.sendMessage(MessageManager.applyColour("&9All money was succesfully removed from the ground!"));
+		return true;
 	}
 
 }

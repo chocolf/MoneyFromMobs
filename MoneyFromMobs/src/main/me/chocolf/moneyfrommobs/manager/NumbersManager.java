@@ -1,30 +1,37 @@
 package me.chocolf.moneyfrommobs.manager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.util.Utils;
+import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
 
 public class NumbersManager {
 	
 	private MoneyFromMobs plugin;
 	private double lootingMultiplier;
-	private boolean permissionMultiplierEnabled;
+	private HashMap<String, Double> worldMultipliers = new HashMap<>();
+	private HashMap<String, Double> permissionGroupMultipliers = new HashMap<>();
+	
 	private HashMap<String, Double> minAmounts = new HashMap<>();
 	private HashMap<String, Double> maxAmounts = new HashMap<>();
+	private String playerAmount;
+	
 	private HashMap<String, Double> dropChances = new HashMap<>();
+	
 	private HashMap<String, Integer> minNumberOfDrops = new HashMap<>();
 	private HashMap<String, Integer> maxNumberOfDrops = new HashMap<>();
-	private String playerAmount;
+	
+	
 	
 	public NumbersManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
@@ -34,12 +41,14 @@ public class NumbersManager {
 	public void init() {
 		FileConfiguration config = plugin.getConfig();
 		FileConfiguration MMConfig = plugin.getMMConfig().getConfig();
-		lootingMultiplier = config.getDouble("MoneyAddedPerLevel");
-		permissionMultiplierEnabled = config.getBoolean("PermissionMultipliersEnabled");
+		loadLootingMultiplier();
+		loadWorldMultipliers();
+		loadPermissionGroupMultipliers();
+		playerAmount = config.getString("PLAYER.Amount");
+		
 		minAmounts.clear();
 		maxAmounts.clear();
 		dropChances.clear();
-		playerAmount = config.getString("PLAYER.Amount");
 		
 		// loop through normal config to find enabled mobs. Store their amount, drop chance and number of drops
 		for (String mob : config.getKeys(false)){
@@ -88,27 +97,31 @@ public class NumbersManager {
 	public double getAmount(Player p, String entityName) {
 		double min = minAmounts.get(entityName);
 		double max = maxAmounts.get(entityName);
-		double amount = Utils.doubleRandomNumber(min, max);
+		double amount = RandomNumberUtils.doubleRandomNumber(min, max);
+		double baseAmount = amount;
 		
 		if ( p!=null ) {
-			amount = applyLootingMultiplier(amount, p);
-			if (permissionMultiplierEnabled) {
-				amount = applyPermissionMultiplier(amount, p);
-			}
+			amount += applyLootingMultiplier(baseAmount, p);
+			amount += applyWorldMultiplier(baseAmount, p);
+			amount += applyPermissionGroupMultiplier(baseAmount, p);
 		}
-		return Utils.round(amount, 2);
+		return RandomNumberUtils.round(amount, 2);
 	}
 	
 	public int getNumberOfDrops(String entityName) {
 		int min = minNumberOfDrops.get(entityName);
 		int max = maxNumberOfDrops.get(entityName);
 		
-		return Utils.intRandomNumber(min, max+1);
+		return RandomNumberUtils.intRandomNumber(min, max+1);
 	}
 	
 	
 	public double getDropChance(String entityName) {
 		return dropChances.get(entityName);
+	}
+	
+	public Map<String, Double> getDropChances(){
+		return dropChances;
 	}
 	
 	public double getPlayerAmount(Entity entity) {
@@ -118,39 +131,87 @@ public class NumbersManager {
 		double amount;
 		if ( strAmount.contains("%")) {
 			strAmount = strAmount.replace("%","");
-			amount = playersBalance*(Double.valueOf(strAmount)/100);
+			amount = playersBalance*(Double.parseDouble(strAmount)/100);
 		}else {
-			amount = Double.valueOf(strAmount);
+			amount = Double.parseDouble(strAmount);
 			if (amount > playersBalance) {
 				amount = playersBalance;
 			}
 		}
-		return Utils.round(amount, 2);
+		return RandomNumberUtils.round(amount, 2);
 	}
 	
-	private double applyLootingMultiplier(double amount, Player p) {
+	private double applyLootingMultiplier(double amountToAdd, Player p) {
 		ItemStack killersWeapon = p.getInventory().getItemInMainHand();
 		int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
-		double lootingmultiplier = this.lootingMultiplier;
-		lootingmultiplier = 1+(lootingmultiplier*lootingLevel);
-		amount *= lootingmultiplier;
-		return amount;
+		amountToAdd *= lootingMultiplier * lootingLevel;
+		return amountToAdd;
 	}
 	
-	private double applyPermissionMultiplier(double amount, Player p) {
-		String permissionPrefix = "moneyfrommobs.multiplier.";
-		for (PermissionAttachmentInfo attachmentInfo : p.getEffectivePermissions()) {
-			if (attachmentInfo.getPermission().startsWith(permissionPrefix)) {
-		    	double permissionMultiplier = Double.parseDouble(attachmentInfo.getPermission().replace(permissionPrefix, ""));
-		    	permissionMultiplier /= 100;
-		    	permissionMultiplier += 1;
-		    	amount *= permissionMultiplier;
-		    }
+	private double applyWorldMultiplier(double amountToAdd, Player p) {
+		String worldName = p.getWorld().getName();
+		if (worldMultipliers.isEmpty() || !worldMultipliers.containsKey(worldName))
+			return 0;
+		
+		double worldMultiplier = worldMultipliers.get(worldName);
+		amountToAdd *= worldMultiplier;
+		return amountToAdd;
+	}
+	
+	private double applyPermissionGroupMultiplier(double amount, Player p) {
+		if (permissionGroupMultipliers.isEmpty())
+			return 0;
+		
+		String[] playerGroups = plugin.getPerms().getPlayerGroups(p);
+		double amountToAdd = 0;
+		for (String groupName : playerGroups) {
+			if (!permissionGroupMultipliers.containsKey(groupName))
+				continue;
+			
+			double groupMultiplier = permissionGroupMultipliers.get(groupName);
+			amountToAdd += amount * groupMultiplier;
+		}	
+		return amountToAdd;
+	}
+	
+	private void loadLootingMultiplier() {
+		FileConfiguration config = plugin.getConfig();
+		String strLootingMultiplier = config.getString("LootingMultiplier").replace("%", "");
+		lootingMultiplier =  Double.parseDouble(strLootingMultiplier)/100;
+	}
+	
+	private void loadPermissionGroupMultipliers() {
+		permissionGroupMultipliers.clear();
+		@SuppressWarnings("unchecked")
+		List<String> permissiongroupMultipliers = (List<String>) plugin.getConfig().getList("PermissionGroupMultipliers");
+		for (String permissionGroup : permissiongroupMultipliers) {
+			String[] splitList = permissionGroup.split(" ");
+			String permissionGroupName = splitList[0];
+			
+			if (permissionGroupName.equalsIgnoreCase("NONE") )
+				return;
+			
+			double permissionGroupMultiplier = Double.parseDouble(splitList[1].replace("%", "") )/100;
+			permissionGroupMultipliers.put(permissionGroupName, permissionGroupMultiplier);
 		}
-		return amount;
+		Bukkit.broadcastMessage(""+this.permissionGroupMultipliers);
 	}
 	
-	public Map<String, Double> getDropChances(){
-		return dropChances;
+	private void loadWorldMultipliers() {
+		worldMultipliers.clear();
+		@SuppressWarnings("unchecked")
+		List<String> worldmultipliers = (List<String>) plugin.getConfig().getList("WorldMultipliers");
+		for (String world : worldmultipliers) {
+			String[] splitList = world.split(" ");
+			String worldName = splitList[0];
+			
+			if (worldName.equalsIgnoreCase("NONE"))
+				return;
+			
+			Double worldMultiplier = Double.parseDouble(splitList[1].replace("%", "") )/100;
+			worldMultipliers.put(worldName,  worldMultiplier);
+		}
 	}
+	
+	
 }

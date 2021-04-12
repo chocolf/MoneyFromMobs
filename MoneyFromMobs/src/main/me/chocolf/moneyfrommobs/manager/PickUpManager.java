@@ -23,8 +23,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.event.GiveMoneyEvent;
-import me.chocolf.moneyfrommobs.util.Utils;
+import me.chocolf.moneyfrommobs.api.event.GiveMoneyEvent;
 import me.chocolf.moneyfrommobs.util.VersionUtils;
 
 public class PickUpManager {
@@ -48,13 +47,10 @@ public class PickUpManager {
 		// loads item to drop
 		FileConfiguration config = plugin.getConfig();
 		try {
-			if ( config.getString("MoneyDropsOnGround.Item").contains("CustomHead:")) {
+			if ( config.getString("MoneyDropsOnGround.Item").contains("CustomHead:")) 
 				itemToDrop = (getCustomHead(plugin.getConfig().getString("MoneyDropsOnGround.Item").replace("CustomHead:", "") ));
-			}
-			else {
-				Material itemType = Material.valueOf(plugin.getConfig().getString("MoneyDropsOnGround.Item"));
-				itemToDrop = (new ItemStack(itemType, 1));
-			}
+			
+			else itemToDrop = (new ItemStack(Material.valueOf(plugin.getConfig().getString("MoneyDropsOnGround.Item")), 1));
 		}
 		catch(Exception e) {
 			plugin.getLogger().warning("Make sure you have entered a valid ItemType in your config. Setting ItemType to Emerald until fixed");
@@ -76,8 +72,7 @@ public class PickUpManager {
 		}
 		
 		// loads Item Name
-		itemName = (Utils.applyColour(config.getString("MoneyDropsOnGround.ItemName")));
-		
+		itemName = MessageManager.applyColour( config.getString("MoneyDropsOnGround.ItemName") );
 	}
 	
 	public void loadParticles() {

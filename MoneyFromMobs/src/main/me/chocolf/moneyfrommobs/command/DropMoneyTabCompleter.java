@@ -21,7 +21,7 @@ public class DropMoneyTabCompleter implements TabCompleter{
 			arguments1.add("<AmountToDrop>");
 		}
 		if ( arguments2.isEmpty() ) {
-			arguments2.add("<NumberOfDrops>");
+			arguments2.add("[NumberOfDrops]");
 		}
 		
 		if (args.length == 1) {

@@ -10,12 +10,12 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.event.AttemptToDropMoneyEvent;
-import me.chocolf.moneyfrommobs.event.DropMoneyEvent;
+import me.chocolf.moneyfrommobs.api.event.AttemptToDropMoneyEvent;
+import me.chocolf.moneyfrommobs.api.event.DropMoneyEvent;
 import me.chocolf.moneyfrommobs.manager.DropsManager;
 import me.chocolf.moneyfrommobs.manager.NumbersManager;
 import me.chocolf.moneyfrommobs.manager.PickUpManager;
-import me.chocolf.moneyfrommobs.util.Utils;
+import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
 
 public class DeathListeners implements Listener{
 	
@@ -63,7 +63,7 @@ public class DeathListeners implements Listener{
 		dropChance = attemptToDropMoneyEvent.getDropChance();
 		
 		// makes random number and compares it to drop chance
-		double randomNum = Utils.doubleRandomNumber(0.0, 100.0);
+		double randomNum = RandomNumberUtils.doubleRandomNumber(0.0, 100.0);
 		if (randomNum > dropChance) return;
 		
 		PickUpManager pickUpManager = plugin.getPickUpManager();

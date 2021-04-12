@@ -16,8 +16,8 @@ import me.chocolf.moneyfrommobs.command.DropMoneyTabCompleter;
 import me.chocolf.moneyfrommobs.command.MuteMessagesCommand;
 import me.chocolf.moneyfrommobs.command.ReloadCommand;
 import me.chocolf.moneyfrommobs.integration.DropMoneyFlag;
-import me.chocolf.moneyfrommobs.integration.MythicMobsFileManager;
 import me.chocolf.moneyfrommobs.integration.MoneyFromMobsPlaceholderExpansion;
+import me.chocolf.moneyfrommobs.integration.MythicMobsFileManager;
 import me.chocolf.moneyfrommobs.listener.DeathListeners;
 import me.chocolf.moneyfrommobs.listener.MobSpawnListener;
 import me.chocolf.moneyfrommobs.listener.OnJoinListener;
@@ -35,9 +35,11 @@ import me.chocolf.moneyfrommobs.util.Metrics;
 import me.chocolf.moneyfrommobs.util.UpdateChecker;
 import me.chocolf.moneyfrommobs.util.VersionUtils;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 public class MoneyFromMobs extends JavaPlugin{
 	private Economy econ = null;
+	private Permission perms = null;
 	private MythicMobsFileManager mmConfig;
 	private PickUpManager pickUpManager;
 	private MessageManager messageManager;
@@ -88,15 +90,12 @@ public class MoneyFromMobs extends JavaPlugin{
 		// Bukkit runnable to allow players to pickup items when inventory is full
 		loadInventoryIsFullRunnable();
 		
-		// Disables plugin if economy set up failed
-		if ( !setupEconomy() ) {
-			getLogger().severe("Disabled becuase you don't have Vault or an economy plugin installed");
-			getServer().getPluginManager().disablePlugin(this);
-		}
+		setupEconomy();
+		setupPermissions();
 		
 		// Checks if user is using latest version on spigot
 		try {
-			if (UpdateChecker.checkForUpdate() && getConfig().getBoolean("UpdateNotification"))
+			if (UpdateChecker.checkForUpdate())
 				getLogger().info("Update Available for MoneyFromMobs: https://www.spigotmc.org/resources/money-from-mobs-1-9-1-16-4.79137/");	
 		}
 		catch (Exception e) {
@@ -121,6 +120,13 @@ public class MoneyFromMobs extends JavaPlugin{
     		econ = rsp.getProvider();
         return econ != null;
     }
+	
+	// sets up permission hook
+	private boolean setupPermissions() {
+		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        perms = rsp.getProvider();
+        return perms != null;
+	}
 	
 	private void loadConfigs() {
 		saveDefaultConfig();
@@ -158,6 +164,9 @@ public class MoneyFromMobs extends JavaPlugin{
 	public Economy getEcon() {
 		return econ;
 	}
+	public Permission getPerms() {
+		return perms;
+	}
 	public PickUpManager getPickUpManager() {
 		return pickUpManager;
 	}
@@ -168,11 +177,9 @@ public class MoneyFromMobs extends JavaPlugin{
 	public DropsManager getDropsManager() {
 		return dropsManager;
 	}
-
 	public NumbersManager getNumbersManager() {
 		return numbersManager;
 	}
-
 	public PlaceholderAPIListener getPlaceholdersListener() {
 		return placeholderListener;
 	}

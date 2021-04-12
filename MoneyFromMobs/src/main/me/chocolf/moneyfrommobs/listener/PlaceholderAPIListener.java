@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.event.GiveMoneyEvent;
+import me.chocolf.moneyfrommobs.api.event.GiveMoneyEvent;
 
 public class PlaceholderAPIListener implements Listener{
 	

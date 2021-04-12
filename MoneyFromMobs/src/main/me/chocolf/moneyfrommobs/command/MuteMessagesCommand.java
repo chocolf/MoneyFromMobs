@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.util.Utils;
+import me.chocolf.moneyfrommobs.manager.MessageManager;
 
 public class MuteMessagesCommand implements CommandExecutor{
 	
@@ -21,23 +21,16 @@ public class MuteMessagesCommand implements CommandExecutor{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (label.equalsIgnoreCase("mfmmute")) {
-			if (sender.hasPermission("MoneyFromMobs.mute")) {
-				Player p = (Player) sender;
-				if (p.hasMetadata("MfmMuteMessages")) {
-					p.removeMetadata("MfmMuteMessages", plugin);
-					p.sendMessage(Utils.applyColour(plugin.getConfig().getString("MuteToggleOffMessage")));
-				}else {
-					p.setMetadata("MfmMuteMessages", new FixedMetadataValue(plugin, 0));
-					p.sendMessage(Utils.applyColour(plugin.getConfig().getString("MuteToggleOnMessage")));
-				}
-				return true;
-			}else {
-				sender.sendMessage(Utils.applyColour("&cYou don't have permission to use this command!"));
-				return true;
-			}
+		MessageManager messageManager = plugin.getMessageManager();
+		Player p = (Player) sender;
+		if (p.hasMetadata("MfmMuteMessages")) {
+			p.removeMetadata("MfmMuteMessages", plugin);
+			p.sendMessage(messageManager.getMessage("muteToggleOffMessage"));
+		}else {
+			p.setMetadata("MfmMuteMessages", new FixedMetadataValue(plugin, 0));
+			p.sendMessage(messageManager.getMessage("muteToggleOnMessage"));
 		}
-		return false;
+		return true;
 	}
 	
 }
