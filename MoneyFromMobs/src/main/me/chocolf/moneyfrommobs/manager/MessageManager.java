@@ -67,7 +67,7 @@ public class MessageManager {
 		
 		if (shouldSendFloatingTextMessage) {
 			messageToSend = getMessage("floatingTextMessage", balance, strAmount);
-			sendFloatingTextMessage(messageToSend, p.getLocation());
+			sendFloatingTextMessage(messageToSend, p.getLocation(), p);
 		}
 	}
 	
@@ -78,20 +78,20 @@ public class MessageManager {
 		p.sendMessage(messageToSend);
 	}
 
-	private void sendFloatingTextMessage(String messageToSend, Location loc) {
+	private void sendFloatingTextMessage(String messageToSend, Location loc, Player p) {
 		Vector directionVector = loc.getDirection();
 		directionVector.setY(0.6);
 		loc.add(directionVector.multiply(4));
 		
 		switch (VersionUtils.getNMSVersion()) {
 		case "v1_16_R3":
-			new FloatingTextArmorStand_1_16_R3(loc, messageToSend);
+			new FloatingTextArmorStand_1_16_R3(loc, messageToSend, p);
 			break;
 		case "v1_16_R2":
-			new FloatingTextArmorStand_1_16_R2(loc, messageToSend);
+			new FloatingTextArmorStand_1_16_R2(loc, messageToSend, p);
 			break;
 		case "v1_12_R1":
-			new FloatingTextArmorStand_1_12_R1(loc, messageToSend);
+			new FloatingTextArmorStand_1_12_R1(loc, messageToSend, p);
 			break;
 		default:
 			plugin.getLogger().warning("Floating Text Messages are not compatible with your version. Versions Supported: 1.12.2 and 1.16.2-1.16.5. Please disable Floating Text Messages in your config to avoid this error message!");

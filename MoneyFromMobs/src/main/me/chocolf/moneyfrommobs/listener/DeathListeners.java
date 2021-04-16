@@ -83,7 +83,7 @@ public class DeathListeners implements Listener{
 			numberOfDrops = dropMoneyEvent.getNumberOfDrops();
 			
 			// drops item
-			dropsManager.dropItem(itemToDrop, amount, location, numberOfDrops);
+			dropsManager.dropItem(itemToDrop, amount, location, numberOfDrops, p);
 		}
 		// if money goes straight into players account
 		else {

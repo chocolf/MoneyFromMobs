@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -163,6 +162,8 @@ public class NumbersManager {
 			return 0;
 		
 		String[] playerGroups = plugin.getPerms().getPlayerGroups(p);
+		if (playerGroups.length == 0)
+			return 0;
 		double amountToAdd = 0;
 		for (String groupName : playerGroups) {
 			if (!permissionGroupMultipliers.containsKey(groupName))
@@ -182,6 +183,8 @@ public class NumbersManager {
 	
 	private void loadPermissionGroupMultipliers() {
 		permissionGroupMultipliers.clear();
+		if (plugin.getEcon() == null)
+			return;
 		@SuppressWarnings("unchecked")
 		List<String> permissiongroupMultipliers = (List<String>) plugin.getConfig().getList("PermissionGroupMultipliers");
 		for (String permissionGroup : permissiongroupMultipliers) {
@@ -194,7 +197,6 @@ public class NumbersManager {
 			double permissionGroupMultiplier = Double.parseDouble(splitList[1].replace("%", "") )/100;
 			permissionGroupMultipliers.put(permissionGroupName, permissionGroupMultiplier);
 		}
-		Bukkit.broadcastMessage(""+this.permissionGroupMultipliers);
 	}
 	
 	private void loadWorldMultipliers() {

@@ -29,7 +29,8 @@ import me.chocolf.moneyfrommobs.util.VersionUtils;
 public class PickUpManager {
 	
 	private static final Pattern pattern = Pattern.compile("([0-9]){6}mfm");
-	private MoneyFromMobs plugin;	
+	private MoneyFromMobs plugin;
+	private boolean onlyKillerPickUpMoney;
 	private ItemStack itemToDrop;
 	private String itemName;
 	private Particle particleEffect;
@@ -38,12 +39,17 @@ public class PickUpManager {
 	
 	public PickUpManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
+		init();
+	}
+	
+	public void init() {
 		loadItem();
 		loadParticles();
 		loadSound();
+		onlyKillerPickUpMoney = plugin.getConfig().getBoolean("OnlyKillerCanPickUpMoney");
 	}
 	
-	public void loadItem() {
+	private void loadItem() {
 		// loads item to drop
 		FileConfiguration config = plugin.getConfig();
 		try {
@@ -75,7 +81,7 @@ public class PickUpManager {
 		itemName = MessageManager.applyColour( config.getString("MoneyDropsOnGround.ItemName") );
 	}
 	
-	public void loadParticles() {
+	private void loadParticles() {
 		FileConfiguration config = plugin.getConfig();
 		if (config.getString("ParticleEffect").equalsIgnoreCase("NONE")) {
 			particleEffect = null;
@@ -92,7 +98,7 @@ public class PickUpManager {
 		}
 	}
 	
-	public void loadSound() {
+	private void loadSound() {
 		FileConfiguration config = plugin.getConfig();
 		if (config.getString("Sound").equalsIgnoreCase("NONE")) {
 			sound = null;
@@ -150,6 +156,10 @@ public class PickUpManager {
 
 	public Sound getSound() {
 		return sound;
+	}
+
+	public boolean shouldOnlyKillerPickUpMoney() {
+		return onlyKillerPickUpMoney;
 	}
 
 	// methods

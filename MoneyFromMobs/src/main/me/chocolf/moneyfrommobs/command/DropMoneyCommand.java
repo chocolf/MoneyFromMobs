@@ -61,7 +61,7 @@ public class DropMoneyCommand implements CommandExecutor{
 			location = dropMoneyEvent.getLocation();
 			numberOfDrops = dropMoneyEvent.getNumberOfDrops();
 			
-			dropsManager.dropItem(itemToDrop, amount*numberOfDrops, location, numberOfDrops);
+			dropsManager.dropItem(itemToDrop, amount*numberOfDrops, location, numberOfDrops, null);
 			return true;
 		}
 		return false;

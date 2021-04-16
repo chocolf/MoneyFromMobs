@@ -39,7 +39,7 @@ import net.milkbowl.vault.permission.Permission;
 
 public class MoneyFromMobs extends JavaPlugin{
 	private Economy econ = null;
-	private Permission perms = null;
+	private Permission permissions = null;
 	private MythicMobsFileManager mmConfig;
 	private PickUpManager pickUpManager;
 	private MessageManager messageManager;
@@ -90,10 +90,11 @@ public class MoneyFromMobs extends JavaPlugin{
 		// Bukkit runnable to allow players to pickup items when inventory is full
 		loadInventoryIsFullRunnable();
 		
+		// vault econ and perms
 		setupEconomy();
 		setupPermissions();
 		
-		// Checks if user is using latest version on spigot
+		// Checks if user is using latest version of the plugin on spigot
 		try {
 			if (UpdateChecker.checkForUpdate())
 				getLogger().info("Update Available for MoneyFromMobs: https://www.spigotmc.org/resources/money-from-mobs-1-9-1-16-4.79137/");	
@@ -124,8 +125,8 @@ public class MoneyFromMobs extends JavaPlugin{
 	// sets up permission hook
 	private boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        perms = rsp.getProvider();
-        return perms != null;
+        permissions = rsp.getProvider();
+        return permissions != null;
 	}
 	
 	private void loadConfigs() {
@@ -165,7 +166,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		return econ;
 	}
 	public Permission getPerms() {
-		return perms;
+		return permissions;
 	}
 	public PickUpManager getPickUpManager() {
 		return pickUpManager;
@@ -189,5 +190,4 @@ public class MoneyFromMobs extends JavaPlugin{
 	public static MoneyFromMobs getInstance() {
 		return instance;
 	}
-
 }

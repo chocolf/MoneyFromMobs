@@ -34,16 +34,22 @@ private MoneyFromMobs plugin;
 		
 		e.setCancelled(true);
 		// stops mobs from picking up money
-		if (!(e.getEntity() instanceof Player) ) return;
+		if (e.getEntity() instanceof Player ) {
+			Player p = (Player) e.getEntity();
+			// returns if player doesn't have permission to pickup money
+			if ( !p.hasPermission("MoneyFromMobs.use") ) return;
+			
+			List<String> itemLore = itemStack.getItemMeta().getLore();
+			
+			if (pickUpManager.shouldOnlyKillerPickUpMoney() && itemLore.size() > 2 && !itemLore.get(2).equals(p.getName()) )
+				return;
+		    
+		    double amount = Double.parseDouble(itemLore.get(1));
+		    pickUpManager.giveMoney(amount, p);
+		    item.remove();
+		}
 		
-		Player p = (Player) e.getEntity();
-		// returns if player doesn't have permission to pickup money
-		if ( !p.hasPermission("MoneyFromMobs.use") ) return;
 		
-	    List<String> itemLore = itemStack.getItemMeta().getLore();
-	    double amount = Double.parseDouble(itemLore.get(1));
-	    pickUpManager.giveMoney(amount, p);
-	    item.remove();
 	}
 	
 	@EventHandler

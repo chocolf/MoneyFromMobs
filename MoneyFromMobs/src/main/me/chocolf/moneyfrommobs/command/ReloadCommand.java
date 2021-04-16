@@ -34,9 +34,7 @@ public class ReloadCommand implements CommandExecutor{
 		// reloads things
 		messageManager.loadMessage();
 		
-		pickUpManager.loadItem();
-		pickUpManager.loadParticles();
-		pickUpManager.loadSound();
+		pickUpManager.init();
 		
 		dropsManager.init();
 		
@@ -48,8 +46,8 @@ public class ReloadCommand implements CommandExecutor{
 				Bukkit.getScheduler().cancelTask(plugin.getInventoryIsFullRunnable().getTaskId());
 			}
 			plugin.loadInventoryIsFullRunnable();
-			
 		}
+		
 		// sends message saying it loaded correctly
 		sender.sendMessage(MessageManager.applyColour("&9Money From Mobs was reloaded!"));
 	

@@ -85,16 +85,23 @@ public class DropsManager {
 	    this.canDropIfSplitSlimes = config.getBoolean("MoneyDropsFromSplitSlimes");
 	}
 	
-	public void dropItem(ItemStack item, Double amount, Location location, int numberOfDrops) {
+	public void dropItem(ItemStack item, Double amount, Location location, int numberOfDrops, Player p) {
 		if (amount == 0) return;
 		amount = amount/numberOfDrops;
 		for ( int i=0; i<numberOfDrops;i++ ) {
+			
+			// first line of lore is randomnumbers + mfm so items don't stack
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = new ArrayList<>();
 			lore.add(String.valueOf(RandomNumberUtils.intRandomNumber(1000000,9999999) + "mfm"));
 						
-			// adds lore so when picked up plugin knows how much money to give
+			// second line of lore is amount to give on pickup
 			lore.add(String.valueOf(amount));
+			
+			// third line of lore is player who killed the mob
+			if (p != null)
+				lore.add(p.getName());
+			
 			meta.setLore(lore);
 			item.setItemMeta(meta);
 			

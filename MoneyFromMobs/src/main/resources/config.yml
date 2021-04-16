@@ -61,14 +61,16 @@ LootingMultiplier: 10%
 
 # Players in these Permission Groups will gain extra money based on the percentages next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable Permission Multipliers.
 PermissionGroupMultipliers:
- - PermissionGroup1 5%
- - PermissionGroup2 10%
+  - PermissionGroup1 5%
+  - PermissionGroup2 10%
  
 # Players in these Worlds will gain extra money based on the percentage next to the World name. Set the first World to "NONE" if you want to disable World Multipliers
 WorldMultipliers:
- - world1 5%
- - world2 10%
+  - world1 5%
+  - world2 10%
  
+# Setting this option to true means only the person who killed the mob can pick up the money that it dropped. Can lead to money lying around because someone forgot to pick it up though, which might cause confusion for other players trying to pick it up.
+OnlyKillerCanPickUpMoney: false
 
 # Messages sent to player when they use /MfmMute
 MuteToggleOnMessage: '&cMessages will no longer be shown when you pick up money dropped by mobs!'
@@ -81,7 +83,7 @@ MuteToggleOffMessage: '&aMessages will now be shown when you pick up money dropp
 # NumberOfDrops = number of money items to be dropped e.g 3 means the amount will be divided by 3 and drop 3 items. Can also be set to 1-3 which means its random between 1 and 3
 # OnlyOnKill = Whether mobs should drop money if they weren't killed by a player. False means mobs can drop money if they fell to their death for example
 
-# Looting doesn't affect players because it could lead to players killing each other to generate infinite money.
+# All multipliers don't affect players because it could lead to players killing each other to generate infinite money.
 # Amount: 10% = Player drops 10% of their balance. Doesn't have to be a percentage
 PLAYER:
   Enabled: true

@@ -25,21 +25,25 @@ public class PaperListeners implements Listener{
 	
 	@EventHandler
 	public void onAttemptToPickUp(PlayerAttemptPickupItemEvent e) {
-		PickUpManager manager = plugin.getPickUpManager();
+		PickUpManager pickUpManager = plugin.getPickUpManager();
 		// gets item picked up
 		Item item = e.getItem();
 		ItemStack itemStack = item.getItemStack();
 		// return if item picked up isnt money
-		if (!manager.isMoneyPickedUp(itemStack)) return;
+		if (!pickUpManager.isMoneyPickedUp(itemStack)) return;
 		
 		e.setCancelled(true);
 		Player p = e.getPlayer();
 		// returns if player doesn't have permission to pickup money
 		if ( !p.hasPermission("MoneyFromMobs.use") ) return;
 		
-	    List<String> itemLore = itemStack.getItemMeta().getLore();
+		List<String> itemLore = itemStack.getItemMeta().getLore();
+		
+		if (pickUpManager.shouldOnlyKillerPickUpMoney() && itemLore.size() > 2 && !itemLore.get(2).equals(p.getName()) )
+			return;
+	    
 	    double amount = Double.parseDouble(itemLore.get(1));
-	    manager.giveMoney(amount, p);
+	    pickUpManager.giveMoney(amount, p);
 	    item.remove();
 	}
 }
