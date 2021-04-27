@@ -6,7 +6,7 @@ UpdateNotification: true
 # Item: can be set to a custom head from websites like https://minecraft-heads.com/custom-heads by copying the VALUE from the website. Example: 'CustomHead:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzUxMTM3ZTExNDQzYThmYmIwNWZjZDNjY2MxYWY5YmQyMzAzOTE4ZjM1NDQ4MTg1ZTNlZDk2ZWYxODRkYSJ9fX0='
 # CustomModelData can be set to to customize textures. Only works with 1.14+ I don't know much about it so I won't be able to help you but here is a little guide: https://www.planetminecraft.com/forums/communities/texturing/new-1-14-custom-item-models-tuto-578834/
 # DisableDecimal means that amounts like 5.00 will be changed to just 5 in the name
-MoneyDropsOnGround: 
+MoneyDropsOnGround:
   Enabled: true
   Item: 'EMERALD'
   CustomModelData: 0
@@ -59,7 +59,7 @@ PickupMoneyWhenInventoryIsFull:
 # Extra money based on a percentage per level of Looting. e.g. LootingMultiplier: 10% means a player with Looting 3 will get 30% more money
 LootingMultiplier: 10%
 
-# Players in these Permission Groups will gain extra money based on the percentages next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable Permission Multipliers.
+# Players in these Permission Groups will gain extra money based on the percentages next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable Permission Multipliers, or if you don't use vault based permissions plugin.
 PermissionGroupMultipliers:
   - PermissionGroup1 5%
   - PermissionGroup2 10%

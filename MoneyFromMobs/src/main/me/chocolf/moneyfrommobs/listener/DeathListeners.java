@@ -48,8 +48,11 @@ public class DeathListeners implements Listener{
 		if (!dropsManager.canDropMoneyHere(entity, entityName, p))
 			return;
 		
-		if (entityName.equals("PLAYER"))
+		if (entityName.equals("PLAYER")) {
+			if (entity.hasPermission("MoneyFromMobs.PreventMoneyDropOnDeath"))
+				return;
 			amount = numbersManager.getPlayerAmount(entity);
+		}
 		else
 			amount = numbersManager.getAmount(p, entityName);
 		

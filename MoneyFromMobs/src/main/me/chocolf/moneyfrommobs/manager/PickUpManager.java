@@ -123,20 +123,20 @@ public class PickUpManager {
 		else {
 			head = new ItemStack(Material.valueOf("SKULL_ITEM"),1,(short) 3);
 		}
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
-        GameProfile profile = new GameProfile(UUID.randomUUID(), "");
-        profile.getProperties().put("textures", new Property("textures", value));
-        Field profileField = null;
-        try {
-            profileField = meta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(meta, profile);
-        } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            e.printStackTrace();
-        }
-        head.setItemMeta(meta);
-        return head;
-    }
+	    SkullMeta meta = (SkullMeta) head.getItemMeta();
+	    GameProfile profile = new GameProfile(UUID.randomUUID(), "");
+	    profile.getProperties().put("textures", new Property("textures", value));
+	    Field profileField = null;
+	    try {
+	        profileField = meta.getClass().getDeclaredField("profile");
+	        profileField.setAccessible(true);
+	        profileField.set(meta, profile);
+	    } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
+	        e.printStackTrace();
+	    }
+	    head.setItemMeta(meta);
+	    return head;
+	}
 
 	public ItemStack getItemToDrop() {
 		return itemToDrop;
@@ -177,11 +177,11 @@ public class PickUpManager {
 		Location loc = p.getLocation();
 		
 		// give money
-		plugin.getEcon().depositPlayer(p,amount);	
+		plugin.getEcon().depositPlayer(p,amount);
 		
 		// play sound
 		if (sound != null) {
-			p.playSound(loc, sound, 1 , 1);
+			p.playSound(loc, sound, 1, 1);
 		}
 		
 		// spawn particle
