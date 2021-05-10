@@ -11,6 +11,7 @@ import org.bukkit.util.Vector;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_12_R1;
+import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_13_R2;
 import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_16_R2;
 import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_16_R3;
 import me.chocolf.moneyfrommobs.util.VersionUtils;
@@ -89,6 +90,9 @@ public class MessageManager {
 			break;
 		case "v1_16_R2":
 			new FloatingTextArmorStand_1_16_R2(loc, messageToSend, p);
+			break;
+		case "v1_13_R2":
+			new FloatingTextArmorStand_1_13_R2(loc, messageToSend, p);
 			break;
 		case "v1_12_R1":
 			new FloatingTextArmorStand_1_12_R1(loc, messageToSend, p);

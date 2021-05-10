@@ -1,7 +1,7 @@
 main: me.chocolf.moneyfrommobs.MoneyFromMobs
 name: MoneyFromMobs
-version: 3.72
-api-version: 1.16
+version: 3.73
+api-version: 1.13
 author: Chocolf
 description: Makes mobs drop money with looting multiplier
 depend: [Vault]
