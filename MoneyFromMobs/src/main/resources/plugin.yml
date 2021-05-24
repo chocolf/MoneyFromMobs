@@ -1,6 +1,6 @@
 main: me.chocolf.moneyfrommobs.MoneyFromMobs
 name: MoneyFromMobs
-version: 3.73
+version: 3.8
 api-version: 1.13
 author: Chocolf
 description: Makes mobs drop money with looting multiplier
@@ -23,3 +23,7 @@ commands:
     description: Removes all money drops off the ground
     permission: MoneyFromMobs.clear
     usage: "Usage: /MfmClear"
+  MfmEvent:
+    description: Starts/Stops an event that increases the amount of money dropped by mobs for a certain amount of time.
+    permission: MoneyFromMobs.event
+    usage: "Usage: /MfmEvent <Start/Stop> [Percentage Increase] [Hours] [Minutes] [Seconds]"

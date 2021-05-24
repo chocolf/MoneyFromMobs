@@ -12,7 +12,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.manager.MessageManager;
 
 public class ClearDropsCommand implements CommandExecutor{
 	
@@ -31,11 +30,12 @@ public class ClearDropsCommand implements CommandExecutor{
 			for (Entity entity : entList) {
 				if (entity instanceof Item) {
 					ItemStack item = ((Item) entity).getItemStack();
-					if (plugin.getPickUpManager().isMoneyPickedUp(item)) entity.remove();				
+					if (plugin.getPickUpManager().isMoneyPickedUp(item))
+						entity.remove();
 				}
 			}
 		}
-		sender.sendMessage(MessageManager.applyColour("&9All money was succesfully removed from the ground!"));
+		sender.sendMessage(plugin.getMessageManager().getMessage("clearMoneyDropsMessage"));
 		return true;
 	}
 

@@ -1,26 +1,17 @@
 package me.chocolf.moneyfrommobs.util;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.plugin.Plugin;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A class to update/add new sections/keys to your config while keeping your current values and keeping your comments
@@ -30,6 +21,7 @@ import org.yaml.snakeyaml.Yaml;
  * If a key has an attached comment above it, it is written first.
  * @author tchristofferson
  */
+@SuppressWarnings("rawtypes")
 public class ConfigUpdater {
 
     /**
@@ -41,6 +33,13 @@ public class ConfigUpdater {
      * @throws IOException If an IOException occurs
      */
     public static void update(Plugin plugin, String resourceName, File toUpdate, List<String> ignoredSections) throws IOException {
+        DumperOptions dumperOptions = new DumperOptions();
+        dumperOptions.setSplitLines(false);
+
+        if (resourceName.contains("language")) {
+            dumperOptions.setDefaultScalarStyle(DumperOptions.ScalarStyle.DOUBLE_QUOTED);
+        }
+
         BufferedReader newReader = new BufferedReader(new InputStreamReader(plugin.getResource(resourceName), StandardCharsets.UTF_8));
         List<String> newLines = newReader.lines().collect(Collectors.toList());
         newReader.close();
@@ -53,7 +52,7 @@ public class ConfigUpdater {
         //ignoredSections can ONLY contain configurations sections
         ignoredSectionsArrayList.removeIf(ignoredSection -> !newConfig.isConfigurationSection(ignoredSection));
 
-        Yaml yaml = new Yaml();
+        Yaml yaml = new Yaml(dumperOptions);
         Map<String, String> comments = parseComments(newLines, ignoredSectionsArrayList, oldConfig, yaml);
         write(newConfig, oldConfig, comments, ignoredSectionsArrayList, writer, yaml);
     }
@@ -76,7 +75,7 @@ public class ConfigUpdater {
             }
 
             for (String ignoredSection : ignoredSections) {
-                if (key.startsWith(ignoredSection)) {
+                if (key.equals(ignoredSection)) {
                     continue outer;
                 }
             }
@@ -110,7 +109,8 @@ public class ConfigUpdater {
 
     //Doesn't work with configuration sections, must be an actual object
     //Auto checks if it is serializable and writes to file
-    private static void write(Object obj, String actualKey, String prefixSpaces, Yaml yaml, BufferedWriter writer) throws IOException {
+    
+	private static void write(Object obj, String actualKey, String prefixSpaces, Yaml yaml, BufferedWriter writer) throws IOException {
         if (obj instanceof ConfigurationSerializable) {
             writer.write(prefixSpaces + actualKey + ": " + yaml.dump(((ConfigurationSerializable) obj).serialize()));
         } else if (obj instanceof String || obj instanceof Character) {
@@ -121,7 +121,7 @@ public class ConfigUpdater {
 
             writer.write(prefixSpaces + actualKey + ": " + yaml.dump(obj));
         } else if (obj instanceof List) {
-            writeList((List<?>) obj, actualKey, prefixSpaces, yaml, writer);
+            writeList((List) obj, actualKey, prefixSpaces, yaml, writer);
         } else {
             writer.write(prefixSpaces + actualKey + ": " + yaml.dump(obj));
         }
@@ -139,11 +139,11 @@ public class ConfigUpdater {
     }
 
     //Writes a list of any object
-    private static void writeList(List<?> list, String actualKey, String prefixSpaces, Yaml yaml, BufferedWriter writer) throws IOException {
+    private static void writeList(List list, String actualKey, String prefixSpaces, Yaml yaml, BufferedWriter writer) throws IOException {
         writer.write(getListAsString(list, actualKey, prefixSpaces, yaml));
     }
 
-    private static String getListAsString(List<?> list, String actualKey, String prefixSpaces, Yaml yaml) {
+    private static String getListAsString(List list, String actualKey, String prefixSpaces, Yaml yaml) {
         StringBuilder builder = new StringBuilder(prefixSpaces).append(actualKey).append(":");
 
         if (list.isEmpty()) {
@@ -234,7 +234,7 @@ public class ConfigUpdater {
                 appendSection(builder, (ConfigurationSection) value, prefixSpaces, yaml);
                 prefixSpaces.setLength(prefixSpaces.length() - 2);
             } else if (value instanceof List) {
-                builder.append(getListAsString((List<?>) value, actualKey, prefixSpaces.toString(), yaml));
+                builder.append(getListAsString((List) value, actualKey, prefixSpaces.toString(), yaml));
             } else {
                 builder.append(prefixSpaces.toString()).append(actualKey).append(": ").append(yaml.dump(value));
             }

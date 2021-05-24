@@ -1,38 +1,21 @@
 # Whether to notify players with OP when there is an update for MoneyFromMobs
 UpdateNotification: true
 
-# Set Enabled to false if you want money to go straight into players account instead of dropping as an item.
-# RGB Support for 1.16+ e.g. #62d180 instead of &a will give you a green
-# Item: can be set to a custom head from websites like https://minecraft-heads.com/custom-heads by copying the VALUE from the website. Example: 'CustomHead:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzUxMTM3ZTExNDQzYThmYmIwNWZjZDNjY2MxYWY5YmQyMzAzOTE4ZjM1NDQ4MTg1ZTNlZDk2ZWYxODRkYSJ9fX0='
-# CustomModelData can be set to to customize textures. Only works with 1.14+ I don't know much about it so I won't be able to help you but here is a little guide: https://www.planetminecraft.com/forums/communities/texturing/new-1-14-custom-item-models-tuto-578834/
-# DisableDecimal means that amounts like 5.00 will be changed to just 5 in the name
+###################################################### Drop Options ######################################################
+
 MoneyDropsOnGround:
+  # Set Enabled to false if you want money to go straight into players account instead of dropping as an item.
   Enabled: true
+  # Type of Item to drop. Can be set to a custom head from websites like https://minecraft-heads.com/custom-heads by copying the VALUE from the website. Example: 'CustomHead:eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzUxMTM3ZTExNDQzYThmYmIwNWZjZDNjY2MxYWY5YmQyMzAzOTE4ZjM1NDQ4MTg1ZTNlZDk2ZWYxODRkYSJ9fX0='
   Item: 'EMERALD'
-  CustomModelData: 0
-  Enchanted: true
+  # Name above dropped item. RGB Support for 1.16+ e.g. #62d180 instead of &a will give you a green
   ItemName: '&a$%amount%'
+  # Whether the dropped item should glow or not
+  Enchanted: true
+  # CustomModelData can be set to to customize textures. Only works with 1.14+ I don't know much about it so I won't be able to help you but here is a little guide: https://www.planetminecraft.com/forums/communities/texturing/new-1-14-custom-item-models-tuto-578834/
+  CustomModelData: 0
+  # DisableDecimal means that amounts like 5.00 will be changed to just 5 in the ItemName
   DisableDecimal: false
-    
-# Sounds list: https://www.digminecraft.com/lists/sound_list_pc.php
-# Sound = sound played on pickup. Change to "NONE" if you don't want a sound to be played
-Sound: entity.item.pickup
-
-# Particles list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
-# ParticleEffect = Particle effect spawned on pickup. Change to "NONE" if you don't want a particle to spawn.
-ParticleEffect: VILLAGER_HAPPY
-AmountOfParticles: 5
-
-# Where the message is shown when a player picks up money. Usable Placeholders: %amount% and %balance%
-ShowMessageInChat:
-  Enabled: false
-  Message: '&aYou picked up $%amount%!'
-ShowMessageInActionBar:
-  Enabled: true
-  Message: '&aYou picked up $%amount%! You now have: $%balance%!'
-ShowMessageAsFloatingText:
-  Enabled: true
-  Message: '&a+$%amount%!'
 
 # Whether certain mobs should drop money
 # Slimes/MagmaCubes that have split will not be classed as a natural mob or a spawner mob.
@@ -47,19 +30,33 @@ DisabledWorlds:
   - world1
   - world2
 
+###################################################### Pick Up Options ######################################################
+
+# Sound = Sound played on pickup. Change to "NONE" if you don't want a sound to be played. Sounds list: https://www.digminecraft.com/lists/sound_list_pc.php
+Sound: entity.item.pickup
+
+# ParticleEffect = Particle effect spawned on pickup. Change to "NONE" if you don't want a particle to spawn. Particles list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+ParticleEffect: VILLAGER_HAPPY
+AmountOfParticles: 5
+
 # This option loops through all players and checks for dropped items every so many ticks to see if there is money next to a player so if you have a lot of players it could cause lag.
 # You only need to enable this option if you are not using PaperMC 1.13+, as PaperMC allows you to pick up money when your inventory is full without this option. https://papermc.io/downloads
-# Interval = how often the plugin checks for items around the player. 5 = checks every 5 ticks (20 ticks = 1 second).
-# Radius = radius around player to check for money
 PickupMoneyWhenInventoryIsFull:
   Enabled: true
+  # Interval = how often the plugin checks for items around the player. 5 = checks every 5 ticks (20 ticks = 1 second).
   Interval: 5
+  # Radius = radius around player to check for money
   Radius: 1
+
+# Setting this option to true means only the person who killed the mob can pick up the money that it dropped. This can lead to money lying around because someone forgot to pick it up though, which might cause confusion for other players trying to pick it up.
+OnlyKillerCanPickUpMoney: false
+
+###################################################### Multipliers ######################################################
 
 # Extra money based on a percentage per level of Looting. e.g. LootingMultiplier: 10% means a player with Looting 3 will get 30% more money
 LootingMultiplier: 10%
 
-# Players in these Permission Groups will gain extra money based on the percentages next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable Permission Multipliers, or if you don't use vault based permissions plugin.
+# Players in these Permission Groups will gain extra money based on the percentages next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable this Multiplier, or if you don't use a vault based permissions plugin.
 PermissionGroupMultipliers:
   - PermissionGroup1 5%
   - PermissionGroup2 10%
@@ -68,22 +65,52 @@ PermissionGroupMultipliers:
 WorldMultipliers:
   - world1 5%
   - world2 10%
- 
-# Setting this option to true means only the person who killed the mob can pick up the money that it dropped. Can lead to money lying around because someone forgot to pick it up though, which might cause confusion for other players trying to pick it up.
-OnlyKillerCanPickUpMoney: false
 
-# Messages sent to player when they use /MfmMute
+# Players in these Permission Groups will drop LESS money on death based on the percentage next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable this Multiplier, or if you don't use a vault based permissions plugin.
+PlayerDeathMultipliers:
+  - PermissionGroup1 5%
+  - PermissionGroup2 10%
+
+###################################################### Messages ######################################################
+
+# Where the message is shown when a player picks up money. Usable Placeholders: %amount% and %balance%
+ShowMessageInChat:
+  Enabled: false
+  Message: '&aYou picked up $%amount%!'
+ShowMessageInActionBar:
+  Enabled: true
+  Message: '&aYou picked up $%amount%! You now have: $%balance%!'
+ShowMessageAsFloatingText:
+  Enabled: true
+  Message: '&a+$%amount%!'
+  # Starting height of the floating text message in blocks
+  Height: 2.4
+  # Whether the message moves upwards or stays still
+  Movement: true
+
+# Messages sent when using /MfmMute
 MuteToggleOnMessage: '&cMessages will no longer be shown when you pick up money dropped by mobs!'
 MuteToggleOffMessage: '&aMessages will now be shown when you pick up money dropped by mobs!'
 
+# Message sent when using /MfmClear
+ClearMoneyDropsMessage: '&9All money was succesfully removed from the ground!'
 
-# Min = Lowest amount of money to be dropped.
-# Max = Highest amount of money to be dropped.
+# Message sent when using /MfmReload
+ReloadMessage: '&9Money From Mobs was reloaded!'
+
+# Messages sent when using /MfmEvent
+EventStart: '&aA Money Multiplier Event has started! Mobs will drop &f{multiplier}% &amore money for {hours} hours, {minutes} minutes and {seconds} seconds!'
+EventFinish: '&cThe Money Multiplier Event has ended! All mobs will now drop their normal amount!'
+EventAlreadyRunningMessage: '&cThere is already a Money Multiplier Event running.'
+NoEventRunningMessage: '&cThere is no Money Multiplier Event to stop.'
+
+###################################################### Mob/Player Options ######################################################
+
 # DropChance = Percentage chance for the player to be given money e.g 25 = 25% chance for mob to drop money
 # NumberOfDrops = number of money items to be dropped e.g 3 means the amount will be divided by 3 and drop 3 items. Can also be set to 1-3 which means its random between 1 and 3
 # OnlyOnKill = Whether mobs should drop money if they weren't killed by a player. False means mobs can drop money if they fell to their death for example
 
-# All multipliers don't affect players because it could lead to players killing each other to generate infinite money.
+# All multipliers do not affect players because it could lead to players killing each other to generate infinite money.
 # Amount: 10% = Player drops 10% of their balance. Doesn't have to be a percentage
 PLAYER:
   Enabled: true
@@ -94,6 +121,8 @@ PLAYER:
   Message: '&cYou dropped $%amount% on death. You now have: $%balance%.'
   
 ########## ANIMALS ##########
+# Min = Lowest amount of money to be dropped.
+# Max = Highest amount of money to be dropped.
 CHICKEN:
   Enabled: true
   Min: 5

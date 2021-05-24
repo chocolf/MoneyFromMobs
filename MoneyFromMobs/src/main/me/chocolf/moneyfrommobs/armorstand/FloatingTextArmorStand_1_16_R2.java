@@ -38,15 +38,18 @@ public class FloatingTextArmorStand_1_16_R2 extends EntityArmorStand{
 		
 		MoneyFromMobs plugin = MoneyFromMobs.getInstance();
 		
-		for (int i = 0; i<20; i+=1) {
-			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-			    @Override
-			    public void run() {
-			    	loc.add(0,0.1,0);
-			    	armorstand.setPosition(loc.getX(), loc.getY(), loc.getZ());
-			    }
-			}, i);
+		if (plugin.getMessageManager().shouldMoveFloatingTextMessageUpwards()) {
+			for (int i = 0; i < 20; i += 1) {
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				    @Override
+				    public void run() {
+				    	loc.add(0, 0.1, 0);
+				    	armorstand.setPosition(loc.getX(), loc.getY(), loc.getZ());
+				    }
+				}, i);
+			}
 		}
+		
 		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 		    @Override
 		    public void run() {

@@ -13,6 +13,8 @@ import org.bukkit.scheduler.BukkitTask;
 import me.chocolf.moneyfrommobs.command.ClearDropsCommand;
 import me.chocolf.moneyfrommobs.command.DropMoneyCommand;
 import me.chocolf.moneyfrommobs.command.DropMoneyTabCompleter;
+import me.chocolf.moneyfrommobs.command.MfmEventCommand;
+import me.chocolf.moneyfrommobs.command.MfmEventTabCompleter;
 import me.chocolf.moneyfrommobs.command.MuteMessagesCommand;
 import me.chocolf.moneyfrommobs.command.ReloadCommand;
 import me.chocolf.moneyfrommobs.integration.DropMoneyFlag;
@@ -69,11 +71,14 @@ public class MoneyFromMobs extends JavaPlugin{
 		loadConfigs();
 		
 		// Commands
-		new ReloadCommand(this);
-		new DropMoneyCommand(this);
 		new ClearDropsCommand(this);
-		new MuteMessagesCommand(this);
+		new DropMoneyCommand(this);
 		this.getCommand("mfmdrop").setTabCompleter(new DropMoneyTabCompleter());
+		new MfmEventCommand(this);
+		this.getCommand("mfmevent").setTabCompleter(new MfmEventTabCompleter());
+		new MuteMessagesCommand(this);
+		new ReloadCommand(this);
+		
 		
 		// Managers
 		pickUpManager = new PickUpManager(this);

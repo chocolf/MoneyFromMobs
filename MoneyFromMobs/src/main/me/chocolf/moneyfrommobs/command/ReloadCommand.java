@@ -49,7 +49,7 @@ public class ReloadCommand implements CommandExecutor{
 		}
 		
 		// sends message saying it loaded correctly
-		sender.sendMessage(MessageManager.applyColour("&9Money From Mobs was reloaded!"));
+		sender.sendMessage(messageManager.getMessage("reloadMessage"));
 	
 		return true;
 	}

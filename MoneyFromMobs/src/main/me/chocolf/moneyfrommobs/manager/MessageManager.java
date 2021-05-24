@@ -22,9 +22,11 @@ import net.md_5.bungee.api.chat.TextComponent;
 public class MessageManager {
 	
 	private MoneyFromMobs plugin;
+	private double floatingTextHeight;
 	private boolean shouldSendChatMessage;
 	private boolean shouldSendActionBarMessage;
 	private boolean shouldSendFloatingTextMessage;
+	private boolean moveFloatingTextMessageUpwards;
 	private HashMap<String, String> messagesMap = new HashMap<>();
 	private static final Pattern pattern = Pattern.compile("#([A-Fa-f0-9]){6}");
 	
@@ -36,9 +38,12 @@ public class MessageManager {
 	public void loadMessage() {
 		FileConfiguration config = plugin.getConfig();
 		
+		floatingTextHeight = config.getDouble("ShowMessageAsFloatingText.Height")/4;
+		
 		shouldSendChatMessage = config.getBoolean("ShowMessageInChat.Enabled");
 		shouldSendActionBarMessage = config.getBoolean("ShowMessageInActionBar.Enabled");
 		shouldSendFloatingTextMessage = config.getBoolean("ShowMessageAsFloatingText.Enabled");
+		moveFloatingTextMessageUpwards = config.getBoolean("ShowMessageAsFloatingText.Movement");
 		
 		messagesMap.clear();
 		messagesMap.put("chatMessage", applyColour( config.getString("ShowMessageInChat.Message") ));
@@ -48,6 +53,14 @@ public class MessageManager {
 		
 		messagesMap.put("muteToggleOnMessage", applyColour( config.getString("MuteToggleOnMessage") ));
 		messagesMap.put("muteToggleOffMessage", applyColour( config.getString("MuteToggleOffMessage") ));
+		
+		messagesMap.put("clearMoneyDropsMessage", applyColour(config.getString("ClearMoneyDropsMessage") ));
+		messagesMap.put("reloadMessage", applyColour(config.getString("ReloadMessage") ));
+		
+		messagesMap.put("eventAlreadyRunningMessage", applyColour(config.getString("EventAlreadyRunningMessage") ));
+		messagesMap.put("noEventRunningMessage", applyColour(config.getString("NoEventRunningMessage") ));
+		messagesMap.put("eventStart", applyColour(config.getString("EventStart") ));
+		messagesMap.put("eventFinish", applyColour(config.getString("EventFinish") ));
 	}
 	
 	public void sendMessage(String strAmount, Player p) {
@@ -81,7 +94,7 @@ public class MessageManager {
 
 	private void sendFloatingTextMessage(String messageToSend, Location loc, Player p) {
 		Vector directionVector = loc.getDirection();
-		directionVector.setY(0.6);
+		directionVector.setY(floatingTextHeight);
 		loc.add(directionVector.multiply(4));
 		
 		switch (VersionUtils.getNMSVersion()) {
@@ -121,6 +134,10 @@ public class MessageManager {
 	
 	private String getMessage(String messageName, double balance, String strAmount) {
 		return messagesMap.get(messageName).replace("%amount%", strAmount).replace("%balance%", String.format("%.2f", balance) );
+	}
+
+	public boolean shouldMoveFloatingTextMessageUpwards() {
+		return moveFloatingTextMessageUpwards;
 	}
 
 }

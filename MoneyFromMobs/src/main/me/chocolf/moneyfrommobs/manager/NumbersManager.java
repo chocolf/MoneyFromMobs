@@ -18,8 +18,12 @@ public class NumbersManager {
 	
 	private MoneyFromMobs plugin;
 	private double lootingMultiplier;
+	private double eventMultiplier = 0;
+	
+
 	private HashMap<String, Double> worldMultipliers = new HashMap<>();
 	private HashMap<String, Double> permissionGroupMultipliers = new HashMap<>();
+	private HashMap<String, Double> playerDeathMultipliers = new HashMap<>();
 	
 	private HashMap<String, Double> minAmounts = new HashMap<>();
 	private HashMap<String, Double> maxAmounts = new HashMap<>();
@@ -43,6 +47,7 @@ public class NumbersManager {
 		loadLootingMultiplier();
 		loadWorldMultipliers();
 		loadPermissionGroupMultipliers();
+		loadPlayerDeathMultipliers();
 		playerAmount = config.getString("PLAYER.Amount");
 		
 		minAmounts.clear();
@@ -101,6 +106,7 @@ public class NumbersManager {
 		
 		if ( p!=null ) {
 			amount += applyLootingMultiplier(baseAmount, p);
+			amount += applyEventMultiplier(baseAmount);
 			amount += applyWorldMultiplier(baseAmount, p);
 			amount += applyPermissionGroupMultiplier(baseAmount, p);
 		}
@@ -137,6 +143,7 @@ public class NumbersManager {
 				amount = playersBalance;
 			}
 		}
+		amount -= applyPlayerDeathMultipliers(amount, p);
 		return RandomNumberUtils.round(amount, 2);
 	}
 	
@@ -144,6 +151,11 @@ public class NumbersManager {
 		ItemStack killersWeapon = p.getInventory().getItemInMainHand();
 		int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
 		amountToAdd *= lootingMultiplier * lootingLevel;
+		return amountToAdd;
+	}
+	
+	private double applyEventMultiplier(double amountToAdd) {
+		amountToAdd *= eventMultiplier;
 		return amountToAdd;
 	}
 	
@@ -175,6 +187,25 @@ public class NumbersManager {
 		return amountToAdd;
 	}
 	
+	private double applyPlayerDeathMultipliers(double amount, Player p) {
+		if (this.playerDeathMultipliers.isEmpty())
+			return 0;
+		
+		String[] playerGroups = plugin.getPerms().getPlayerGroups(p);
+		if (playerGroups.length == 0)
+			return 0;
+		
+		double amountToAdd = 0;
+		for (String groupName : playerGroups) {
+			if (!playerDeathMultipliers.containsKey(groupName))
+				continue;
+			
+			double groupMultiplier = playerDeathMultipliers.get(groupName);
+			amountToAdd += amount * groupMultiplier;
+		}
+		return amountToAdd;
+	}
+	
 	private void loadLootingMultiplier() {
 		FileConfiguration config = plugin.getConfig();
 		String strLootingMultiplier = config.getString("LootingMultiplier").replace("%", "");
@@ -185,8 +216,7 @@ public class NumbersManager {
 		permissionGroupMultipliers.clear();
 		if (plugin.getEcon() == null)
 			return;
-		@SuppressWarnings("unchecked")
-		List<String> permissiongroupMultipliers = (List<String>) plugin.getConfig().getList("PermissionGroupMultipliers");
+		List<String> permissiongroupMultipliers = plugin.getConfig().getStringList("PermissionGroupMultipliers");
 		for (String permissionGroup : permissiongroupMultipliers) {
 			String[] splitList = permissionGroup.split(" ");
 			String permissionGroupName = splitList[0];
@@ -201,8 +231,7 @@ public class NumbersManager {
 	
 	private void loadWorldMultipliers() {
 		worldMultipliers.clear();
-		@SuppressWarnings("unchecked")
-		List<String> worldmultipliers = (List<String>) plugin.getConfig().getList("WorldMultipliers");
+		List<String> worldmultipliers = plugin.getConfig().getStringList("WorldMultipliers");
 		for (String world : worldmultipliers) {
 			String[] splitList = world.split(" ");
 			String worldName = splitList[0];
@@ -213,6 +242,33 @@ public class NumbersManager {
 			Double worldMultiplier = Double.parseDouble(splitList[1].replace("%", "") )/100;
 			worldMultipliers.put(worldName,  worldMultiplier);
 		}
+	}
+	
+	private void loadPlayerDeathMultipliers() {
+		playerDeathMultipliers.clear();
+		
+		if (plugin.getEcon() == null)
+			return;
+		
+		List<String> playerdeathMultipliers = plugin.getConfig().getStringList("PlayerDeathMultipliers");
+		for (String permissionGroup : playerdeathMultipliers) {
+			String[] splitList = permissionGroup.split(" ");
+			String permissionGroupName = splitList[0];
+			
+			if (permissionGroupName.equalsIgnoreCase("NONE") )
+				return;
+			
+			double playerDeathMultiplier = Double.parseDouble(splitList[1].replace("%", "") )/100;
+			playerDeathMultipliers.put(permissionGroupName, playerDeathMultiplier);
+		}
+	}
+	
+	public double getEventMultiplier() {
+		return eventMultiplier;
+	}
+
+	public void setEventMultiplier(double eventMultiplier) {
+		this.eventMultiplier = eventMultiplier;
 	}
 	
 	
