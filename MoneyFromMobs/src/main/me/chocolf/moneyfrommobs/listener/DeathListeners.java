@@ -13,6 +13,7 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.api.event.AttemptToDropMoneyEvent;
 import me.chocolf.moneyfrommobs.api.event.DropMoneyEvent;
 import me.chocolf.moneyfrommobs.manager.DropsManager;
+import me.chocolf.moneyfrommobs.manager.MultipliersManager;
 import me.chocolf.moneyfrommobs.manager.NumbersManager;
 import me.chocolf.moneyfrommobs.manager.PickUpManager;
 import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
@@ -42,6 +43,7 @@ public class DeathListeners implements Listener{
 		
 		DropsManager dropsManager = plugin.getDropsManager();
 		NumbersManager numbersManager = plugin.getNumbersManager();
+		MultipliersManager multipliersManager = plugin.getMultipliersManager();
 		String entityName = dropsManager.getEntityName(entity);
 		double amount;
 		
@@ -52,10 +54,12 @@ public class DeathListeners implements Listener{
 			if (entity.hasPermission("MoneyFromMobs.PreventMoneyDropOnDeath"))
 				return;
 			amount = numbersManager.getPlayerAmount(entity);
+			amount -= multipliersManager.applyPlayerDeathMultipliers(amount,(Player) entity);
 		}
-		else
-			amount = numbersManager.getAmount(p, entityName);
-		
+		else {
+			amount = numbersManager.getAmount(p, entityName, entity);
+			amount = multipliersManager.applyMultipliers(amount, p, entity);
+		}
 		double dropChance = numbersManager.getDropChance(entityName);
 		int numberOfDrops = numbersManager.getNumberOfDrops(entityName);
 		
@@ -68,6 +72,15 @@ public class DeathListeners implements Listener{
 		// makes random number and compares it to drop chance
 		double randomNum = RandomNumberUtils.doubleRandomNumber(0.0, 100.0);
 		if (randomNum > dropChance) return;
+		
+		if (dropsManager.reachedMaxDropsPerMinute(p)) {
+			String maxDropsReachedMessage = plugin.getMessageManager().getMessage("maxDropsReachedMessage");
+			if (!maxDropsReachedMessage.equals("")) {
+				p.sendMessage(maxDropsReachedMessage);
+			}
+			return;
+		}
+			
 		
 		PickUpManager pickUpManager = plugin.getPickUpManager();
 		

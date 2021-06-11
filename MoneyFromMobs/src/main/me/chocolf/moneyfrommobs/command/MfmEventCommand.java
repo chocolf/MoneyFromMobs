@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.manager.MessageManager;
-import me.chocolf.moneyfrommobs.manager.NumbersManager;
+import me.chocolf.moneyfrommobs.manager.MultipliersManager;
 
 public class MfmEventCommand implements CommandExecutor{
 	
@@ -26,12 +26,12 @@ public class MfmEventCommand implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		int numberOfArgs = args.length;
 		MessageManager messageManager = plugin.getMessageManager();
-		NumbersManager numbersManager = plugin.getNumbersManager();
+		MultipliersManager multipliersManager = plugin.getMultipliersManager();
 		
 		if (numberOfArgs > 0) {
 			if (args[0].equalsIgnoreCase("stop")) {
 				if (task != null) {
-					numbersManager.setEventMultiplier(0);
+					multipliersManager.setEventMultiplier(0);
 					Bukkit.broadcastMessage(messageManager.getMessage("eventFinish"));
 					Bukkit.getScheduler().cancelTask(task.getTaskId());
 					task = null;
@@ -50,7 +50,7 @@ public class MfmEventCommand implements CommandExecutor{
 						return true;
 					}
 					
-					numbersManager.setEventMultiplier(Double.parseDouble(args[1].replace("%", ""))/100);
+					multipliersManager.setEventMultiplier(Double.parseDouble(args[1].replace("%", ""))/100);
 					
 					int hours = Integer.parseInt(args[2]);
 					int minutes = Integer.parseInt(args[3]);
@@ -66,7 +66,7 @@ public class MfmEventCommand implements CommandExecutor{
 					task = Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 					    @Override
 					    public void run() {
-					    	numbersManager.setEventMultiplier(0);
+					    	multipliersManager.setEventMultiplier(0);
 					    	task = null;
 					    	Bukkit.broadcastMessage(messageManager.getMessage("eventFinish"));
 					    }

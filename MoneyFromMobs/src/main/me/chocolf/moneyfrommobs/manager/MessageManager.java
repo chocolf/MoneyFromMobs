@@ -4,16 +4,14 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_12_R1;
-import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_13_R2;
-import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_16_R2;
-import me.chocolf.moneyfrommobs.armorstand.FloatingTextArmorStand_1_16_R3;
 import me.chocolf.moneyfrommobs.util.VersionUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -57,6 +55,8 @@ public class MessageManager {
 		messagesMap.put("clearMoneyDropsMessage", applyColour(config.getString("ClearMoneyDropsMessage") ));
 		messagesMap.put("reloadMessage", applyColour(config.getString("ReloadMessage") ));
 		
+		messagesMap.put("maxDropsReachedMessage", applyColour(config.getString("MaxDropsReachedMessage") ));
+		
 		messagesMap.put("eventAlreadyRunningMessage", applyColour(config.getString("EventAlreadyRunningMessage") ));
 		messagesMap.put("noEventRunningMessage", applyColour(config.getString("NoEventRunningMessage") ));
 		messagesMap.put("eventStart", applyColour(config.getString("EventStart") ));
@@ -81,7 +81,7 @@ public class MessageManager {
 		
 		if (shouldSendFloatingTextMessage) {
 			messageToSend = getMessage("floatingTextMessage", balance, strAmount);
-			sendFloatingTextMessage(messageToSend, p.getLocation(), p);
+			sendFloatingTextMessage(messageToSend, p.getLocation());
 		}
 	}
 	
@@ -92,27 +92,37 @@ public class MessageManager {
 		p.sendMessage(messageToSend);
 	}
 
-	private void sendFloatingTextMessage(String messageToSend, Location loc, Player p) {
+	private void sendFloatingTextMessage(String messageToSend, Location loc) {
 		Vector directionVector = loc.getDirection();
 		directionVector.setY(floatingTextHeight);
 		loc.add(directionVector.multiply(4));
 		
-		switch (VersionUtils.getNMSVersion()) {
-		case "v1_16_R3":
-			new FloatingTextArmorStand_1_16_R3(loc, messageToSend, p);
-			break;
-		case "v1_16_R2":
-			new FloatingTextArmorStand_1_16_R2(loc, messageToSend, p);
-			break;
-		case "v1_13_R2":
-			new FloatingTextArmorStand_1_13_R2(loc, messageToSend, p);
-			break;
-		case "v1_12_R1":
-			new FloatingTextArmorStand_1_12_R1(loc, messageToSend, p);
-			break;
-		default:
-			plugin.getLogger().warning("Floating Text Messages are not compatible with your version. Versions Supported: 1.12.2 and 1.16.2-1.16.5. Please disable Floating Text Messages in your config to avoid this error message!");
+		ArmorStand armorstand = loc.getWorld().spawn(loc, ArmorStand.class, armorStand -> armorStand.setVisible(false));
+		
+		armorstand.setMarker(true);
+		armorstand.setGravity(false);
+		armorstand.setCustomName(messageToSend);
+		armorstand.setCustomNameVisible(true);
+		
+		
+		if (shouldMoveFloatingTextMessageUpwards()) {
+			for (int i = 0; i < 20; i += 1) {
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+					@Override
+					public void run() {
+						armorstand.teleport(armorstand.getLocation().add(0, 0.1,0));
+					}
+				}, i);
+			} 
 		}
+		
+		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+		    @Override
+		    public void run() {
+		    	armorstand.remove();
+		    }
+		}, 20L);
+		
 	}
 	
 	

@@ -1,6 +1,7 @@
 package me.chocolf.moneyfrommobs.manager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,6 +27,7 @@ import me.chocolf.moneyfrommobs.util.VersionUtils;
 public class DropsManager {
 	
 	private MoneyFromMobs plugin;
+	
 	private HashSet<String> disabledWorlds = new HashSet<>();
 	private HashSet<String> onlyOnKillMobs = new HashSet<>();
 	private boolean canDropIfNatural;
@@ -34,6 +36,9 @@ public class DropsManager {
 	private boolean canDropIfSplitSlimes;
 	private boolean dropMoneyOnGround;
 	
+	private HashMap<String, Integer> numberOfDropsThisMinute = new HashMap<>();
+	private int maxDropsPerMinute;
+	
 	public DropsManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
 		init();
@@ -41,10 +46,12 @@ public class DropsManager {
 	}
 	
 	public void init() {
+		FileConfiguration config = plugin.getConfig();
 		loadDropMoneyOnGround();
 		loadDisabledWorlds();
 		loadSpawnReasonBooleans();
 		loadOnlyOnKill();
+		maxDropsPerMinute = config.getInt("MaxDropsPerMinute");
 	}
 	
 	private void loadDropMoneyOnGround() {
@@ -90,7 +97,7 @@ public class DropsManager {
 		amount = amount/numberOfDrops;
 		for ( int i=0; i<numberOfDrops;i++ ) {
 			
-			// first line of lore is randomnumbers + mfm so items don't stack
+			// first line of lore is random numbers + mfm so items don't stack
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = new ArrayList<>();
 			lore.add(String.valueOf(RandomNumberUtils.intRandomNumber(1000000,9999999) + "mfm"));
@@ -130,6 +137,28 @@ public class DropsManager {
 		return canDropWithSpawnReason(entity);
 	}
 	
+	public boolean reachedMaxDropsPerMinute(Player p ) {
+		if (maxDropsPerMinute == 0) return false;
+		if (p==null) return false;
+		
+		String playerName = p.getName();
+		
+		if (numberOfDropsThisMinute.containsKey(playerName)) {
+			numberOfDropsThisMinute.replace(playerName, numberOfDropsThisMinute.get(playerName)+1);
+			return numberOfDropsThisMinute.get(playerName) > maxDropsPerMinute;
+		}
+		else {
+			numberOfDropsThisMinute.put(playerName, 1);
+			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+			    @Override
+			    public void run() {
+			    	numberOfDropsThisMinute.remove(playerName);
+			    }
+			}, 1200L);
+			return false;
+		}
+	}
+
 	private boolean onlyOnKill(Player p, String entityName) {
 		return p==null && onlyOnKillMobs.contains(entityName);
 	}
@@ -157,7 +186,7 @@ public class DropsManager {
 		}
 		// if mob was in a rose stacker stack
 		// REMEMBER TO REMOVE ONCE ROSE STACKER CALLS CREATURESPAWNEVENT
-		if (Bukkit.getServer().getPluginManager().isPluginEnabled("RoseStacker")) {
+		if (Bukkit.getPluginManager().isPluginEnabled("RoseStacker")) {
 			String spawnReason = PersistentDataUtils.getEntitySpawnReason((LivingEntity) entity).toString();
 			if (!isSpawnReasonEnabled(spawnReason)) return false;
 		}

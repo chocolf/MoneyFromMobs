@@ -29,6 +29,7 @@ import me.chocolf.moneyfrommobs.listener.PlaceholderAPIListener;
 import me.chocolf.moneyfrommobs.listener.WorldGuardListener;
 import me.chocolf.moneyfrommobs.manager.DropsManager;
 import me.chocolf.moneyfrommobs.manager.MessageManager;
+import me.chocolf.moneyfrommobs.manager.MultipliersManager;
 import me.chocolf.moneyfrommobs.manager.NumbersManager;
 import me.chocolf.moneyfrommobs.manager.PickUpManager;
 import me.chocolf.moneyfrommobs.runnable.NearEntitiesRunnable;
@@ -47,6 +48,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	private MessageManager messageManager;
 	private DropsManager dropsManager;
 	private NumbersManager numbersManager;
+	private MultipliersManager multipliersManager;
 	private BukkitTask inventoryIsFullRunnable;
 	private PlaceholderAPIListener placeholderListener;
 	private static MoneyFromMobs instance;
@@ -85,9 +87,10 @@ public class MoneyFromMobs extends JavaPlugin{
 		messageManager = new MessageManager(this);
 		dropsManager = new DropsManager(this);
 		numbersManager = new NumbersManager(this);
+		multipliersManager = new MultipliersManager(this);
 		
 		// PlaceholderAPI integration
-		if(Bukkit.getServer().getPluginManager().isPluginEnabled("PlaceHolderAPI")){
+		if(Bukkit.getPluginManager().isPluginEnabled("PlaceHolderAPI")){
 			new MoneyFromMobsPlaceholderExpansion(this).register();
 			placeholderListener = new PlaceholderAPIListener(this);
 		}
@@ -112,13 +115,13 @@ public class MoneyFromMobs extends JavaPlugin{
 	@Override
 	public void onLoad() {
 		// loads WorldGuard flag
-		if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null && VersionUtils.getVersionNumber() > 15)
+		if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null && VersionUtils.getVersionNumber() > 15)
 			DropMoneyFlag.registerFlag();
 	}
 
 	// sets up economy if server has Vault and an Economy plugin
 	private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null)
+        if (Bukkit.getPluginManager().getPlugin("Vault") == null)
             return false;
         
     	RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
@@ -178,6 +181,9 @@ public class MoneyFromMobs extends JavaPlugin{
 	}
 	public MessageManager getMessageManager() {
 		return messageManager;
+	}
+	public MultipliersManager getMultipliersManager() {
+		return multipliersManager;
 	}
 
 	public DropsManager getDropsManager() {

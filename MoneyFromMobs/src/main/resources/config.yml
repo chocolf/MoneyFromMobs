@@ -29,6 +29,9 @@ MoneyDropsFromSplitSlimes: true
 DisabledWorlds:
   - world1
   - world2
+  
+# How many times a player can get a mob to drop money per minute. Set to 0 if you want it to be unlimited.
+MaxDropsPerMinute: 0
 
 ###################################################### Pick Up Options ######################################################
 
@@ -53,7 +56,7 @@ OnlyKillerCanPickUpMoney: false
 
 ###################################################### Multipliers ######################################################
 
-# Extra money based on a percentage per level of Looting. e.g. LootingMultiplier: 10% means a player with Looting 3 will get 30% more money
+# Extra money based on a percentage per level of Looting. For example, LootingMultiplier: 10% means a player with Looting 3 will get 30% more money
 LootingMultiplier: 10%
 
 # Players in these Permission Groups will gain extra money based on the percentages next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable this Multiplier, or if you don't use a vault based permissions plugin.
@@ -70,6 +73,9 @@ WorldMultipliers:
 PlayerDeathMultipliers:
   - PermissionGroup1 5%
   - PermissionGroup2 10%
+
+# Extra money based on the level of the mob when using the plugin LorinthsRpgMobs. For example, LorinthsRpgMobsMultiplier: 1% means level 2 mobs will drop 1% more money and level 3 mobs will drop 2% more money and so on
+LorinthsRpgMobsMultiplier: 1%
 
 ###################################################### Messages ######################################################
 
@@ -97,6 +103,9 @@ ClearMoneyDropsMessage: '&9All money was succesfully removed from the ground!'
 
 # Message sent when using /MfmReload
 ReloadMessage: '&9Money From Mobs was reloaded!'
+
+# Message sent to player when they kill a mob and they have already reached the max drops per minute. Set to '' to stop the message from being sent.
+MaxDropsReachedMessage: '&9You have reached the maximum number of money drops per minute. Please wait before trying to get more money!'
 
 # Messages sent when using /MfmEvent
 EventStart: '&aA Money Multiplier Event has started! Mobs will drop &f{multiplier}% &amore money for {hours} hours, {minutes} minutes and {seconds} seconds!'
@@ -327,6 +336,27 @@ WOLF:
   NumberOfDrops: 1-3
   OnlyOnKill: true
 SNOWMAN:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+GOAT:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+GLOW_SQUID:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+AXOLOTL:
   Enabled: true
   Min: 5
   Max: 5
