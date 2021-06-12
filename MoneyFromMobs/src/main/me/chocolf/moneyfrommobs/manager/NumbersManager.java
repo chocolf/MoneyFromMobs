@@ -84,7 +84,7 @@ public class NumbersManager {
 		}
 	}
 	
-	public double getAmount(Player p, String entityName, Entity entity) {
+	public double getAmount(String entityName, Entity entity) {
 		double min = minAmounts.get(entityName);
 		double max = maxAmounts.get(entityName);
 		return RandomNumberUtils.doubleRandomNumber(min, max);

@@ -97,13 +97,13 @@ public class MessageManager {
 		directionVector.setY(floatingTextHeight);
 		loc.add(directionVector.multiply(4));
 		
-		ArmorStand armorstand = loc.getWorld().spawn(loc, ArmorStand.class, armorStand -> armorStand.setVisible(false));
-		
-		armorstand.setMarker(true);
-		armorstand.setGravity(false);
-		armorstand.setCustomName(messageToSend);
-		armorstand.setCustomNameVisible(true);
-		
+		ArmorStand armorstand = loc.getWorld().spawn(loc, ArmorStand.class, armorStand ->{
+			armorStand.setVisible(false);
+			armorStand.setMarker(true);
+			armorStand.setGravity(false);
+			armorStand.setCustomName(applyColour(messageToSend));
+			armorStand.setCustomNameVisible(true);
+		});
 		
 		if (shouldMoveFloatingTextMessageUpwards()) {
 			for (int i = 0; i < 20; i += 1) {
