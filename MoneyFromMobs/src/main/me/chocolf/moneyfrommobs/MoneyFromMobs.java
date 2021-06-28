@@ -60,6 +60,10 @@ public class MoneyFromMobs extends JavaPlugin{
 		// bstats
 		new Metrics(this, 8361); // 8361 is this plugins id
 		
+		// vault econ and perms
+		setupEconomy();
+		setupPermissions();
+		
 		// listeners
 		new PickUpListeners(this);
 		new DeathListeners(this);
@@ -98,9 +102,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		// Bukkit runnable to allow players to pickup items when inventory is full
 		loadInventoryIsFullRunnable();
 		
-		// vault econ and perms
-		setupEconomy();
-		setupPermissions();
+		
 		
 		// Checks if user is using latest version of the plugin on spigot
 		try {

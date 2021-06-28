@@ -78,8 +78,7 @@ public class MultipliersManager {
 	}
 	
 	private double applyEventMultiplier(double amountToAdd) {
-		amountToAdd *= eventMultiplier;
-		return amountToAdd;
+		return amountToAdd * eventMultiplier;
 	}
 	
 	private double applyWorldMultiplier(double amountToAdd, Entity entity) {
@@ -106,7 +105,7 @@ public class MultipliersManager {
 			
 			double groupMultiplier = permissionGroupMultipliers.get(groupName);
 			amountToAdd += amount * groupMultiplier;
-		}	
+		}
 		return amountToAdd;
 	}
 	
@@ -131,6 +130,7 @@ public class MultipliersManager {
 		permissionGroupMultipliers.clear();
 		if (plugin.getEcon() == null)
 			return;
+		
 		List<String> permissiongroupMultipliers = plugin.getConfig().getStringList("PermissionGroupMultipliers");
 		for (String permissionGroup : permissiongroupMultipliers) {
 			String[] splitList = permissionGroup.split(" ");

@@ -57,7 +57,7 @@ public class DeathListeners implements Listener{
 			amount -= multipliersManager.applyPlayerDeathMultipliers(amount,(Player) entity);
 		}
 		else {
-			amount = numbersManager.getAmount(entityName, entity);
+			amount = numbersManager.getAmount(entityName);
 			amount = multipliersManager.applyMultipliers(amount, p, entity);
 		}
 		double dropChance = numbersManager.getDropChance(entityName);

@@ -33,6 +33,9 @@ DisabledWorlds:
 # How many times a player can get a mob to drop money per minute. Set to 0 if you want it to be unlimited.
 MaxDropsPerMinute: 0
 
+# If the random number from Min and Max should be a whole number only or a random number with decimals.
+RandomIntegerOnly: true
+
 ###################################################### Pick Up Options ######################################################
 
 # Sound = Sound played on pickup. Change to "NONE" if you don't want a sound to be played. Sounds list: https://www.digminecraft.com/lists/sound_list_pc.php

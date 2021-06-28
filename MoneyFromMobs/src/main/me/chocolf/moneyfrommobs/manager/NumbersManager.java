@@ -18,6 +18,7 @@ public class NumbersManager {
 	private HashMap<String, Double> minAmounts = new HashMap<>();
 	private HashMap<String, Double> maxAmounts = new HashMap<>();
 	private String playerAmount;
+	private boolean randomInteger;
 	
 	private HashMap<String, Double> dropChances = new HashMap<>();
 	
@@ -35,6 +36,8 @@ public class NumbersManager {
 		FileConfiguration config = plugin.getConfig();
 		FileConfiguration MMConfig = plugin.getMMConfig().getConfig();
 		playerAmount = config.getString("PLAYER.Amount");
+		
+		randomInteger = config.getBoolean("RandomIntegerOnly");
 		
 		minAmounts.clear();
 		maxAmounts.clear();
@@ -84,10 +87,13 @@ public class NumbersManager {
 		}
 	}
 	
-	public double getAmount(String entityName, Entity entity) {
+	public double getAmount(String entityName) {
 		double min = minAmounts.get(entityName);
 		double max = maxAmounts.get(entityName);
-		return RandomNumberUtils.doubleRandomNumber(min, max);
+		if (randomInteger)
+			return RandomNumberUtils.intRandomNumber((int) min, (int) max+1);
+		else
+			return RandomNumberUtils.doubleRandomNumber(min, max);
 	}
 	
 	public double getPlayerAmount(Entity entity) {
