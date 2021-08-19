@@ -32,6 +32,7 @@ public class ReloadCommand implements CommandExecutor{
 		// reloads configs
 		plugin.reloadConfig();
 		plugin.getMMConfig().reloadConfig();
+		plugin.getMultipliersConfig().reloadConfig();
 		
 		// reloads things
 		messageManager.loadMessage();

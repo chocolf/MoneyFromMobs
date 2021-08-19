@@ -109,8 +109,11 @@ public class DeathListeners implements Listener{
 		
 		if (entity instanceof Player) {
 			if (amount == 0) return;
-			plugin.getEcon().withdrawPlayer((Player) entity, amount);
-			plugin.getMessageManager().sendPlayerMessage(amount, (Player) entity);
+			if (dropsManager.shouldTakeMoneyFromKilledPlayer()) {
+				plugin.getEcon().withdrawPlayer((Player) entity, amount);
+				plugin.getMessageManager().sendPlayerMessage(amount, (Player) entity);
+			}
+			
 		}
 	}	
 }

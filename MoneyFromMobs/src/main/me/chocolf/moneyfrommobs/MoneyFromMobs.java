@@ -20,6 +20,7 @@ import me.chocolf.moneyfrommobs.command.ReloadCommand;
 import me.chocolf.moneyfrommobs.integration.DropMoneyFlag;
 import me.chocolf.moneyfrommobs.integration.MoneyFromMobsPlaceholderExpansion;
 import me.chocolf.moneyfrommobs.integration.MythicMobsFileManager;
+import me.chocolf.moneyfrommobs.integration.PlayerDropMoneyFlag;
 import me.chocolf.moneyfrommobs.listener.DeathListeners;
 import me.chocolf.moneyfrommobs.listener.MobSpawnListener;
 import me.chocolf.moneyfrommobs.listener.OnJoinListener;
@@ -29,6 +30,7 @@ import me.chocolf.moneyfrommobs.listener.PlaceholderAPIListener;
 import me.chocolf.moneyfrommobs.listener.WorldGuardListener;
 import me.chocolf.moneyfrommobs.manager.DropsManager;
 import me.chocolf.moneyfrommobs.manager.MessageManager;
+import me.chocolf.moneyfrommobs.manager.MultipliersFileManager;
 import me.chocolf.moneyfrommobs.manager.MultipliersManager;
 import me.chocolf.moneyfrommobs.manager.NumbersManager;
 import me.chocolf.moneyfrommobs.manager.PickUpManager;
@@ -44,6 +46,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	private Economy econ = null;
 	private Permission permissions = null;
 	private MythicMobsFileManager mmConfig;
+	private MultipliersFileManager multipliersConfig;
 	private PickUpManager pickUpManager;
 	private MessageManager messageManager;
 	private DropsManager dropsManager;
@@ -117,8 +120,10 @@ public class MoneyFromMobs extends JavaPlugin{
 	@Override
 	public void onLoad() {
 		// loads WorldGuard flag
-		if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null && VersionUtils.getVersionNumber() > 15)
+		if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null && VersionUtils.getVersionNumber() > 15) {
 			DropMoneyFlag.registerFlag();
+			PlayerDropMoneyFlag.registerFlag();
+		}
 	}
 
 	// sets up economy if server has Vault and an Economy plugin
@@ -149,8 +154,16 @@ public class MoneyFromMobs extends JavaPlugin{
 		}
 		reloadConfig();
 		
-		// Makes MythicMobs Config
+		// Makes MythicMobs and Multipliers Config file
 		mmConfig = new MythicMobsFileManager(this);
+		multipliersConfig = new MultipliersFileManager(this);
+		
+		try {
+			  ConfigUpdater.update(this, "Multipliers.yml", new File(getDataFolder(), "Multipliers.yml"), Arrays.asList());//The list is sections you want to ignore
+		} 
+		catch (IOException e) {
+			  e.printStackTrace();
+		}
 	}
 	
 	// loads runnable that allows players to pick up money when their inventory is full
@@ -171,6 +184,9 @@ public class MoneyFromMobs extends JavaPlugin{
 
 	public MythicMobsFileManager getMMConfig() {
 		return mmConfig;
+	}
+	public MultipliersFileManager getMultipliersConfig() {
+		return multipliersConfig;
 	}
 	public Economy getEcon() {
 		return econ;

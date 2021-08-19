@@ -65,7 +65,7 @@ public class MessageManager {
 	
 	public void sendMessage(String strAmount, Player p) {
 		String messageToSend;
-		if ( p.hasMetadata("MfmMuteMessages")) 
+		if ( p.hasMetadata("MfmMuteMessages"))
 			return;
 		
 		double balance = plugin.getEcon().getBalance(p);

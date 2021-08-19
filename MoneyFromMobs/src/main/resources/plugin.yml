@@ -1,11 +1,11 @@
 main: me.chocolf.moneyfrommobs.MoneyFromMobs
 name: MoneyFromMobs
-version: 4.1
+version: 4.2
 api-version: 1.13
 author: Chocolf
 description: Makes mobs drop money with looting multiplier
 depend: [Vault]
-softdepend: [WorldEdit,WorldGuard,MythicMobs,PlaceholderAPI,RoseStacker,LorinthsRpgMobs]
+softdepend: [WorldEdit,WorldGuard,MythicMobs,PlaceholderAPI,RoseStacker,LorinthsRpgMobs,LevelledMobs]
 commands:
   MfmReload:
     description: Reloads the config file of Money From Mobs
@@ -30,5 +30,17 @@ commands:
 
 permissions:
   MoneyFromMobs.use:
-    description: Allows players to kill mobs to obtain money and pick money up.
+    description: Allows player to kill mobs to obtain money and pick money up.
     default: true
+  MoneyFromMobs.PreventMoneyDropOnDeath:
+    description: Stops player from dropping money when they die
+  MoneyFromMobs.reload:
+    description: Allows player to use /MfmReload
+  MoneyFromMobs.drop:
+    description: Allows player to use /MfmDrop <AmountToDrop> [NumberOfDrops]
+  MoneyFromMobs.mute:
+    description: Allows player to use /MfmMute
+  MoneyFromMobs.clear:
+    description: Allows player to use /MfmClear
+  MoneyFromMobs.event:
+    description: Allows player to use /MfmEvent <Start/Stop> [Percentage Increase] [Hours] [Minutes] [Seconds]

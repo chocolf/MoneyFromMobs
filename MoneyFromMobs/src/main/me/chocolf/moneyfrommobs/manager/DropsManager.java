@@ -35,6 +35,9 @@ public class DropsManager {
 	private boolean canDropIfSpawnEgg;
 	private boolean canDropIfSplitSlimes;
 	private boolean dropMoneyOnGround;
+	private boolean removeDropInMinute;
+	private boolean divideMoneyBetweenDrops;
+	private boolean takeMoneyFromKilledPlayer;
 	
 	private HashMap<String, Integer> numberOfDropsThisMinute = new HashMap<>();
 	private int maxDropsPerMinute;
@@ -52,6 +55,9 @@ public class DropsManager {
 		loadSpawnReasonBooleans();
 		loadOnlyOnKill();
 		maxDropsPerMinute = config.getInt("MaxDropsPerMinute");
+		removeDropInMinute = config.getBoolean("RemoveMoneyAfter60Seconds");
+		divideMoneyBetweenDrops = config.getBoolean("DivideMoneyBetweenDrops");
+		takeMoneyFromKilledPlayer = config.getBoolean("PLAYER.TakeMoneyFromKilledPlayer");
 	}
 	
 	private void loadDropMoneyOnGround() {
@@ -94,7 +100,9 @@ public class DropsManager {
 	
 	public void dropItem(ItemStack item, Double amount, Location location, int numberOfDrops, Player p) {
 		if (amount == 0) return;
-		amount = amount/numberOfDrops;
+		if (divideMoneyBetweenDrops)
+			amount = amount/numberOfDrops;
+		
 		for ( int i=0; i<numberOfDrops;i++ ) {
 			
 			// first line of lore is random numbers + mfm so items don't stack
@@ -118,6 +126,16 @@ public class DropsManager {
 			// removes decimal place
 			if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal") && strAmount.contains(".00"))
 				strAmount = String.format("%.0f", amount);
+			
+			// schedules task to remove drop in 1 minute if enabled
+			if (removeDropInMinute) {
+				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				    @Override
+				    public void run() {
+				    	itemDropped.remove();
+				    }
+				}, 1200L);
+			}
 			
 			itemDropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", strAmount));
 			itemDropped.setCustomNameVisible(true);
@@ -163,7 +181,6 @@ public class DropsManager {
 		return p==null && onlyOnKillMobs.contains(entityName);
 	}
 
-	
 	private boolean canDropWithSpawnReason(Entity entity) {
 		if (VersionUtils.getVersionNumber() > 13 ){
 			try {
@@ -202,19 +219,12 @@ public class DropsManager {
 	}
 	
 	public String getEntityName(Entity entity) {
-		FileConfiguration mfmMMConfig = plugin.getMMConfig().getConfig();
-		if (mfmMMConfig.getBoolean("Enabled") && plugin.getServer().getPluginManager().isPluginEnabled("MythicMobs") && MythicMobs.inst().getAPIHelper().isMythicMob(entity)) {
+		if (plugin.getServer().getPluginManager().isPluginEnabled("MythicMobs") && MythicMobs.inst().getAPIHelper().isMythicMob(entity)) {
 			String mythicMobName = MythicMobs.inst().getAPIHelper().getMythicMobInstance(entity).getType().getInternalName();
-			if (this.isEntityEnabled(mythicMobName)) {
+			if (this.isEntityEnabled(mythicMobName)) 
 				return mythicMobName;
-			}
-			else {
-				return entity.getType().toString();
-			}
 		}
-		else {
-			return entity.getType().toString();
-		}		
+		return entity.getType().toString();	
 	}
 	
 	public Set<String> getDisabledWorlds() {
@@ -238,6 +248,10 @@ public class DropsManager {
 
 	public boolean doesMoneyDropOnGround() {
 		return dropMoneyOnGround;
+	}
+
+	public boolean shouldTakeMoneyFromKilledPlayer() {
+		return takeMoneyFromKilledPlayer;
 	}
 
 	

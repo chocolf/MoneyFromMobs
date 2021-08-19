@@ -33,8 +33,16 @@ DisabledWorlds:
 # How many times a player can get a mob to drop money per minute. Set to 0 if you want it to be unlimited.
 MaxDropsPerMinute: 0
 
-# If the random number from Min and Max should be a whole number only or a random number with decimals.
+# If the random number from Min and Max should be a whole number only or a random number to 2 decimal places.
 RandomIntegerOnly: true
+
+# Whether to automatically remove money from the ground if it has not been picked up within 60 seconds
+# Warning!! This causes more lag than it stops. Just like plugins like ClearLag cause more lag than they actually stop
+RemoveMoneyAfter60Seconds: false
+
+# Whether the money to be dropped is to be divided between all of the drops or whether they should all have the same amount
+# For example, if you set a Pig to drop $10 with 2 drops, Setting this option to true would make it drop 2x$5 but setting this option to false would make it drop 2x$10
+DivideMoneyBetweenDrops: true
 
 ###################################################### Pick Up Options ######################################################
 
@@ -57,28 +65,6 @@ PickupMoneyWhenInventoryIsFull:
 # Setting this option to true means only the person who killed the mob can pick up the money that it dropped. This can lead to money lying around because someone forgot to pick it up though, which might cause confusion for other players trying to pick it up.
 OnlyKillerCanPickUpMoney: false
 
-###################################################### Multipliers ######################################################
-
-# Extra money based on a percentage per level of Looting. For example, LootingMultiplier: 10% means a player with Looting 3 will get 30% more money
-LootingMultiplier: 10%
-
-# Players in these Permission Groups will gain extra money based on the percentages next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable this Multiplier, or if you don't use a vault based permissions plugin.
-PermissionGroupMultipliers:
-  - PermissionGroup1 5%
-  - PermissionGroup2 10%
- 
-# Players in these Worlds will gain extra money based on the percentage next to the World name. Set the first World to "NONE" if you want to disable World Multipliers
-WorldMultipliers:
-  - world1 5%
-  - world2 10%
-
-# Players in these Permission Groups will drop LESS money on death based on the percentage next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable this Multiplier, or if you don't use a vault based permissions plugin.
-PlayerDeathMultipliers:
-  - PermissionGroup1 5%
-  - PermissionGroup2 10%
-
-# Extra money based on the level of the mob when using the plugin LorinthsRpgMobs. For example, LorinthsRpgMobsMultiplier: 1% means level 2 mobs will drop 1% more money and level 3 mobs will drop 2% more money and so on
-LorinthsRpgMobsMultiplier: 1%
 
 ###################################################### Messages ######################################################
 
@@ -119,7 +105,7 @@ NoEventRunningMessage: '&cThere is no Money Multiplier Event to stop.'
 ###################################################### Mob/Player Options ######################################################
 
 # DropChance = Percentage chance for the player to be given money e.g 25 = 25% chance for mob to drop money
-# NumberOfDrops = number of money items to be dropped e.g 3 means the amount will be divided by 3 and drop 3 items. Can also be set to 1-3 which means its random between 1 and 3
+# NumberOfDrops = number of money items to be dropped. Set whether money is divided between drops above. Can also be set to 1-3 which means the number of drops will be random between 1 and 3
 # OnlyOnKill = Whether mobs should drop money if they weren't killed by a player. False means mobs can drop money if they fell to their death for example
 
 # All multipliers do not affect players because it could lead to players killing each other to generate infinite money.
@@ -130,6 +116,7 @@ PLAYER:
   DropChance: 100
   NumberOfDrops: 5
   OnlyOnKill: true
+  TakeMoneyFromKilledPlayer: true
   Message: '&cYou dropped $%amount% on death. You now have: $%balance%.'
   
 ########## ANIMALS ##########

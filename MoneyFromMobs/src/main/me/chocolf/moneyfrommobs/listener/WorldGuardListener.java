@@ -2,6 +2,8 @@ package me.chocolf.moneyfrommobs.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -14,6 +16,7 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.api.event.AttemptToDropMoneyEvent;
 import me.chocolf.moneyfrommobs.integration.DropMoneyFlag;
+import me.chocolf.moneyfrommobs.integration.PlayerDropMoneyFlag;
 
 public class WorldGuardListener implements Listener{
 	
@@ -25,12 +28,15 @@ public class WorldGuardListener implements Listener{
 	@EventHandler
 	public void onAttemptToDropMoney(AttemptToDropMoneyEvent e) {
 		// if drop-money flag is deny cancel the drop
-		Location loc = e.getEntity().getLocation();
+		Entity entity = e.getEntity();
+		Location loc = entity.getLocation();
 		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 		RegionQuery query = container.createQuery();
 		ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(loc));
 		if (!set.testState(null, DropMoneyFlag.getDropMoneyFlag()))
-			e.setCancelled(true);	
+			e.setCancelled(true);
+		if (!set.testState(null, PlayerDropMoneyFlag.getPlayerDropMoneyFlag()) && entity instanceof Player)
+			e.setCancelled(true);
 	}
 
 }

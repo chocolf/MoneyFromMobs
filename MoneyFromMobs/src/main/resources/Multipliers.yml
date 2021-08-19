@@ -1,0 +1,31 @@
+###################################################### Multipliers ######################################################
+
+# Extra money based on a percentage per level of Looting. For example, LootingMultiplier: 10% means a player with Looting 3 will get 30% more money
+LootingMultiplier: 10%
+
+# Players in these Permission Groups will gain extra money based on the percentages next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable this Multiplier, or if you don't use a vault based permissions plugin.
+PermissionGroupMultipliers:
+  - PermissionGroup1 5%
+  - PermissionGroup2 10%
+ 
+# Players in these Worlds will gain extra money based on the percentage next to the World name. Set the first World to "NONE" if you want to disable World Multipliers
+WorldMultipliers:
+  - world1 5%
+  - world2 10%
+
+# Players in these Permission Groups will drop LESS money on death based on the percentage next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable this Multiplier, or if you don't use a vault based permissions plugin.
+PlayerDeathMultipliers:
+  - PermissionGroup1 5%
+  - PermissionGroup2 10%
+
+# Extra money based on the level of the mob when using the plugin LorinthsRpgMobs. For example, LorinthsRpgMobsMultiplier: 1% means level 2 mobs will drop 1% more money and level 3 mobs will drop 2% more money and so on
+LorinthsRpgMobsMultiplier: 1%
+
+# Extra money based on the level of the mob when using MythicMobs. For example, MythicMobsLevelsMultiplier: 1% means level 2 mobs will drop 1% more money and level 3 mobs will drop 2% more money and so on
+MythicMobsLevelsMultiplier: 0%
+
+# Extra money based on the level of the mob when using LeveledMobs. For example, LeveledMobsMultiplier: 1% means level 2 mobs will drop 1% more money and level 3 mobs will drop 2% more money and so on
+LevelledMobsMultiplier: 1%
+
+# Extra money given if the mob that was killed was an Infernal Mob from the plugin InfernalMobs
+InfernalMobsMultiplier: 10%
