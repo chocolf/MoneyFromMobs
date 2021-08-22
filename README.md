@@ -1,5 +1,5 @@
 # MoneyFromMobs  
-A Spigot plugin that makes mobs drop money with looting multiplier. Make sure to check out the wiki for any info you need  
+A Spigot plugin that makes mobs drop money with a looting multiplier. Make sure to check out the wiki for any info you need  
 Find more information on the plugin [here](https://www.spigotmc.org/resources/money-from-mobs-1-12-1-17.79137/)  
 
 ## Support  
