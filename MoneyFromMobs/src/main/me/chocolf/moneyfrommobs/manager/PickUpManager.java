@@ -43,15 +43,15 @@ public class PickUpManager {
 	}
 	
 	public void init() {
-		loadItem();
-		loadParticles();
-		loadSound();
-		onlyKillerPickUpMoney = plugin.getConfig().getBoolean("OnlyKillerCanPickUpMoney");
+		FileConfiguration config = plugin.getConfig();
+		loadItem(config);
+		loadParticles(config);
+		loadSound(config);
+		onlyKillerPickUpMoney = config.getBoolean("OnlyKillerCanPickUpMoney");
 	}
 	
-	private void loadItem() {
+	private void loadItem(FileConfiguration config) {
 		// loads item to drop
-		FileConfiguration config = plugin.getConfig();
 		try {
 			if ( config.getString("MoneyDropsOnGround.Item").contains("CustomHead:")) 
 				itemToDrop = (getCustomHead(plugin.getConfig().getString("MoneyDropsOnGround.Item").replace("CustomHead:", "") ));
@@ -81,8 +81,7 @@ public class PickUpManager {
 		itemName = MessageManager.applyColour( config.getString("MoneyDropsOnGround.ItemName") );
 	}
 	
-	private void loadParticles() {
-		FileConfiguration config = plugin.getConfig();
+	private void loadParticles(FileConfiguration config) {
 		if (config.getString("ParticleEffect").equalsIgnoreCase("NONE")) {
 			particleEffect = null;
 		}
@@ -98,8 +97,7 @@ public class PickUpManager {
 		}
 	}
 	
-	private void loadSound() {
-		FileConfiguration config = plugin.getConfig();
+	private void loadSound(FileConfiguration config) {
 		if (config.getString("Sound").equalsIgnoreCase("NONE")) {
 			sound = null;
 		}

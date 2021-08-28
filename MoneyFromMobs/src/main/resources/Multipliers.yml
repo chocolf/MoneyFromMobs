@@ -24,7 +24,7 @@ LorinthsRpgMobsMultiplier: 1%
 # Extra money based on the level of the mob when using MythicMobs. For example, MythicMobsLevelsMultiplier: 1% means level 2 mobs will drop 1% more money and level 3 mobs will drop 2% more money and so on
 MythicMobsLevelsMultiplier: 0%
 
-# Extra money based on the level of the mob when using LeveledMobs. For example, LeveledMobsMultiplier: 1% means level 2 mobs will drop 1% more money and level 3 mobs will drop 2% more money and so on
+# Extra money based on the level of the mob when using LevelledMobs. For example, LevelledMobsMultiplier: 1% means level 2 mobs will drop 1% more money and level 3 mobs will drop 2% more money and so on
 LevelledMobsMultiplier: 1%
 
 # Extra money given if the mob that was killed was an Infernal Mob from the plugin InfernalMobs

@@ -50,23 +50,22 @@ public class DropsManager {
 	
 	public void init() {
 		FileConfiguration config = plugin.getConfig();
-		loadDropMoneyOnGround();
-		loadDisabledWorlds();
-		loadSpawnReasonBooleans();
-		loadOnlyOnKill();
+		loadDropMoneyOnGround(config);
+		loadDisabledWorlds(config);
+		loadSpawnReasonBooleans(config);
+		loadOnlyOnKill(config);
 		maxDropsPerMinute = config.getInt("MaxDropsPerMinute");
 		removeDropInMinute = config.getBoolean("RemoveMoneyAfter60Seconds");
 		divideMoneyBetweenDrops = config.getBoolean("DivideMoneyBetweenDrops");
 		takeMoneyFromKilledPlayer = config.getBoolean("PLAYER.TakeMoneyFromKilledPlayer");
 	}
 	
-	private void loadDropMoneyOnGround() {
-		dropMoneyOnGround = plugin.getConfig().getBoolean("MoneyDropsOnGround.Enabled");
+	private void loadDropMoneyOnGround(FileConfiguration config) {
+		dropMoneyOnGround = config.getBoolean("MoneyDropsOnGround.Enabled");
 	}
 
-	private void loadOnlyOnKill() {
+	private void loadOnlyOnKill(FileConfiguration config) {
 		this.onlyOnKillMobs.clear();
-		FileConfiguration config = plugin.getConfig();
 		FileConfiguration MMConfig = plugin.getMMConfig().getConfig();
 		for (String mob : config.getKeys(false)){
 			//ConfigurationSection mobConfigSection = config.getConfigurationSection(mob);
@@ -82,20 +81,19 @@ public class DropsManager {
 		}
 	}
 
-	private void loadDisabledWorlds() {
+	private void loadDisabledWorlds(FileConfiguration config) {
 		disabledWorlds.clear();
 		@SuppressWarnings("unchecked")
-		List<String> disabledWorldsInConfig = (List<String>) this.plugin.getConfig().getList("DisabledWorlds");
+		List<String> disabledWorldsInConfig = (List<String>) config.getList("DisabledWorlds");
 		for (String world : disabledWorldsInConfig)
 		  disabledWorlds.add(world); 
 	}
 	
-	private void loadSpawnReasonBooleans() {
-	    FileConfiguration config = this.plugin.getConfig();
-	    this.canDropIfNatural = config.getBoolean("MoneyDropsFromNaturalMobs");
-	    this.canDropIfSpawner = config.getBoolean("MoneyDropsFromSpawnerMobs");
-	    this.canDropIfSpawnEgg = config.getBoolean("MoneyDropsFromSpawnEggMobs");
-	    this.canDropIfSplitSlimes = config.getBoolean("MoneyDropsFromSplitSlimes");
+	private void loadSpawnReasonBooleans(FileConfiguration config) {
+	    canDropIfNatural = config.getBoolean("MoneyDropsFromNaturalMobs");
+	    canDropIfSpawner = config.getBoolean("MoneyDropsFromSpawnerMobs");
+	    canDropIfSpawnEgg = config.getBoolean("MoneyDropsFromSpawnEggMobs");
+	    canDropIfSplitSlimes = config.getBoolean("MoneyDropsFromSplitSlimes");
 	}
 	
 	public void dropItem(ItemStack item, Double amount, Location location, int numberOfDrops, Player p) {
