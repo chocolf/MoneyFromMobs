@@ -41,14 +41,15 @@ public class MultipliersManager {
 	}
 
 	public void init() {
-		loadLootingMultiplier();
-		loadWorldMultipliers();
-		loadPermissionGroupMultipliers();
-		loadPlayerDeathMultipliers();
-		loadLorinthsRpgMobsMultiplier();
-		loadMythicMobsLevelsMultiplier();
-		loadLevelledMobsMultiplier();
-		loadInfernalMobsMultiplier();
+		FileConfiguration config = plugin.getMultipliersConfig().getConfig();
+		loadLootingMultiplier(config);
+		loadWorldMultipliers(config);
+		loadPermissionGroupMultipliers(config);
+		loadPlayerDeathMultipliers(config);
+		loadLorinthsRpgMobsMultiplier(config);
+		loadMythicMobsLevelsMultiplier(config);
+		loadLevelledMobsMultiplier(config);
+		loadInfernalMobsMultiplier(config);
 	}
 	
 	public double applyMultipliers(double amount, Player p, Entity entity) {
@@ -162,18 +163,17 @@ public class MultipliersManager {
 			
 	// load multipliers
 	
-	private void loadLootingMultiplier() {
-		FileConfiguration config = plugin.getMultipliersConfig().getConfig();
+	private void loadLootingMultiplier(FileConfiguration config) {
 		String strLootingMultiplier = config.getString("LootingMultiplier").replace("%", "");
 		lootingMultiplier =  Double.parseDouble(strLootingMultiplier)/100;
 	}
 	
-	private void loadPermissionGroupMultipliers() {
+	private void loadPermissionGroupMultipliers(FileConfiguration config) {
 		permissionGroupMultipliers.clear();
 		if (plugin.getEcon() == null)
 			return;
 		
-		List<String> permissiongroupMultipliers = plugin.getMultipliersConfig().getConfig().getStringList("PermissionGroupMultipliers");
+		List<String> permissiongroupMultipliers = config.getStringList("PermissionGroupMultipliers");
 		for (String permissionGroup : permissiongroupMultipliers) {
 			String[] splitList = permissionGroup.split(" ");
 			String permissionGroupName = splitList[0];
@@ -186,9 +186,9 @@ public class MultipliersManager {
 		}
 	}
 	
-	private void loadWorldMultipliers() {
+	private void loadWorldMultipliers(FileConfiguration config) {
 		worldMultipliers.clear();
-		List<String> worldmultipliers = plugin.getMultipliersConfig().getConfig().getStringList("WorldMultipliers");
+		List<String> worldmultipliers = config.getStringList("WorldMultipliers");
 		for (String world : worldmultipliers) {
 			String[] splitList = world.split(" ");
 			String worldName = splitList[0];
@@ -201,13 +201,13 @@ public class MultipliersManager {
 		}
 	}
 	
-	private void loadPlayerDeathMultipliers() {
+	private void loadPlayerDeathMultipliers(FileConfiguration config) {
 		playerDeathMultipliers.clear();
 		
 		if (plugin.getEcon() == null)
 			return;
 		
-		List<String> playerdeathMultipliers = plugin.getMultipliersConfig().getConfig().getStringList("PlayerDeathMultipliers");
+		List<String> playerdeathMultipliers = config.getStringList("PlayerDeathMultipliers");
 		for (String permissionGroup : playerdeathMultipliers) {
 			String[] splitList = permissionGroup.split(" ");
 			String permissionGroupName = splitList[0];
@@ -220,35 +220,31 @@ public class MultipliersManager {
 		}
 	}
 	
-	private void loadLorinthsRpgMobsMultiplier() {
+	private void loadLorinthsRpgMobsMultiplier(FileConfiguration config) {
 		if (Bukkit.getPluginManager().getPlugin("LorinthsRpgMobs") != null) {
-			FileConfiguration config = plugin.getMultipliersConfig().getConfig();
 			String strLorinthsRpgMobsMultiplier = config.getString("LorinthsRpgMobsMultiplier").replace("%", "");
 			lorinthsRpgMobsMultiplier =  Double.parseDouble(strLorinthsRpgMobsMultiplier)/100;
 		}
 	}
 	
-	private void loadMythicMobsLevelsMultiplier() {
+	private void loadMythicMobsLevelsMultiplier(FileConfiguration config) {
 		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
-			FileConfiguration config = plugin.getMultipliersConfig().getConfig();
 			String strMythicMobsLevelsMultiplier = config.getString("MythicMobsLevelsMultiplier").replace("%", "");
 			mythicMobsLevelsMultiplier = Double.parseDouble(strMythicMobsLevelsMultiplier)/100;
 		}	
 	}
 	
-	private void loadLevelledMobsMultiplier() {
+	private void loadLevelledMobsMultiplier(FileConfiguration config) {
 		if (Bukkit.getPluginManager().getPlugin("LevelledMobs") != null) {
 			levelledMobs = ((LevelledMobs) Bukkit.getPluginManager().getPlugin("LevelledMobs")).levelInterface;
-			FileConfiguration config = plugin.getMultipliersConfig().getConfig();
 			String strLevelledMobsMultiplier = config.getString("LevelledMobsMultiplier").replace("%", "");
 			levelledMobsMultiplier = Double.parseDouble(strLevelledMobsMultiplier)/100;
 		}
 	}
 	
-	private void loadInfernalMobsMultiplier() {
+	private void loadInfernalMobsMultiplier(FileConfiguration config) {
 		if (Bukkit.getPluginManager().getPlugin("InfernalMobs") != null) {
 			infernalMobs = (InfernalMobsPlugin) Bukkit.getPluginManager().getPlugin("InfernalMobs");
-			FileConfiguration config = plugin.getMultipliersConfig().getConfig();
 			String strInfernalMobsMultiplier = config.getString("InfernalMobsMultiplier").replace("%", "");
 			infernalMobsMultiplier = Double.parseDouble(strInfernalMobsMultiplier)/100;
 		}	

@@ -33,10 +33,7 @@ public class WorldGuardListener implements Listener{
 		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 		RegionQuery query = container.createQuery();
 		ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(loc));
-		if (!set.testState(null, DropMoneyFlag.getDropMoneyFlag()))
-			e.setCancelled(true);
-		if (!set.testState(null, PlayerDropMoneyFlag.getPlayerDropMoneyFlag()) && entity instanceof Player)
+		if (!set.testState(null, DropMoneyFlag.getDropMoneyFlag()) || (!set.testState(null, PlayerDropMoneyFlag.getPlayerDropMoneyFlag()) && entity instanceof Player) )
 			e.setCancelled(true);
 	}
-
 }

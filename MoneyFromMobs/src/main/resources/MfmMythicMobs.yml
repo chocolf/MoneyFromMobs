@@ -1,3 +1,5 @@
+# Add your MythicMobs here using the template below.
+
 Skeleton_King:
   Enabled: true
   Min: 150
