@@ -253,4 +253,8 @@ public class MultipliersManager {
 	public void setEventMultiplier(double eventMultiplier) {
 		this.eventMultiplier = eventMultiplier;
 	}
+	
+	public double getEventMultiplier() {
+		return eventMultiplier;
+	}
 }

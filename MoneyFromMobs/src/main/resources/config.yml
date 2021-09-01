@@ -23,6 +23,7 @@ MoneyDropsFromNaturalMobs: true
 MoneyDropsFromSpawnerMobs: true
 MoneyDropsFromSpawnEggMobs: true
 MoneyDropsFromSplitSlimes: true
+MoneyDropsFromBabyMobs: true
 
 # Disable money drops in a certain world by adding the world name to this list
 # To disable money drops in a WorldGuard region set the flag 'drop-money' to deny. This only works with the latest version of WorldGuard
@@ -88,7 +89,7 @@ MuteToggleOnMessage: '&cMessages will no longer be shown when you pick up money 
 MuteToggleOffMessage: '&aMessages will now be shown when you pick up money dropped by mobs!'
 
 # Message sent when using /MfmClear
-ClearMoneyDropsMessage: '&9All money was succesfully removed from the ground!'
+ClearMoneyDropsMessage: '&9%amount% Money Drops were sucesfully removed from the ground!'
 
 # Message sent when using /MfmReload
 ReloadMessage: '&9Money From Mobs was reloaded!'

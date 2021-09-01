@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -38,6 +38,8 @@ public class DropsManager {
 	private boolean removeDropInMinute;
 	private boolean divideMoneyBetweenDrops;
 	private boolean takeMoneyFromKilledPlayer;
+	private boolean babyMobsCanDropMoney;
+	private boolean roseStackerSupport;
 	
 	private HashMap<String, Integer> numberOfDropsThisMinute = new HashMap<>();
 	private int maxDropsPerMinute;
@@ -54,10 +56,12 @@ public class DropsManager {
 		loadDisabledWorlds(config);
 		loadSpawnReasonBooleans(config);
 		loadOnlyOnKill(config);
+		babyMobsCanDropMoney = config.getBoolean("MoneyDropsFromBabyMobs");
 		maxDropsPerMinute = config.getInt("MaxDropsPerMinute");
 		removeDropInMinute = config.getBoolean("RemoveMoneyAfter60Seconds");
 		divideMoneyBetweenDrops = config.getBoolean("DivideMoneyBetweenDrops");
 		takeMoneyFromKilledPlayer = config.getBoolean("PLAYER.TakeMoneyFromKilledPlayer");
+		roseStackerSupport = Bukkit.getPluginManager().isPluginEnabled("RoseStacker");
 	}
 	
 	private void loadDropMoneyOnGround(FileConfiguration config) {
@@ -150,6 +154,9 @@ public class DropsManager {
 		if (canDropInWorld(entity.getWorld().getName()))
 			return false;
 		
+		if (!babyMobsCanDropMoney && entity instanceof Ageable && !((Ageable) entity).isAdult())
+			return false;
+		
 		return canDropWithSpawnReason(entity);
 	}
 	
@@ -201,7 +208,7 @@ public class DropsManager {
 		}
 		// if mob was in a rose stacker stack
 		// REMEMBER TO REMOVE ONCE ROSE STACKER CALLS CREATURESPAWNEVENT
-		if (Bukkit.getPluginManager().isPluginEnabled("RoseStacker")) {
+		if (roseStackerSupport) {
 			String spawnReason = PersistentDataUtils.getEntitySpawnReason((LivingEntity) entity).toString();
 			if (!isSpawnReasonEnabled(spawnReason)) return false;
 		}
@@ -209,7 +216,7 @@ public class DropsManager {
 	}
 
 	private boolean canDropInWorld(String worldName) {
-		return getDisabledWorlds().contains(worldName);
+		return disabledWorlds.contains(worldName);
 	}
 
 	private boolean isEntityEnabled(String entityName) {
@@ -225,11 +232,7 @@ public class DropsManager {
 		return entity.getType().toString();	
 	}
 	
-	public Set<String> getDisabledWorlds() {
-		return disabledWorlds;
-	}
-	
-	public boolean isSpawnReasonEnabled(String spawnReason) {
+	private boolean isSpawnReasonEnabled(String spawnReason) {
 		switch (spawnReason) {
 		case "NATURAL":
 			return canDropIfNatural;

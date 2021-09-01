@@ -9,6 +9,8 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.Vector;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
@@ -103,9 +105,10 @@ public class MessageManager {
 			armorStand.setGravity(false);
 			armorStand.setCustomName(applyColour(messageToSend));
 			armorStand.setCustomNameVisible(true);
+			armorStand.setMetadata("mfmas", (MetadataValue)new FixedMetadataValue(this.plugin, "mfmas"));
 		});
 		
-		if (shouldMoveFloatingTextMessageUpwards()) {
+		if (moveFloatingTextMessageUpwards) {
 			for (int i = 0; i < 20; i += 1) {
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 					@Override
@@ -122,7 +125,6 @@ public class MessageManager {
 		    	armorstand.remove();
 		    }
 		}, 20L);
-		
 	}
 	
 	
@@ -145,9 +147,4 @@ public class MessageManager {
 	private String getMessage(String messageName, double balance, String strAmount) {
 		return messagesMap.get(messageName).replace("%amount%", strAmount).replace("%balance%", String.format("%.2f", balance) );
 	}
-
-	public boolean shouldMoveFloatingTextMessageUpwards() {
-		return moveFloatingTextMessageUpwards;
-	}
-
 }

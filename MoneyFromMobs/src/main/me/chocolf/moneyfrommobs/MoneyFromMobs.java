@@ -3,8 +3,12 @@ package me.chocolf.moneyfrommobs;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,6 +17,7 @@ import org.bukkit.scheduler.BukkitTask;
 import me.chocolf.moneyfrommobs.command.ClearDropsCommand;
 import me.chocolf.moneyfrommobs.command.DropMoneyCommand;
 import me.chocolf.moneyfrommobs.command.DropMoneyTabCompleter;
+import me.chocolf.moneyfrommobs.command.HelpCommand;
 import me.chocolf.moneyfrommobs.command.MfmEventCommand;
 import me.chocolf.moneyfrommobs.command.MfmEventTabCompleter;
 import me.chocolf.moneyfrommobs.command.MuteMessagesCommand;
@@ -87,6 +92,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		this.getCommand("mfmevent").setTabCompleter(new MfmEventTabCompleter());
 		new MuteMessagesCommand(this);
 		new ReloadCommand(this);
+		new HelpCommand(this);
 		
 		
 		// Managers
@@ -105,8 +111,6 @@ public class MoneyFromMobs extends JavaPlugin{
 		// Bukkit runnable to allow players to pickup items when inventory is full
 		loadInventoryIsFullRunnable();
 		
-		
-		
 		// Checks if user is using latest version of the plugin on spigot
 		try {
 			if (UpdateChecker.checkForUpdate())
@@ -123,6 +127,22 @@ public class MoneyFromMobs extends JavaPlugin{
 		if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null && VersionUtils.getVersionNumber() > 15) {
 			DropMoneyFlag.registerFlag();
 			PlayerDropMoneyFlag.registerFlag();
+		}
+	}
+	
+	@Override
+	public void onDisable() {
+		List<World> worldList = Bukkit.getServer().getWorlds();
+		for (World world : worldList) {
+			List<Entity> entList = world.getEntities();
+			for (Entity entity : entList) {
+				if ( entity instanceof ArmorStand ) {
+					ArmorStand armorstand = (ArmorStand) entity;
+					if (armorstand.hasMetadata("mfmas")) {
+						armorstand.remove();
+					}
+				}
+			}
 		}
 	}
 

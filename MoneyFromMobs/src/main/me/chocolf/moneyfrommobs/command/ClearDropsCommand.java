@@ -24,18 +24,21 @@ public class ClearDropsCommand implements CommandExecutor{
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		int count = 0;
 		List<World> worldList = Bukkit.getServer().getWorlds();
 		for (World world : worldList) {
 			List<Entity> entList = world.getEntities();
 			for (Entity entity : entList) {
-				if (entity instanceof Item) {
+				if ( entity instanceof Item ) {
 					ItemStack item = ((Item) entity).getItemStack();
-					if (plugin.getPickUpManager().isMoneyPickedUp(item))
+					if (plugin.getPickUpManager().isMoneyPickedUp(item)) {
 						entity.remove();
+						count++;
+					}
 				}
 			}
 		}
-		sender.sendMessage(plugin.getMessageManager().getMessage("clearMoneyDropsMessage"));
+		sender.sendMessage(plugin.getMessageManager().getMessage("clearMoneyDropsMessage").replace("%amount%", String.valueOf(count)));
 		return true;
 	}
 

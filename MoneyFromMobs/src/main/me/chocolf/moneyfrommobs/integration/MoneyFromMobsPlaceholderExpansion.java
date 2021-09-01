@@ -1,5 +1,8 @@
 package me.chocolf.moneyfrommobs.integration;
 
+import java.util.Map;
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
@@ -20,19 +23,20 @@ public class MoneyFromMobsPlaceholderExpansion extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player p, String identifier){
 
-        if(p == null)
-            return "";
+        if(p == null) return "";
         
         // %moneyfrommobs_latest_picked_up%
         if(identifier.equals("latest_picked_up")){
-        	if (plugin.getPlaceholdersListener().getLatestPickedUp().containsKey(p.getUniqueId())) {
-        		return plugin.getPlaceholdersListener().getLatestPickedUp().get(p.getUniqueId());
-        	}
-        	else {
-        		String itemName = plugin.getPickUpManager().getItemName();
-        		itemName = itemName.replace("%amount%", "0.00");
-        		return itemName;
-        	}
+        	Map<UUID, String> latestPickedUpList = plugin.getPlaceholdersListener().getLatestPickedUp();
+        	if (latestPickedUpList.containsKey(p.getUniqueId())) 
+        		return latestPickedUpList.get(p.getUniqueId());
+        	else 
+        		return plugin.getPickUpManager().getItemName().replace("%amount%", "0.00");
+        }
+        
+        // %moneyfrommobs_current_event_multiplier%
+        else if (identifier.equals("current_event_multiplier")) {
+        	return String.valueOf(plugin.getMultipliersManager().getEventMultiplier()*100)+"%";
         }
 
 //        // %someplugin_placeholder2%

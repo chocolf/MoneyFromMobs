@@ -31,8 +31,8 @@ private MoneyFromMobs plugin;
 		LivingEntity entity = e.getEntity();
 		if (VersionUtils.getVersionNumber() > 13) {
 			PersistentDataContainer dataContainer = entity.getPersistentDataContainer();
-            NamespacedKey key = new NamespacedKey(plugin, "MfMSpawnReason");
-            dataContainer.set(key, PersistentDataType.STRING, spawnReason);
+			NamespacedKey key = new NamespacedKey(plugin, "MfMSpawnReason");
+			dataContainer.set(key, PersistentDataType.STRING, spawnReason);
 		}
 		else {
 		    entity.setMetadata("MfMSpawnReason", (MetadataValue)new FixedMetadataValue(this.plugin, spawnReason));

@@ -1,12 +1,17 @@
 main: me.chocolf.moneyfrommobs.MoneyFromMobs
 name: MoneyFromMobs
-version: 4.2
+version: 4.3
 api-version: 1.13
 author: Chocolf
 description: Makes mobs drop money with looting multiplier
 depend: [Vault]
 softdepend: [WorldEdit,WorldGuard,MythicMobs,PlaceholderAPI,RoseStacker,LorinthsRpgMobs,LevelledMobs]
 commands:
+  MfmHelp:
+    description: Displays all commands for Money From Mobs
+    permission: MoneyFromMobs.help
+    usage: "Usage: /MfmHelp"
+    aliases: [mfm]
   MfmReload:
     description: Reloads the config file of Money From Mobs
     permission: MoneyFromMobs.reload

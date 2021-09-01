@@ -29,12 +29,13 @@ public class ReloadCommand implements CommandExecutor{
 		NumbersManager numbersManager = plugin.getNumbersManager();
 		MessageManager messageManager = plugin.getMessageManager();
 		MultipliersManager multipliersManager = plugin.getMultipliersManager();
+		
 		// reloads configs
 		plugin.reloadConfig();
 		plugin.getMMConfig().reloadConfig();
 		plugin.getMultipliersConfig().reloadConfig();
 		
-		// reloads things
+		// reloads values stored in managers
 		messageManager.loadMessage();
 		pickUpManager.init();
 		dropsManager.init();
@@ -49,7 +50,7 @@ public class ReloadCommand implements CommandExecutor{
 			plugin.loadInventoryIsFullRunnable();
 		}
 		
-		// sends message saying it loaded correctly
+		// sends message saying it reloaded correctly
 		sender.sendMessage(messageManager.getMessage("reloadMessage"));
 	
 		return true;
