@@ -13,32 +13,24 @@ import me.chocolf.moneyfrommobs.api.event.GiveMoneyEvent;
 
 public class PlaceholderAPIListener implements Listener{
 	
-	private MoneyFromMobs plugin;
-	private HashMap<UUID, String> latestPickedUp = new HashMap<>();
+	private HashMap<UUID, Double> latestPickedUp = new HashMap<>();
 	
 	
 	
 	public PlaceholderAPIListener(MoneyFromMobs plugin) {
-		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
-	public void onPickUpMoney(GiveMoneyEvent e) {
-		String itemName = plugin.getPickUpManager().getItemName();
-		String strAmount = String.format("%.2f", e.getAmount());
-		itemName = itemName.replace("%amount%", strAmount);
-		
-		
+	public void onPickUpMoney(GiveMoneyEvent e) {		
 		UUID uuid = e.getPlayer().getUniqueId();
-		if (latestPickedUp.containsKey(uuid)) {
+		if (latestPickedUp.containsKey(uuid))
 			latestPickedUp.remove(uuid);
-		}
-		latestPickedUp.put(uuid, itemName);
 		
+		latestPickedUp.put(uuid, e.getAmount());
 	}
 	
-	public Map<UUID, String> getLatestPickedUp(){
+	public Map<UUID, Double> getLatestPickedUp(){
 		return latestPickedUp;
 	}
 

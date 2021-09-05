@@ -26,7 +26,7 @@ MoneyDropsFromSplitSlimes: true
 MoneyDropsFromBabyMobs: true
 
 # Disable money drops in a certain world by adding the world name to this list
-# To disable money drops in a WorldGuard region set the flag 'drop-money' to deny. This only works with the latest version of WorldGuard
+# To disable money drops in a WorldGuard region set the flag 'drop-money' or 'player-drop-money' to deny. This only works with the latest version of WorldGuard
 DisabledWorlds:
   - world1
   - world2
@@ -34,7 +34,7 @@ DisabledWorlds:
 # How many times a player can get a mob to drop money per minute. Set to 0 if you want it to be unlimited.
 MaxDropsPerMinute: 0
 
-# If the random number from Min and Max should be a whole number only or a random number to 2 decimal places.
+# If the random number between the set Min and Max for a mob should be a random whole number or a random number to 2 decimal places.
 RandomIntegerOnly: true
 
 # Whether to automatically remove money from the ground if it has not been picked up within 60 seconds
@@ -44,6 +44,7 @@ RemoveMoneyAfter60Seconds: false
 # Whether the money to be dropped is to be divided between all of the drops or whether they should all have the same amount
 # For example, if you set a Pig to drop $10 with 2 drops, Setting this option to true would make it drop 2x$5 but setting this option to false would make it drop 2x$10
 DivideMoneyBetweenDrops: true
+
 
 ###################################################### Pick Up Options ######################################################
 
@@ -83,6 +84,8 @@ ShowMessageAsFloatingText:
   Height: 2.4
   # Whether the message moves upwards or stays still
   Movement: true
+  # Time in seconds before the floating text message vanishes
+  Duration: 1
 
 # Messages sent when using /MfmMute
 MuteToggleOnMessage: '&cMessages will no longer be shown when you pick up money dropped by mobs!'

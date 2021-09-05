@@ -9,10 +9,8 @@ import me.chocolf.moneyfrommobs.manager.MessageManager;
 
 public class HelpCommand implements CommandExecutor{
 	
-	private MoneyFromMobs plugin;
 	
 	public HelpCommand(MoneyFromMobs plugin) {
-		this.plugin = plugin;
 		plugin.getCommand("mfmhelp").setExecutor(this);
 	}
 
@@ -20,11 +18,11 @@ public class HelpCommand implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
 		sender.sendMessage(MessageManager.applyColour(""));
-		sender.sendMessage(MessageManager.applyColour("&a----------Money&fFrom&aMobs Help----------"));
+		sender.sendMessage(MessageManager.applyColour("&a----------Money&fFrom&aMobs Help!----------"));
 		sender.sendMessage(MessageManager.applyColour(""));
 		sender.sendMessage(MessageManager.applyColour("&a/MfmReload - &fReloads MoneyFromMobs"));
 		sender.sendMessage(MessageManager.applyColour(""));
-		sender.sendMessage(MessageManager.applyColour("&a/MfmClear - &fClears all money from the ground"));
+		sender.sendMessage(MessageManager.applyColour("&a/MfmClear - &fClears all money from the ground. Can also be used to remove glitched holographic messages"));
 		sender.sendMessage(MessageManager.applyColour(""));
 		sender.sendMessage(MessageManager.applyColour("&a/MfmMute - &fMute incoming messages when picking up money for the player who ran this command"));
 		sender.sendMessage(MessageManager.applyColour(""));
@@ -32,7 +30,7 @@ public class HelpCommand implements CommandExecutor{
 		sender.sendMessage(MessageManager.applyColour(""));
 		sender.sendMessage(MessageManager.applyColour("&a/MfmEvent <Start/Stop> [PercentageIncrease] [Hours] [Minutes] [Seconds] - &fCreate global multipliers for a limited time"));
 		sender.sendMessage(MessageManager.applyColour(""));
-		sender.sendMessage(String.format(MessageManager.applyColour("&aCurrent Version: &f%s"),plugin.getDescription().getVersion() ));
+		sender.sendMessage(MessageManager.applyColour(MessageManager.applyColour("&aWiki:&f https://github.com/chocolf/MoneyFromMobs/wiki")));
 		
 		return true;
 	}

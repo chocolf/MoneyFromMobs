@@ -25,7 +25,7 @@ commands:
     permission: MoneyFromMobs.mute
     usage: "Usage: /MfmMute"
   MfmClear:
-    description: Removes all money drops off the ground
+    description: Clears all money from the ground. Can also be used to remove glitched holographic messages
     permission: MoneyFromMobs.clear
     usage: "Usage: /MfmClear"
   MfmEvent:

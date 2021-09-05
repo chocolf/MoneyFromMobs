@@ -7,8 +7,10 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
@@ -38,6 +40,18 @@ public class ClearDropsCommand implements CommandExecutor{
 				}
 			}
 		}
+		if (sender instanceof Player) {
+			Player p = (Player) sender;
+			List<Entity> entList = p.getNearbyEntities(0.5, 0.5, 0.5);
+			for (Entity entity : entList) {
+				if (entity instanceof ArmorStand) {
+					ArmorStand armorStand = (ArmorStand) entity;
+					if (armorStand.isInvisible() && armorStand.isMarker() && !armorStand.hasGravity() && armorStand.isCustomNameVisible())
+						armorStand.remove();
+				}
+			}
+		}
+		
 		sender.sendMessage(plugin.getMessageManager().getMessage("clearMoneyDropsMessage").replace("%amount%", String.valueOf(count)));
 		return true;
 	}

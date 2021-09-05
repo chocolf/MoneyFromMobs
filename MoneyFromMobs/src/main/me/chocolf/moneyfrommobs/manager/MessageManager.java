@@ -27,6 +27,7 @@ public class MessageManager {
 	private boolean shouldSendActionBarMessage;
 	private boolean shouldSendFloatingTextMessage;
 	private boolean moveFloatingTextMessageUpwards;
+	private double floatingTextDuration;
 	private HashMap<String, String> messagesMap = new HashMap<>();
 	private static final Pattern pattern = Pattern.compile("#([A-Fa-f0-9]){6}");
 	
@@ -44,6 +45,7 @@ public class MessageManager {
 		shouldSendActionBarMessage = config.getBoolean("ShowMessageInActionBar.Enabled");
 		shouldSendFloatingTextMessage = config.getBoolean("ShowMessageAsFloatingText.Enabled");
 		moveFloatingTextMessageUpwards = config.getBoolean("ShowMessageAsFloatingText.Movement");
+		floatingTextDuration = config.getDouble("ShowMessageAsFloatingText.Duration") * 20;
 		
 		messagesMap.clear();
 		messagesMap.put("chatMessage", applyColour( config.getString("ShowMessageInChat.Message") ));
@@ -109,7 +111,7 @@ public class MessageManager {
 		});
 		
 		if (moveFloatingTextMessageUpwards) {
-			for (int i = 0; i < 20; i += 1) {
+			for (int i = 0; i < floatingTextDuration; i += 1) {
 				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 					@Override
 					public void run() {
@@ -124,7 +126,7 @@ public class MessageManager {
 		    public void run() {
 		    	armorstand.remove();
 		    }
-		}, 20L);
+		}, (long) floatingTextDuration);
 	}
 	
 	

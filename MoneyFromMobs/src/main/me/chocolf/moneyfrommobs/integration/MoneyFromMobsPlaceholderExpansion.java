@@ -27,17 +27,18 @@ public class MoneyFromMobsPlaceholderExpansion extends PlaceholderExpansion {
         
         // %moneyfrommobs_latest_picked_up%
         if(identifier.equals("latest_picked_up")){
-        	Map<UUID, String> latestPickedUpList = plugin.getPlaceholdersListener().getLatestPickedUp();
+        	Map<UUID, Double> latestPickedUpList = plugin.getPlaceholdersListener().getLatestPickedUp();
         	if (latestPickedUpList.containsKey(p.getUniqueId())) 
-        		return latestPickedUpList.get(p.getUniqueId());
+        		return String.format("%.2f",latestPickedUpList.get(p.getUniqueId()));
         	else 
-        		return plugin.getPickUpManager().getItemName().replace("%amount%", "0.00");
+        		return "0.00";
         }
         
         // %moneyfrommobs_current_event_multiplier%
         else if (identifier.equals("current_event_multiplier")) {
         	return String.valueOf(plugin.getMultipliersManager().getEventMultiplier()*100)+"%";
         }
+        
 
 //        // %someplugin_placeholder2%
 //      if(identifier.equals("placeholder2")){
