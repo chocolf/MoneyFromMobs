@@ -2,7 +2,6 @@ package me.chocolf.moneyfrommobs.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +20,7 @@ import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
 
 public class DeathListeners implements Listener{
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
 	public DeathListeners(MoneyFromMobs plugin) {
 		this.plugin = plugin;
@@ -35,7 +34,7 @@ public class DeathListeners implements Listener{
 		Player p = null;
 
 		// if killer is a player set p = to killer
-		if ((entity.getKiller() instanceof Player)) {
+		if (entity.getKiller() != null) {
 			p = e.getEntity().getKiller();
 			// if player doesn't have permission return
 			if (!(p.hasPermission("MoneyFromMobs.use")))
@@ -45,6 +44,7 @@ public class DeathListeners implements Listener{
 		DropsManager dropsManager = plugin.getDropsManager();
 		NumbersManager numbersManager = plugin.getNumbersManager();
 		MultipliersManager multipliersManager = plugin.getMultipliersManager();
+
 		String entityName = dropsManager.getEntityName(entity);
 		double amount;
 		

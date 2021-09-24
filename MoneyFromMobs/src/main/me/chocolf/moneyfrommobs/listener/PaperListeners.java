@@ -15,7 +15,7 @@ import me.chocolf.moneyfrommobs.manager.PickUpManager;
 
 public class PaperListeners implements Listener{
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
 	public PaperListeners(MoneyFromMobs plugin) {
 		this.plugin = plugin;
@@ -29,7 +29,7 @@ public class PaperListeners implements Listener{
 		// gets item picked up
 		Item item = e.getItem();
 		ItemStack itemStack = item.getItemStack();
-		// return if item picked up isnt money
+		// return if item picked up isn't money
 		if (!pickUpManager.isMoneyPickedUp(itemStack)) return;
 		
 		e.setCancelled(true);

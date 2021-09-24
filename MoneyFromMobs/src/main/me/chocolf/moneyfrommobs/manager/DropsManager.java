@@ -26,10 +26,10 @@ import me.chocolf.moneyfrommobs.util.VersionUtils;
 
 public class DropsManager {
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
-	private HashSet<String> disabledWorlds = new HashSet<>();
-	private HashSet<String> onlyOnKillMobs = new HashSet<>();
+	private final HashSet<String> disabledWorlds = new HashSet<>();
+	private final HashSet<String> onlyOnKillMobs = new HashSet<>();
 	private boolean canDropIfNatural;
 	private boolean canDropIfSpawner;
 	private boolean canDropIfSpawnEgg;
@@ -41,7 +41,7 @@ public class DropsManager {
 	private boolean babyMobsCanDropMoney;
 	private boolean roseStackerSupport;
 	
-	private HashMap<String, Integer> numberOfDropsThisMinute = new HashMap<>();
+	private final HashMap<String, Integer> numberOfDropsThisMinute = new HashMap<>();
 	private int maxDropsPerMinute;
 	
 	public DropsManager(MoneyFromMobs plugin) {
@@ -89,8 +89,7 @@ public class DropsManager {
 		disabledWorlds.clear();
 		@SuppressWarnings("unchecked")
 		List<String> disabledWorldsInConfig = (List<String>) config.getList("DisabledWorlds");
-		for (String world : disabledWorldsInConfig)
-		  disabledWorlds.add(world); 
+		disabledWorlds.addAll(disabledWorldsInConfig);
 	}
 	
 	private void loadSpawnReasonBooleans(FileConfiguration config) {
@@ -110,7 +109,7 @@ public class DropsManager {
 			// first line of lore is random numbers + mfm so items don't stack
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = new ArrayList<>();
-			lore.add(String.valueOf(RandomNumberUtils.intRandomNumber(1000000,9999999) + "mfm"));
+			lore.add(RandomNumberUtils.intRandomNumber(1000000,9999999) + "mfm");
 						
 			// second line of lore is amount to give on pickup
 			lore.add(String.valueOf(amount));
@@ -131,12 +130,7 @@ public class DropsManager {
 			
 			// schedules task to remove drop in 1 minute if enabled
 			if (removeDropInMinute) {
-				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-				    @Override
-				    public void run() {
-				    	itemDropped.remove();
-				    }
-				}, 1200L);
+				Bukkit.getScheduler().runTaskLater(plugin, itemDropped::remove, 1200L);
 			}
 			
 			itemDropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", strAmount));
@@ -172,12 +166,7 @@ public class DropsManager {
 		}
 		else {
 			numberOfDropsThisMinute.put(playerName, 1);
-			Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-			    @Override
-			    public void run() {
-			    	numberOfDropsThisMinute.remove(playerName);
-			    }
-			}, 1200L);
+			Bukkit.getScheduler().runTaskLater(plugin, () -> numberOfDropsThisMinute.remove(playerName), 1200L);
 			return false;
 		}
 	}
@@ -210,7 +199,7 @@ public class DropsManager {
 		// REMEMBER TO REMOVE ONCE ROSE STACKER CALLS CREATURESPAWNEVENT
 		if (roseStackerSupport) {
 			String spawnReason = PersistentDataUtils.getEntitySpawnReason((LivingEntity) entity).toString();
-			if (!isSpawnReasonEnabled(spawnReason)) return false;
+			return isSpawnReasonEnabled(spawnReason);
 		}
 		return true;
 	}

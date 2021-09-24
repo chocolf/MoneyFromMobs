@@ -21,7 +21,7 @@ import me.lorinth.rpgmobs.LorinthsRpgMobs;
 
 public class MultipliersManager {
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	private static LevelInterface levelledMobs;
 	private static InfernalMobsPlugin infernalMobs;
 	private double lootingMultiplier;
@@ -31,9 +31,9 @@ public class MultipliersManager {
 	private double levelledMobsMultiplier = 0;
 	private double infernalMobsMultiplier = 0;
 	
-	private HashMap<String, Double> worldMultipliers = new HashMap<>();
-	private HashMap<String, Double> permissionGroupMultipliers = new HashMap<>();
-	private HashMap<String, Double> playerDeathMultipliers = new HashMap<>();
+	private final HashMap<String, Double> worldMultipliers = new HashMap<>();
+	private final HashMap<String, Double> permissionGroupMultipliers = new HashMap<>();
+	private final HashMap<String, Double> playerDeathMultipliers = new HashMap<>();
 	
 	public MultipliersManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;

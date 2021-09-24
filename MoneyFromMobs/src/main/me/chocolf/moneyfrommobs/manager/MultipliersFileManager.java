@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 
 public class MultipliersFileManager {
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	private FileConfiguration multipliersConfig = null;
 	private File configFile = null;
 	
@@ -49,8 +49,6 @@ public class MultipliersFileManager {
 		} catch (IOException e) {
 			Bukkit.getLogger().warning("[MoneyFromMobs] Could not save Multipliers.yml");
 		}
-		
-		
 	}
 	
 	public void saveDefaultConfig() {

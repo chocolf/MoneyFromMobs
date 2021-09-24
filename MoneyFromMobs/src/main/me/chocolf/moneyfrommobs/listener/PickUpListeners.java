@@ -15,7 +15,8 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.manager.PickUpManager;
 
 public class PickUpListeners implements Listener{
-private MoneyFromMobs plugin;
+
+	private final MoneyFromMobs plugin;
 	
 	public PickUpListeners(MoneyFromMobs plugin) {
 		this.plugin = plugin;
@@ -29,11 +30,11 @@ private MoneyFromMobs plugin;
 		// gets item picked up
 		Item item = e.getItem();
 		ItemStack itemStack = item.getItemStack();
-		// return if item picked up isnt money
+		// return if item picked up isn't money
 		if (!pickUpManager.isMoneyPickedUp(itemStack)) return;
 		
 		e.setCancelled(true);
-		// stops mobs from picking up money
+		// Stop mobs from picking up money
 		if (e.getEntity() instanceof Player ) {
 			Player p = (Player) e.getEntity();
 			// returns if player doesn't have permission to pickup money

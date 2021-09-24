@@ -13,17 +13,17 @@ import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
 
 public class NumbersManager {
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
-	private HashMap<String, Double> minAmounts = new HashMap<>();
-	private HashMap<String, Double> maxAmounts = new HashMap<>();
+	private final HashMap<String, Double> minAmounts = new HashMap<>();
+	private final HashMap<String, Double> maxAmounts = new HashMap<>();
 	private String playerAmount;
 	private boolean randomInteger;
 	
-	private HashMap<String, Double> dropChances = new HashMap<>();
+	private final HashMap<String, Double> dropChances = new HashMap<>();
 	
-	private HashMap<String, Integer> minNumberOfDrops = new HashMap<>();
-	private HashMap<String, Integer> maxNumberOfDrops = new HashMap<>();
+	private final HashMap<String, Integer> minNumberOfDrops = new HashMap<>();
+	private final HashMap<String, Integer> maxNumberOfDrops = new HashMap<>();
 	
 	
 	

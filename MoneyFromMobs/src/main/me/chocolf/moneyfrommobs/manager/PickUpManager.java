@@ -29,7 +29,7 @@ import me.chocolf.moneyfrommobs.util.VersionUtils;
 public class PickUpManager {
 	
 	private static final Pattern pattern = Pattern.compile("([0-9]){6}mfm");
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	private boolean onlyKillerPickUpMoney;
 	private ItemStack itemToDrop;
 	private String itemName;
@@ -124,7 +124,7 @@ public class PickUpManager {
 	    SkullMeta meta = (SkullMeta) head.getItemMeta();
 	    GameProfile profile = new GameProfile(UUID.randomUUID(), "");
 	    profile.getProperties().put("textures", new Property("textures", value));
-	    Field profileField = null;
+	    Field profileField;
 	    try {
 	        profileField = meta.getClass().getDeclaredField("profile");
 	        profileField.setAccessible(true);

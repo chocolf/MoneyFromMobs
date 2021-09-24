@@ -13,7 +13,7 @@ import me.chocolf.moneyfrommobs.api.event.GiveMoneyEvent;
 
 public class PlaceholderAPIListener implements Listener{
 	
-	private HashMap<UUID, Double> latestPickedUp = new HashMap<>();
+	private final HashMap<UUID, Double> latestPickedUp = new HashMap<>();
 	
 	
 	
@@ -22,10 +22,9 @@ public class PlaceholderAPIListener implements Listener{
 	}
 	
 	@EventHandler
-	public void onPickUpMoney(GiveMoneyEvent e) {		
+	public void onPickUpMoney(GiveMoneyEvent e) {
 		UUID uuid = e.getPlayer().getUniqueId();
-		if (latestPickedUp.containsKey(uuid))
-			latestPickedUp.remove(uuid);
+		latestPickedUp.remove(uuid);
 		
 		latestPickedUp.put(uuid, e.getAmount());
 	}

@@ -13,11 +13,9 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 
 public class NearEntitiesRunnable extends BukkitRunnable{
 
-private MoneyFromMobs plugin;
-private int radius;
+	private final MoneyFromMobs plugin;
+	private final int radius;
 
-	
-	
 	public NearEntitiesRunnable(MoneyFromMobs plugin) {
 		this.plugin = plugin;
 		this.radius = plugin.getConfig().getInt("PickupMoneyWhenInventoryIsFull.Radius");

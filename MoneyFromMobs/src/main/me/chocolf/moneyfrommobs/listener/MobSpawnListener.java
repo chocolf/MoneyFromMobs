@@ -16,7 +16,7 @@ import me.chocolf.moneyfrommobs.util.VersionUtils;
 
 public class MobSpawnListener implements Listener {
 	
-private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
 	public MobSpawnListener(MoneyFromMobs plugin) {
 		this.plugin = plugin;

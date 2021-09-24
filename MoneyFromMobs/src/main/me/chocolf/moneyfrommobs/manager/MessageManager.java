@@ -10,7 +10,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.Vector;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
@@ -21,14 +20,14 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class MessageManager {
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	private double floatingTextHeight;
 	private boolean shouldSendChatMessage;
 	private boolean shouldSendActionBarMessage;
 	private boolean shouldSendFloatingTextMessage;
 	private boolean moveFloatingTextMessageUpwards;
 	private double floatingTextDuration;
-	private HashMap<String, String> messagesMap = new HashMap<>();
+	private final HashMap<String, String> messagesMap = new HashMap<>();
 	private static final Pattern pattern = Pattern.compile("#([A-Fa-f0-9]){6}");
 	
 	public MessageManager(MoneyFromMobs plugin) {
@@ -112,21 +111,11 @@ public class MessageManager {
 		
 		if (moveFloatingTextMessageUpwards) {
 			for (int i = 0; i < floatingTextDuration; i += 1) {
-				Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-					@Override
-					public void run() {
-						armorstand.teleport(armorstand.getLocation().add(0, 0.1,0));
-					}
-				}, i);
+				Bukkit.getScheduler().runTaskLater(plugin, () -> armorstand.teleport(armorstand.getLocation().add(0, 0.1,0)), i);
 			} 
 		}
 		
-		Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-		    @Override
-		    public void run() {
-		    	armorstand.remove();
-		    }
-		}, (long) floatingTextDuration);
+		Bukkit.getScheduler().runTaskLater(plugin, armorstand::remove, (long) floatingTextDuration);
 	}
 	
 	

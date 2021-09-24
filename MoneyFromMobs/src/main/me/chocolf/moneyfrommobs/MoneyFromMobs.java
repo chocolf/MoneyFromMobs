@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -111,7 +110,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		// Bukkit runnable to allow players to pickup items when inventory is full
 		loadInventoryIsFullRunnable();
 		
-		// Checks if user is using latest version of the plugin on spigot
+		// Checks if user is using the latest version of the plugin on spigot
 		try {
 			if (UpdateChecker.checkForUpdate())
 				getLogger().info("Update Available for MoneyFromMobs: https://www.spigotmc.org/resources/money-from-mobs-1-9-1-16-4.79137/");	
@@ -192,7 +191,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		
 		if ( getConfig().getBoolean("PickupMoneyWhenInventoryIsFull.Enabled")) {
 			int interval = this.getConfig().getInt("PickupMoneyWhenInventoryIsFull.Interval");
-			inventoryIsFullRunnable = new NearEntitiesRunnable(this).runTaskTimer((Plugin)this, interval, interval);
+			inventoryIsFullRunnable = new NearEntitiesRunnable(this).runTaskTimer(this, interval, interval);
 		}
 	}
 	
