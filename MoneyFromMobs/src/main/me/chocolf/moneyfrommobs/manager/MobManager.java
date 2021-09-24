@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
 
-public class NumbersManager {
+public class MobManager {
 	
 	private final MoneyFromMobs plugin;
 	
@@ -27,7 +27,7 @@ public class NumbersManager {
 	
 	
 	
-	public NumbersManager(MoneyFromMobs plugin) {
+	public MobManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
 		init();
 	}
@@ -110,7 +110,7 @@ public class NumbersManager {
 				amount = playersBalance;
 			}
 		}
-		return amount;
+		return RandomNumberUtils.round(amount, 2);
 	}
 	
 	public int getNumberOfDrops(String entityName) {

@@ -36,7 +36,7 @@ import me.chocolf.moneyfrommobs.manager.DropsManager;
 import me.chocolf.moneyfrommobs.manager.MessageManager;
 import me.chocolf.moneyfrommobs.manager.MultipliersFileManager;
 import me.chocolf.moneyfrommobs.manager.MultipliersManager;
-import me.chocolf.moneyfrommobs.manager.NumbersManager;
+import me.chocolf.moneyfrommobs.manager.MobManager;
 import me.chocolf.moneyfrommobs.manager.PickUpManager;
 import me.chocolf.moneyfrommobs.runnable.NearEntitiesRunnable;
 import me.chocolf.moneyfrommobs.util.ConfigUpdater;
@@ -54,7 +54,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	private PickUpManager pickUpManager;
 	private MessageManager messageManager;
 	private DropsManager dropsManager;
-	private NumbersManager numbersManager;
+	private MobManager mobManager;
 	private MultipliersManager multipliersManager;
 	private BukkitTask inventoryIsFullRunnable;
 	private PlaceholderAPIListener placeholderListener;
@@ -98,7 +98,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		pickUpManager = new PickUpManager(this);
 		messageManager = new MessageManager(this);
 		dropsManager = new DropsManager(this);
-		numbersManager = new NumbersManager(this);
+		mobManager = new MobManager(this);
 		multipliersManager = new MultipliersManager(this);
 		
 		// PlaceholderAPI integration
@@ -226,8 +226,8 @@ public class MoneyFromMobs extends JavaPlugin{
 	public DropsManager getDropsManager() {
 		return dropsManager;
 	}
-	public NumbersManager getNumbersManager() {
-		return numbersManager;
+	public MobManager getNumbersManager() {
+		return mobManager;
 	}
 	public PlaceholderAPIListener getPlaceholdersListener() {
 		return placeholderListener;

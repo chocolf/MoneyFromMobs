@@ -9,7 +9,7 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.manager.DropsManager;
 import me.chocolf.moneyfrommobs.manager.MessageManager;
 import me.chocolf.moneyfrommobs.manager.MultipliersManager;
-import me.chocolf.moneyfrommobs.manager.NumbersManager;
+import me.chocolf.moneyfrommobs.manager.MobManager;
 import me.chocolf.moneyfrommobs.manager.PickUpManager;
 
 public class ReloadCommand implements CommandExecutor{
@@ -26,7 +26,7 @@ public class ReloadCommand implements CommandExecutor{
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		PickUpManager pickUpManager = plugin.getPickUpManager();
 		DropsManager dropsManager = plugin.getDropsManager();
-		NumbersManager numbersManager = plugin.getNumbersManager();
+		MobManager mobManager = plugin.getNumbersManager();
 		MessageManager messageManager = plugin.getMessageManager();
 		MultipliersManager multipliersManager = plugin.getMultipliersManager();
 		
@@ -39,7 +39,7 @@ public class ReloadCommand implements CommandExecutor{
 		messageManager.loadMessage();
 		pickUpManager.init();
 		dropsManager.init();
-		numbersManager.init();
+		mobManager.init();
 		multipliersManager.init();
 		
 		// reloads bukkit runnable if user is not using paper

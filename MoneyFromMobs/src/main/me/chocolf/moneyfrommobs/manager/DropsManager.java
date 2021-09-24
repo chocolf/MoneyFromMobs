@@ -172,6 +172,7 @@ public class DropsManager {
 	}
 
 	private boolean onlyOnKill(Player p, String entityName) {
+		// if mob died without killing a player and OnlyOnKill is false in config
 		return p==null && onlyOnKillMobs.contains(entityName);
 	}
 
