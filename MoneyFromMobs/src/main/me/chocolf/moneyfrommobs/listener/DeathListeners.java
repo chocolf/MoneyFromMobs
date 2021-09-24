@@ -3,6 +3,7 @@ package me.chocolf.moneyfrommobs.listener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,11 +31,11 @@ public class DeathListeners implements Listener{
 	
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent e) {
-		Entity entity = e.getEntity();
+		LivingEntity entity = e.getEntity();
 		Player p = null;
 
 		// if killer is a player set p = to killer
-		if ((e.getEntity().getKiller() instanceof Player)) {
+		if ((entity.getKiller() instanceof Player)) {
 			p = e.getEntity().getKiller();
 			// if player doesn't have permission return
 			if (!(p.hasPermission("MoneyFromMobs.use")))

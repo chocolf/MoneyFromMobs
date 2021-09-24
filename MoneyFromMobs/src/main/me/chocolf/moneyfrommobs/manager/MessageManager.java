@@ -107,7 +107,7 @@ public class MessageManager {
 			armorStand.setGravity(false);
 			armorStand.setCustomName(applyColour(messageToSend));
 			armorStand.setCustomNameVisible(true);
-			armorStand.setMetadata("mfmas", (MetadataValue)new FixedMetadataValue(this.plugin, "mfmas"));
+			armorStand.setMetadata("mfmas", new FixedMetadataValue(this.plugin, "mfmas"));
 		});
 		
 		if (moveFloatingTextMessageUpwards) {
