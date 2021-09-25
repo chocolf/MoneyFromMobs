@@ -35,7 +35,7 @@ DisabledWorlds:
 MaxDropsPerMinute: 0
 
 # If the random number between the set Min and Max for a mob should be a random whole number or a random number to 2 decimal places.
-RandomIntegerOnly: true
+RandomIntegerOnly: false
 
 # Whether to automatically remove money from the ground if it has not been picked up within 60 seconds
 # Warning!! This causes more lag than it stops. Just like plugins like ClearLag cause more lag than they actually stop

@@ -11,7 +11,7 @@ import me.chocolf.moneyfrommobs.manager.MessageManager;
 
 public class MuteMessagesCommand implements CommandExecutor{
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
 	
 	public MuteMessagesCommand(MoneyFromMobs plugin) {

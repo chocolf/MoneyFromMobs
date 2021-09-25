@@ -12,7 +12,7 @@ import me.chocolf.moneyfrommobs.manager.MultipliersManager;
 
 public class MfmEventCommand implements CommandExecutor{
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
 	BukkitTask task;
 	
@@ -35,12 +35,11 @@ public class MfmEventCommand implements CommandExecutor{
 					Bukkit.broadcastMessage(messageManager.getMessage("eventFinish"));
 					Bukkit.getScheduler().cancelTask(task.getTaskId());
 					task = null;
-					return true;
 				}
 				else {
 					sender.sendMessage(messageManager.getMessage("noEventRunningMessage") );
-					return true;
 				}
+				return true;
 			}
 
 			else if (args[0].equalsIgnoreCase("start") && numberOfArgs >= 5) {
@@ -63,13 +62,10 @@ public class MfmEventCommand implements CommandExecutor{
 							.replace("{minutes}", args[3])
 							.replace("{seconds}", args[4]));
 					
-					task = Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-					    @Override
-					    public void run() {
-					    	multipliersManager.setEventMultiplier(0);
-					    	task = null;
-					    	Bukkit.broadcastMessage(messageManager.getMessage("eventFinish"));
-					    }
+					task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+						multipliersManager.setEventMultiplier(0);
+						task = null;
+						Bukkit.broadcastMessage(messageManager.getMessage("eventFinish"));
 					}, totalTime * 20L);
 					return true;
 				} catch (Exception e) {

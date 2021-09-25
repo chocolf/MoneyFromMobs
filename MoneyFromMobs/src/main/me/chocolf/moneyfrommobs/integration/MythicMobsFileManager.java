@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 
 public class MythicMobsFileManager {
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	private FileConfiguration mythicMobsConfig = null;
 	private File configFile = null;
 	

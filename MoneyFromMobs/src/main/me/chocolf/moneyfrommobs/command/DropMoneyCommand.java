@@ -16,7 +16,7 @@ import me.chocolf.moneyfrommobs.manager.PickUpManager;
 
 public class DropMoneyCommand implements CommandExecutor{
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
 	
 	public DropMoneyCommand(MoneyFromMobs plugin) {
@@ -43,7 +43,7 @@ public class DropMoneyCommand implements CommandExecutor{
 			ItemStack itemToDrop = pickUpManager.getItemToDrop();
 			if (args.length >= 2) {
 				try {
-					numberOfDrops = Integer.valueOf(args[1]);
+					numberOfDrops = Integer.parseInt(args[1]);
 				}
 				catch (Exception e) {
 					return false;

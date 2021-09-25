@@ -7,7 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -35,7 +34,7 @@ public class MobSpawnListener implements Listener {
 			dataContainer.set(key, PersistentDataType.STRING, spawnReason);
 		}
 		else {
-		    entity.setMetadata("MfMSpawnReason", (MetadataValue)new FixedMetadataValue(this.plugin, spawnReason));
+		    entity.setMetadata("MfMSpawnReason", new FixedMetadataValue(this.plugin, spawnReason));
 		}
 		
 	}	

@@ -6,10 +6,10 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 
 public class VersionUtils {
 	
-	private static String v = Bukkit.getServer().getClass().getPackage().getName();
-	private static String nmsVersion =  v.substring(v.lastIndexOf('.') + 1);
-	private static String bukkitVersion = Bukkit.getServer().getBukkitVersion().split("-")[0];
-	private static int versionNumber = Integer.parseInt(nmsVersion.split("_")[1]);
+	private static final String v = Bukkit.getServer().getClass().getPackage().getName();
+	private static final String nmsVersion =  v.substring(v.lastIndexOf('.') + 1);
+	private static final String bukkitVersion = Bukkit.getServer().getBukkitVersion().split("-")[0];
+	private static final int versionNumber = Integer.parseInt(nmsVersion.split("_")[1]);
 	
 	public static String getNMSVersion() {
 		return nmsVersion;

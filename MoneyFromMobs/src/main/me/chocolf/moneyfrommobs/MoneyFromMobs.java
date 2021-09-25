@@ -67,10 +67,15 @@ public class MoneyFromMobs extends JavaPlugin{
 		// bstats
 		new Metrics(this, 8361); // 8361 is this plugins id
 		
-		// vault econ and perms
-		setupEconomy();
+		// Disable plugin if fail to set up vault and econ plugin
+		if(!setupEconomy()){
+			this.getLogger().severe("&cCOMPATIBLE ECONOMY PLUGIN NOT FOUND! DISABLING PLUGIN!!!");
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+
 		setupPermissions();
-		
+
 		// listeners
 		new PickUpListeners(this);
 		new DeathListeners(this);
@@ -92,8 +97,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		new MuteMessagesCommand(this);
 		new ReloadCommand(this);
 		new HelpCommand(this);
-		
-		
+
 		// Managers
 		pickUpManager = new PickUpManager(this);
 		messageManager = new MessageManager(this);
@@ -147,23 +151,25 @@ public class MoneyFromMobs extends JavaPlugin{
 
 	// sets up economy if server has Vault and an Economy plugin
 	private boolean setupEconomy() {
-        if (Bukkit.getPluginManager().getPlugin("Vault") == null)
-            return false;
-        
     	RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
     	if (rsp != null)
     		econ = rsp.getProvider();
-        return econ != null;
+
+		return econ != null;
     }
 	
 	// sets up permission hook
-	private boolean setupPermissions() {
+	private void setupPermissions() {
 		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        permissions = rsp.getProvider();
-        return permissions != null;
+		if (rsp != null)
+			if (rsp.getProvider().hasGroupSupport())
+	        	permissions = rsp.getProvider();
+			else
+				this.getLogger().warning(MessageManager.applyColour("&cCOMPATIBLE PERMISSIONS PLUGIN NOT FOUND! PERMISSION GROUP MULTIPLIERS WILL NOT WORK!!!"));
 	}
 	
 	private void loadConfigs() {
+		// loads config.yml and auto updates it
 		saveDefaultConfig();
 		try {
 			  ConfigUpdater.update(this, "config.yml", new File(getDataFolder(), "config.yml"), Arrays.asList());//The list is sections you want to ignore
@@ -176,7 +182,8 @@ public class MoneyFromMobs extends JavaPlugin{
 		// Makes MythicMobs and Multipliers Config file
 		mmConfig = new MythicMobsFileManager(this);
 		multipliersConfig = new MultipliersFileManager(this);
-		
+
+		// Updates Multipliers.yml
 		try {
 			  ConfigUpdater.update(this, "Multipliers.yml", new File(getDataFolder(), "Multipliers.yml"), Arrays.asList());//The list is sections you want to ignore
 		} 

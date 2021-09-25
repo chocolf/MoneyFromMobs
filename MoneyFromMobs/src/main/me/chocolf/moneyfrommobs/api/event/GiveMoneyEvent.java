@@ -10,7 +10,7 @@ import org.bukkit.event.HandlerList;
 public class GiveMoneyEvent extends Event implements Cancellable{
 	private static final HandlerList HANDLERS = new HandlerList();
 	private boolean isCancelled;
-	private Player player;
+	private final Player player;
 	private Double amount;
 	private Sound sound;
 	private Particle particle;

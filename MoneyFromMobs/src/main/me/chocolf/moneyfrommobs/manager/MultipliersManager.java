@@ -1,7 +1,6 @@
 package me.chocolf.moneyfrommobs.manager;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -170,11 +169,10 @@ public class MultipliersManager {
 	
 	private void loadPermissionGroupMultipliers(FileConfiguration config) {
 		permissionGroupMultipliers.clear();
-		if (plugin.getEcon() == null)
+		if (plugin.getPerms() == null)
 			return;
-		
-		List<String> permissiongroupMultipliers = config.getStringList("PermissionGroupMultipliers");
-		for (String permissionGroup : permissiongroupMultipliers) {
+
+		for (String permissionGroup : config.getStringList("PermissionGroupMultipliers")) {
 			String[] splitList = permissionGroup.split(" ");
 			String permissionGroupName = splitList[0];
 			
@@ -188,8 +186,7 @@ public class MultipliersManager {
 	
 	private void loadWorldMultipliers(FileConfiguration config) {
 		worldMultipliers.clear();
-		List<String> worldmultipliers = config.getStringList("WorldMultipliers");
-		for (String world : worldmultipliers) {
+		for (String world : config.getStringList("WorldMultipliers")) {
 			String[] splitList = world.split(" ");
 			String worldName = splitList[0];
 			
@@ -206,9 +203,8 @@ public class MultipliersManager {
 		
 		if (plugin.getEcon() == null)
 			return;
-		
-		List<String> playerdeathMultipliers = config.getStringList("PlayerDeathMultipliers");
-		for (String permissionGroup : playerdeathMultipliers) {
+
+		for (String permissionGroup : config.getStringList("PlayerDeathMultipliers")) {
 			String[] splitList = permissionGroup.split(" ");
 			String permissionGroupName = splitList[0];
 			

@@ -14,7 +14,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
  */
 public class MoneyFromMobsPlaceholderExpansion extends PlaceholderExpansion {
 
-    private MoneyFromMobs plugin;
+    private final MoneyFromMobs plugin;
 
     public MoneyFromMobsPlaceholderExpansion(MoneyFromMobs plugin){
         this.plugin = plugin;
@@ -36,13 +36,13 @@ public class MoneyFromMobsPlaceholderExpansion extends PlaceholderExpansion {
         
         // %moneyfrommobs_current_event_multiplier%
         else if (identifier.equals("current_event_multiplier")) {
-        	return String.valueOf(plugin.getMultipliersManager().getEventMultiplier()*100)+"%";
+        	return plugin.getMultipliersManager().getEventMultiplier()*100+"%";
         }
         
 
 //        // %someplugin_placeholder2%
 //      if(identifier.equals("placeholder2")){
-//            return plugin.getConfig().getString("placeholder2", "value doesnt exist");
+//            return plugin.getConfig().getString("placeholder2", "value doesn't exist");
 //        }
  
         // We return null if an invalid placeholder (f.e. %someplugin_placeholder3%) 

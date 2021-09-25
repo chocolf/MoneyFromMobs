@@ -17,7 +17,7 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 
 public class ClearDropsCommand implements CommandExecutor{
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
 	public ClearDropsCommand(MoneyFromMobs plugin) {
 		this.plugin = plugin;

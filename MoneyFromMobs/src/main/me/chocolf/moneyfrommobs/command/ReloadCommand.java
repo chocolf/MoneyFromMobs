@@ -14,7 +14,7 @@ import me.chocolf.moneyfrommobs.manager.PickUpManager;
 
 public class ReloadCommand implements CommandExecutor{
 	
-	private MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
 	
 	public ReloadCommand(MoneyFromMobs plugin) {
@@ -35,7 +35,7 @@ public class ReloadCommand implements CommandExecutor{
 		plugin.getMMConfig().reloadConfig();
 		plugin.getMultipliersConfig().reloadConfig();
 		
-		// reloads values stored in managers
+		// Reload values stored in managers
 		messageManager.loadMessage();
 		pickUpManager.init();
 		dropsManager.init();

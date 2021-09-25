@@ -11,8 +11,8 @@ public class AttemptToDropMoneyEvent extends Event implements Cancellable{
 	private static final HandlerList HANDLERS = new HandlerList();
 	private boolean isCancelled;
 	private double dropChance;
-	private Entity entity;
-	private Player killer;
+	private final Entity entity;
+	private final Player killer;
 	
 	public AttemptToDropMoneyEvent(double dropChance, Entity entity, Player killer) {
 		this.setDropChance(dropChance);

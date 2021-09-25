@@ -80,7 +80,7 @@ public class DeathListeners implements Listener{
 
 		PickUpManager pickUpManager = plugin.getPickUpManager();
 		
-		// if drop money on ground
+		// if money should be dropped as item
 		if ( dropsManager.doesMoneyDropOnGround() ){
 			ItemStack itemToDrop = pickUpManager.getItemToDrop();
 			Location location = entity.getLocation();

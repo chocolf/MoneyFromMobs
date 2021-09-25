@@ -7,6 +7,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class DropMoneyEvent extends Event implements Cancellable{
 	
@@ -15,8 +16,8 @@ public class DropMoneyEvent extends Event implements Cancellable{
 	private ItemStack itemToDrop;
 	private Double amount;
 	private Location location;
-	private Player killer;
-	private Entity entity;
+	private final Player killer;
+	private final Entity entity;
 	private int numberOfDrops;
 	
 	public DropMoneyEvent(ItemStack itemToDrop, Double amount, Location location, Player killer, Entity entity, int numberOfDrops){
@@ -29,7 +30,7 @@ public class DropMoneyEvent extends Event implements Cancellable{
 	}
 	
 	@Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return HANDLERS;
     }
 	
