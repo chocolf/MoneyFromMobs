@@ -30,16 +30,18 @@ public class DropsManager {
 	
 	private final HashSet<String> disabledWorlds = new HashSet<>();
 	private final HashSet<String> onlyOnKillMobs = new HashSet<>();
+	private boolean disableDecimal;
 	private boolean canDropIfNatural;
 	private boolean canDropIfSpawner;
 	private boolean canDropIfSpawnEgg;
 	private boolean canDropIfSplitSlimes;
 	private boolean dropMoneyOnGround;
-	private boolean removeDropInMinute;
 	private boolean divideMoneyBetweenDrops;
 	private boolean takeMoneyFromKilledPlayer;
 	private boolean babyMobsCanDropMoney;
 	private boolean roseStackerSupport;
+	private boolean autoRemoveDrop;
+	private int timeUntilRemove;
 	
 	private final HashMap<String, Integer> numberOfDropsThisMinute = new HashMap<>();
 	private int maxDropsPerMinute;
@@ -56,12 +58,14 @@ public class DropsManager {
 		loadDisabledWorlds(config);
 		loadSpawnReasonBooleans(config);
 		loadOnlyOnKill(config);
+		disableDecimal = plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal");
 		babyMobsCanDropMoney = config.getBoolean("MoneyDropsFromBabyMobs");
 		maxDropsPerMinute = config.getInt("MaxDropsPerMinute");
-		removeDropInMinute = config.getBoolean("RemoveMoneyAfter60Seconds");
 		divideMoneyBetweenDrops = config.getBoolean("DivideMoneyBetweenDrops");
 		takeMoneyFromKilledPlayer = config.getBoolean("PLAYER.TakeMoneyFromKilledPlayer");
 		roseStackerSupport = Bukkit.getPluginManager().isPluginEnabled("RoseStacker");
+		autoRemoveDrop = config.getBoolean("AutoRemoveMoney.Enabled");
+		timeUntilRemove = config.getInt("AutoRemoveMoney.TimeUntilRemove");
 	}
 	
 	private void loadDropMoneyOnGround(FileConfiguration config) {
@@ -103,9 +107,11 @@ public class DropsManager {
 		if (amount == 0) return;
 		if (divideMoneyBetweenDrops)
 			amount = amount/numberOfDrops;
+
+		if (disableDecimal)
+			amount = RandomNumberUtils.round(amount, 0);
 		
 		for ( int i=0; i<numberOfDrops;i++ ) {
-			
 			// first line of lore is random numbers + mfm so items don't stack
 			ItemMeta meta = item.getItemMeta();
 			List<String> lore = new ArrayList<>();
@@ -123,14 +129,15 @@ public class DropsManager {
 			
 			Item itemDropped = location.getWorld().dropItemNaturally(location, item );
 			String strAmount = String.format("%.2f", amount);
-			
+
 			// removes decimal place
-			if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal") && strAmount.contains(".00"))
+			if (disableDecimal)
 				strAmount = String.format("%.0f", amount);
+
 			
-			// schedules task to remove drop in 1 minute if enabled
-			if (removeDropInMinute) {
-				Bukkit.getScheduler().runTaskLater(plugin, itemDropped::remove, 1200L);
+			// schedules task to remove drop in certain amount of time if enabled
+			if (autoRemoveDrop) {
+				Bukkit.getScheduler().runTaskLater(plugin, itemDropped::remove, timeUntilRemove * 20L);
 			}
 			
 			itemDropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", strAmount));
@@ -176,35 +183,6 @@ public class DropsManager {
 		return p==null && onlyOnKillMobs.contains(entityName);
 	}
 
-	private boolean canDropWithSpawnReason(Entity entity) {
-		if (VersionUtils.getVersionNumber() > 13 ){
-			try {
-				String spawnReason = entity.getPersistentDataContainer().get(new NamespacedKey(plugin, "MfMSpawnReason"), PersistentDataType.STRING);
-				if (spawnReason != null)
-					return isSpawnReasonEnabled(spawnReason);
-			}
-			catch(Exception e) {
-				return true;
-			}
-		}
-		else if (entity.hasMetadata("MfMSpawnReason")){
-			try {
-				String spawnReason = entity.getMetadata("MfMSpawnReason").get(0).value().toString();
-				return isSpawnReasonEnabled(spawnReason);
-			}
-			catch(Exception e) {
-				return true;
-			}
-		}
-		// if mob was in a rose stacker stack
-		// REMEMBER TO REMOVE ONCE ROSE STACKER CALLS CREATURESPAWNEVENT
-		if (roseStackerSupport) {
-			String spawnReason = PersistentDataUtils.getEntitySpawnReason((LivingEntity) entity).toString();
-			return isSpawnReasonEnabled(spawnReason);
-		}
-		return true;
-	}
-
 	private boolean canDropInWorld(String worldName) {
 		return disabledWorlds.contains(worldName);
 	}
@@ -221,7 +199,14 @@ public class DropsManager {
 		}
 		return entity.getType().toString();	
 	}
-	
+
+	private boolean canDropWithSpawnReason(Entity entity) {
+		String spawnReason = getSpawnReason(entity);
+		if (spawnReason != null)
+			return isSpawnReasonEnabled(spawnReason);
+		return true;
+	}
+
 	private boolean isSpawnReasonEnabled(String spawnReason) {
 		switch (spawnReason) {
 		case "NATURAL":
@@ -235,6 +220,31 @@ public class DropsManager {
 		default:
 			return true;
 		}
+	}
+
+	public String getSpawnReason(Entity entity){
+		if (VersionUtils.getVersionNumber() > 13 ){
+			try {
+				String spawnReason = entity.getPersistentDataContainer().get(new NamespacedKey(plugin, "MfMSpawnReason"), PersistentDataType.STRING);
+				if (spawnReason != null)
+					return spawnReason;
+			}
+			catch(Exception e) {
+				return null;
+			}
+		}
+		else if (entity.hasMetadata("MfMSpawnReason")){
+			try {
+				return entity.getMetadata("MfMSpawnReason").get(0).value().toString();
+			}
+			catch(Exception e) {
+				return null;
+			}
+		}
+		if (roseStackerSupport) {
+			return PersistentDataUtils.getEntitySpawnReason((LivingEntity) entity).toString();
+		}
+		return null;
 	}
 
 	public boolean doesMoneyDropOnGround() {

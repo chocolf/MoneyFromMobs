@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,17 +31,10 @@ public class DropMoneyCommand implements CommandExecutor{
 		DropsManager dropsManager = plugin.getDropsManager();
 		
 		if(args.length > 0) {
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(MessageManager.applyColour("&cThis command must be ran by a player."));
-				return true;
-			}
-			Player p = (Player) sender;
-			
-			Location location = p.getTargetBlock(null, 100).getLocation();
-			location.setY(location.getY()+1);
 			double amount = Double.parseDouble(args[0]);
 			int numberOfDrops = 1;
 			ItemStack itemToDrop = pickUpManager.getItemToDrop();
+
 			if (args.length >= 2) {
 				try {
 					numberOfDrops = Integer.parseInt(args[1]);
@@ -53,7 +47,26 @@ public class DropMoneyCommand implements CommandExecutor{
 					numberOfDrops = 100;
 				}
 			}
-			DropMoneyEvent dropMoneyEvent = new DropMoneyEvent(itemToDrop,amount, location, p, null, numberOfDrops);
+			// sets location if they have included it in the command
+			Location location;
+
+			if (args.length == 3 && args[2].equalsIgnoreCase("here")){
+				location = ((Entity) sender).getLocation();
+			}
+			else if (args.length >= 6){
+				location = new Location(Bukkit.getWorld(args[2]), Double.valueOf(args[3]), Double.valueOf(args[4]), Double.valueOf(args[5]));
+			}
+			else if (sender instanceof Player && args.length < 3){
+				Player p = (Player) sender;
+				location = p.getTargetBlock(null, 100).getLocation();
+				location.setY(location.getY()+1);
+			}
+			else{
+				return false;
+			}
+
+			// calls drop money event
+			DropMoneyEvent dropMoneyEvent = new DropMoneyEvent(itemToDrop,amount, location, null, null, numberOfDrops);
 			Bukkit.getPluginManager().callEvent(dropMoneyEvent);
 			if (dropMoneyEvent.isCancelled()) return true;
 			itemToDrop = dropMoneyEvent.getItemToDrop();

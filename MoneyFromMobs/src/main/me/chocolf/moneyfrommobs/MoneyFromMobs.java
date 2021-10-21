@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import me.chocolf.moneyfrommobs.integration.WorldGuardFlags;
+import me.chocolf.moneyfrommobs.listener.*;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
@@ -21,17 +23,8 @@ import me.chocolf.moneyfrommobs.command.MfmEventCommand;
 import me.chocolf.moneyfrommobs.command.MfmEventTabCompleter;
 import me.chocolf.moneyfrommobs.command.MuteMessagesCommand;
 import me.chocolf.moneyfrommobs.command.ReloadCommand;
-import me.chocolf.moneyfrommobs.integration.DropMoneyFlag;
 import me.chocolf.moneyfrommobs.integration.MoneyFromMobsPlaceholderExpansion;
 import me.chocolf.moneyfrommobs.integration.MythicMobsFileManager;
-import me.chocolf.moneyfrommobs.integration.PlayerDropMoneyFlag;
-import me.chocolf.moneyfrommobs.listener.DeathListeners;
-import me.chocolf.moneyfrommobs.listener.MobSpawnListener;
-import me.chocolf.moneyfrommobs.listener.OnJoinListener;
-import me.chocolf.moneyfrommobs.listener.PaperListeners;
-import me.chocolf.moneyfrommobs.listener.PickUpListeners;
-import me.chocolf.moneyfrommobs.listener.PlaceholderAPIListener;
-import me.chocolf.moneyfrommobs.listener.WorldGuardListener;
 import me.chocolf.moneyfrommobs.manager.DropsManager;
 import me.chocolf.moneyfrommobs.manager.MessageManager;
 import me.chocolf.moneyfrommobs.manager.MultipliersFileManager;
@@ -81,6 +74,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		new DeathListeners(this);
 		new MobSpawnListener(this);
 		new OnJoinListener(this);
+		new HopperListeners(this);
 		if (isUsingPaper()) new PaperListeners(this);
 		if(Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard") && VersionUtils.getVersionNumber() > 15)
 			new WorldGuardListener(this);
@@ -128,8 +122,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	public void onLoad() {
 		// loads WorldGuard flag
 		if (Bukkit.getPluginManager().getPlugin("WorldGuard") != null && VersionUtils.getVersionNumber() > 15) {
-			DropMoneyFlag.registerFlag();
-			PlayerDropMoneyFlag.registerFlag();
+			WorldGuardFlags.registerFlags();
 		}
 	}
 	

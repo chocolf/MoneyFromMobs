@@ -20,9 +20,8 @@ public class OnJoinListener implements Listener{
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		if (!p.isOp()) return;
 		
-		if (UpdateChecker.checkForUpdate()) {
+		if (p.isOp() && UpdateChecker.checkForUpdate()) {
 			p.sendMessage(MessageManager.applyColour("&bUpdate Available for MoneyFromMobs:"));
 			p.sendMessage(MessageManager.applyColour("&bhttps://www.spigotmc.org/resources/money-from-mobs-1-9-1-16-4.79137/"));
 		}

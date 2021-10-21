@@ -1,10 +1,17 @@
 package me.chocolf.moneyfrommobs.listener;
 
 import java.util.List;
+import java.util.UUID;
 
+import me.chocolf.moneyfrommobs.util.VersionUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.block.Hopper;
+import org.bukkit.block.TileState;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -13,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.manager.PickUpManager;
+import org.bukkit.persistence.PersistentDataType;
 
 public class PickUpListeners implements Listener{
 
@@ -49,14 +57,5 @@ public class PickUpListeners implements Listener{
 		    pickUpManager.giveMoney(amount, p);
 		    item.remove();
 		}
-		
-		
-	}
-	
-	@EventHandler
-	public void onHopperPickup(InventoryPickupItemEvent e) {
-		ItemStack item = e.getItem().getItemStack();
-		if (plugin.getPickUpManager().isMoneyPickedUp(item))
-			e.setCancelled(true);
 	}
 }

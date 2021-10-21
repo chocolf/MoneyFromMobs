@@ -36,7 +36,7 @@ public class PickUpManager {
 	private Particle particleEffect;
 	private int numberOfParticles;
 	private Sound sound;
-	
+	private String hopperGivesMoneyTo;
 	public PickUpManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
 		init();
@@ -48,6 +48,7 @@ public class PickUpManager {
 		loadParticles(config);
 		loadSound(config);
 		onlyKillerPickUpMoney = config.getBoolean("OnlyKillerCanPickUpMoney");
+		hopperGivesMoneyTo = config.getString("HopperGivesMoneyTo");
 	}
 	
 	private void loadItem(FileConfiguration config) {
@@ -56,11 +57,11 @@ public class PickUpManager {
 			if ( config.getString("MoneyDropsOnGround.Item").contains("CustomHead:")) 
 				itemToDrop = (getCustomHead(plugin.getConfig().getString("MoneyDropsOnGround.Item").replace("CustomHead:", "") ));
 			
-			else itemToDrop = (new ItemStack(Material.valueOf(plugin.getConfig().getString("MoneyDropsOnGround.Item")), 1));
+			else itemToDrop = (new ItemStack(Material.valueOf(plugin.getConfig().getString("MoneyDropsOnGround.Item").toUpperCase())));
 		}
 		catch(Exception e) {
 			plugin.getLogger().warning("Make sure you have entered a valid ItemType in your config. Setting ItemType to Emerald until fixed");
-			itemToDrop = (new ItemStack(Material.EMERALD, 1));
+			itemToDrop = (new ItemStack(Material.EMERALD));
 		}
 
 		ItemMeta meta = itemToDrop.getItemMeta();
@@ -209,6 +210,9 @@ public class PickUpManager {
 		Matcher matcher = pattern.matcher(itemLore.get(0));
 		return matcher.find();
 	}
-	
-	
+
+
+	public String getWhoHopperGivesMoneyTo() {
+		return hopperGivesMoneyTo;
+	}
 }

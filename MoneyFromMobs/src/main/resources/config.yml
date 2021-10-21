@@ -12,9 +12,9 @@ MoneyDropsOnGround:
   ItemName: '&a$%amount%'
   # Whether the dropped item should glow or not
   Enchanted: true
-  # CustomModelData can be set to to customize textures. Only works with 1.14+ I don't know much about it so I won't be able to help you but here is a little guide: https://www.planetminecraft.com/forums/communities/texturing/new-1-14-custom-item-models-tuto-578834/
+  # CustomModelData can be set to customize textures. Only works with 1.14+ I don't know much about it, so I won't be able to help you but here is a little guide: https://www.planetminecraft.com/forums/communities/texturing/new-1-14-custom-item-models-tuto-578834/
   CustomModelData: 0
-  # DisableDecimal means that amounts like 5.00 will be changed to just 5 in the ItemName
+  # DisableDecimal means the amount will always be rounded to a whole number e.g. $3.33 will go to $3
   DisableDecimal: false
 
 # Whether certain mobs should drop money
@@ -37,11 +37,14 @@ MaxDropsPerMinute: 0
 # If the random number between the set Min and Max for a mob should be a random whole number or a random number to 2 decimal places.
 RandomIntegerOnly: false
 
-# Whether to automatically remove money from the ground if it has not been picked up within 60 seconds
+# Whether to automatically remove money from the ground if it has not been picked up
+# TimeUntilRemove = Amount of time in seconds until the money drop is automatically removed
 # Warning!! This causes more lag than it stops. Just like plugins like ClearLag cause more lag than they actually stop
-RemoveMoneyAfter60Seconds: false
+AutoRemoveMoney:
+  Enabled: false
+  TimeUntilRemove: 60
 
-# Whether the money to be dropped is to be divided between all of the drops or whether they should all have the same amount
+# Whether the money to be dropped is to be divided between all the drops or whether they should all have the same amount
 # For example, if you set a Pig to drop $10 with 2 drops, Setting this option to true would make it drop 2x$5 but setting this option to false would make it drop 2x$10
 DivideMoneyBetweenDrops: true
 
@@ -66,6 +69,12 @@ PickupMoneyWhenInventoryIsFull:
 
 # Setting this option to true means only the person who killed the mob can pick up the money that it dropped. This can lead to money lying around because someone forgot to pick it up though, which might cause confusion for other players trying to pick it up.
 OnlyKillerCanPickUpMoney: false
+
+# Where the money should go when a hopper picks up money. Options are: PLACER, KILLER or NONE
+# PLACER = give money to the player who placed the hopper. Hopper must be placed AFTER installing version 4.4+ of MoneyFromMobs and requires MC 1.13+ to work
+# KILLER = give money to the player who killed the mob. (Money stays on top of the hopper if there was no killer)
+# NONE = Hopper does not pick up money
+HopperGivesMoneyTo: KILLER
 
 
 ###################################################### Messages ######################################################
@@ -92,12 +101,12 @@ MuteToggleOnMessage: '&cMessages will no longer be shown when you pick up money 
 MuteToggleOffMessage: '&aMessages will now be shown when you pick up money dropped by mobs!'
 
 # Message sent when using /MfmClear
-ClearMoneyDropsMessage: '&9%amount% Money Drops were sucesfully removed from the ground!'
+ClearMoneyDropsMessage: '&9%amount% Money Drops were successfully removed from the ground!'
 
 # Message sent when using /MfmReload
 ReloadMessage: '&9Money From Mobs was reloaded!'
 
-# Message sent to player when they kill a mob and they have already reached the max drops per minute. Set to '' to stop the message from being sent.
+# Message sent to player when they kill a mob, and they have already reached the max drops per minute. Set to '' to stop the message from being sent.
 MaxDropsReachedMessage: '&9You have reached the maximum number of money drops per minute. Please wait before trying to get more money!'
 
 # Messages sent when using /MfmEvent
@@ -108,7 +117,7 @@ NoEventRunningMessage: '&cThere is no Money Multiplier Event to stop.'
 
 ###################################################### Mob/Player Options ######################################################
 
-# DropChance = Percentage chance for the player to be given money e.g 25 = 25% chance for mob to drop money
+# DropChance = Percentage chance for the player to be given money e.g. 25 = 25% chance for mob to drop money
 # NumberOfDrops = number of money items to be dropped. Set whether money is divided between drops above. Can also be set to 1-3 which means the number of drops will be random between 1 and 3
 # OnlyOnKill = Whether mobs should drop money if they weren't killed by a player. False means mobs can drop money if they fell to their death for example
 
