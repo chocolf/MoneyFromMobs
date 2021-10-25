@@ -250,12 +250,10 @@ public class DropsManager {
 	public boolean doesMoneyDropOnGround() {
 		return dropMoneyOnGround;
 	}
-
 	public boolean shouldTakeMoneyFromKilledPlayer() {
 		return takeMoneyFromKilledPlayer;
 	}
-
-	
-	
-	
+	public boolean shouldDisableDecimal() {
+		return disableDecimal;
+	}
 }

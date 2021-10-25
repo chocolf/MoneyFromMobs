@@ -37,6 +37,7 @@ public class PickUpManager {
 	private int numberOfParticles;
 	private Sound sound;
 	private String hopperGivesMoneyTo;
+
 	public PickUpManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
 		init();
@@ -161,7 +162,6 @@ public class PickUpManager {
 		return onlyKillerPickUpMoney;
 	}
 
-	// methods
 	public void giveMoney(Double amount,Player p) {
 		// call pickup money event
 		GiveMoneyEvent giveMoneyEvent = new GiveMoneyEvent(p, amount, sound, particleEffect);
@@ -192,14 +192,14 @@ public class PickUpManager {
 		// convert amount to string ready to place it in message
 		String strAmount = String.format("%.2f", amount);
 		
-		// take off decimal place if amount ends in .00
-		if (plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal") && strAmount.contains(".00"))
+		// take off decimal place if enabled in config
+		if (plugin.getDropsManager().shouldDisableDecimal())
 			strAmount = String.format("%.0f", amount);
 		
 		plugin.getMessageManager().sendMessage(strAmount,p);
 		
 	}
-		
+
 	public boolean isMoneyPickedUp(ItemStack itemStack) {
 		// checks if item picked up is money
 		if (itemStack == null) return false;
@@ -210,7 +210,6 @@ public class PickUpManager {
 		Matcher matcher = pattern.matcher(itemLore.get(0));
 		return matcher.find();
 	}
-
 
 	public String getWhoHopperGivesMoneyTo() {
 		return hopperGivesMoneyTo;
