@@ -49,6 +49,7 @@ AutoRemoveMoney:
 DivideMoneyBetweenDrops: true
 
 
+
 ###################################################### Pick Up Options ######################################################
 
 # Sound = Sound played on pickup. Change to "NONE" if you don't want a sound to be played. Sounds list: https://www.digminecraft.com/lists/sound_list_pc.php
