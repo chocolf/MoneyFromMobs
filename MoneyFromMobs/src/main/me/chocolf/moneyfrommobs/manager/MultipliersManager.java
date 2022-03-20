@@ -2,6 +2,7 @@ package me.chocolf.moneyfrommobs.manager;
 
 import java.util.HashMap;
 
+import io.lumine.mythic.bukkit.BukkitAPIHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -10,8 +11,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import io.hotmail.com.jacob_vejvoda.infernalmobs.InfernalMobsPlugin;
-import io.lumine.xikage.mythicmobs.MythicMobs;
+import io.hotmail.com.jacob_vejvoda.infernal_mobs.infernal_mobs;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
 import me.lokka30.levelledmobs.LevelInterface;
@@ -22,7 +23,7 @@ public class MultipliersManager {
 	
 	private final MoneyFromMobs plugin;
 	private static LevelInterface levelledMobs;
-	private static InfernalMobsPlugin infernalMobs;
+	private static infernal_mobs infernalMobs;
 	private double lootingMultiplier;
 	private double eventMultiplier = 0;
 	private double lorinthsRpgMobsMultiplier = 0;	
@@ -136,8 +137,9 @@ public class MultipliersManager {
 	
 	private double applyMythicMobsLevelsMultiplier(double amountToAdd, Entity entity) {
 		if (mythicMobsLevelsMultiplier == 0) return 0;
-		if ( MythicMobs.inst().getAPIHelper().isMythicMob(entity)) {
-			double level = MythicMobs.inst().getAPIHelper().getMythicMobInstance(entity).getLevel() - 1;
+		BukkitAPIHelper MythicMobsAPI = MythicBukkit.inst().getAPIHelper();
+		if ( MythicMobsAPI.isMythicMob(entity)) {
+			double level = MythicMobsAPI.getMythicMobInstance(entity).getLevel() - 1;
 			return amountToAdd * mythicMobsLevelsMultiplier * level;
 		}
 		return 0;
@@ -201,7 +203,7 @@ public class MultipliersManager {
 	private void loadPlayerDeathMultipliers(FileConfiguration config) {
 		playerDeathMultipliers.clear();
 		
-		if (plugin.getEcon() == null)
+		if (plugin.getPerms() == null)
 			return;
 
 		for (String permissionGroup : config.getStringList("PlayerDeathMultipliers")) {
@@ -240,7 +242,7 @@ public class MultipliersManager {
 	
 	private void loadInfernalMobsMultiplier(FileConfiguration config) {
 		if (Bukkit.getPluginManager().getPlugin("InfernalMobs") != null) {
-			infernalMobs = (InfernalMobsPlugin) Bukkit.getPluginManager().getPlugin("InfernalMobs");
+			infernalMobs = (infernal_mobs) Bukkit.getPluginManager().getPlugin("InfernalMobs");
 			String strInfernalMobsMultiplier = config.getString("InfernalMobsMultiplier").replace("%", "");
 			infernalMobsMultiplier = Double.parseDouble(strInfernalMobsMultiplier)/100;
 		}	

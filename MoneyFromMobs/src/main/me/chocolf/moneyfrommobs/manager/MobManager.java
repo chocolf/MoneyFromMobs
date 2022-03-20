@@ -46,6 +46,7 @@ public class MobManager {
 		// loop through normal config to find enabled mobs. Store their amount, drop chance and number of drops
 		for (String mob : config.getKeys(false)){
 			ConfigurationSection mobConfigSection = config.getConfigurationSection(mob);
+			// TODO: improve this so it uses mobConfigSection instead of config
 			if (config.getBoolean(mob+".Enabled") && mobConfigSection.contains("DropChance")){
 				dropChances.put(mob, config.getDouble(mob+".DropChance"));
 				

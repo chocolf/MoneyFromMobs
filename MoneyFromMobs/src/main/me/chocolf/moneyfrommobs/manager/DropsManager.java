@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import io.lumine.mythic.bukkit.MythicBukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -19,7 +20,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import dev.rosewood.rosestacker.utils.PersistentDataUtils;
-import io.lumine.xikage.mythicmobs.MythicMobs;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
 import me.chocolf.moneyfrommobs.util.VersionUtils;
@@ -48,8 +48,8 @@ public class DropsManager {
 	
 	public DropsManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
+		// so it can be run on using /mfmreload
 		init();
-		
 	}
 	
 	public void init() {
@@ -58,7 +58,7 @@ public class DropsManager {
 		loadDisabledWorlds(config);
 		loadSpawnReasonBooleans(config);
 		loadOnlyOnKill(config);
-		disableDecimal = plugin.getConfig().getBoolean("MoneyDropsOnGround.DisableDecimal");
+		disableDecimal = config.getBoolean("MoneyDropsOnGround.DisableDecimal");
 		babyMobsCanDropMoney = config.getBoolean("MoneyDropsFromBabyMobs");
 		maxDropsPerMinute = config.getInt("MaxDropsPerMinute");
 		divideMoneyBetweenDrops = config.getBoolean("DivideMoneyBetweenDrops");
@@ -192,8 +192,8 @@ public class DropsManager {
 	}
 	
 	public String getEntityName(Entity entity) {
-		if (plugin.getServer().getPluginManager().isPluginEnabled("MythicMobs") && MythicMobs.inst().getAPIHelper().isMythicMob(entity)) {
-			String mythicMobName = MythicMobs.inst().getAPIHelper().getMythicMobInstance(entity).getType().getInternalName();
+		if (plugin.getServer().getPluginManager().isPluginEnabled("MythicMobs") && MythicBukkit.inst().getAPIHelper().isMythicMob(entity)) {
+			String mythicMobName = MythicBukkit.inst().getAPIHelper().getMythicMobInstance(entity).getType().getInternalName();
 			if (this.isEntityEnabled(mythicMobName)) 
 				return mythicMobName;
 		}
