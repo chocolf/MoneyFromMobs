@@ -36,6 +36,5 @@ public class MobSpawnListener implements Listener {
 		else {
 		    entity.setMetadata("MfMSpawnReason", new FixedMetadataValue(this.plugin, spawnReason));
 		}
-		
-	}	
+	}
 }

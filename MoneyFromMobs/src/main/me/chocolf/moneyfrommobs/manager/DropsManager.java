@@ -7,6 +7,7 @@ import java.util.List;
 
 import io.lumine.mythic.bukkit.MythicBukkit;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,7 +43,9 @@ public class DropsManager {
 	private boolean roseStackerSupport;
 	private boolean autoRemoveDrop;
 	private int timeUntilRemove;
-	
+	private boolean playerDropsMoneyInCreative;
+	private boolean killerEarnsMoney;
+
 	private final HashMap<String, Integer> numberOfDropsThisMinute = new HashMap<>();
 	private int maxDropsPerMinute;
 	
@@ -54,7 +57,6 @@ public class DropsManager {
 	
 	public void init() {
 		FileConfiguration config = plugin.getConfig();
-		loadDropMoneyOnGround(config);
 		loadDisabledWorlds(config);
 		loadSpawnReasonBooleans(config);
 		loadOnlyOnKill(config);
@@ -63,12 +65,11 @@ public class DropsManager {
 		maxDropsPerMinute = config.getInt("MaxDropsPerMinute");
 		divideMoneyBetweenDrops = config.getBoolean("DivideMoneyBetweenDrops");
 		takeMoneyFromKilledPlayer = config.getBoolean("PLAYER.TakeMoneyFromKilledPlayer");
+		killerEarnsMoney = config.getBoolean("PLAYER.MoneyDrops");
 		roseStackerSupport = Bukkit.getPluginManager().isPluginEnabled("RoseStacker");
 		autoRemoveDrop = config.getBoolean("AutoRemoveMoney.Enabled");
 		timeUntilRemove = config.getInt("AutoRemoveMoney.TimeUntilRemove");
-	}
-	
-	private void loadDropMoneyOnGround(FileConfiguration config) {
+		playerDropsMoneyInCreative = config.getBoolean("CreativeModeDropsMoney");
 		dropMoneyOnGround = config.getBoolean("MoneyDropsOnGround.Enabled");
 	}
 
@@ -126,22 +127,23 @@ public class DropsManager {
 			
 			meta.setLore(lore);
 			item.setItemMeta(meta);
-			
-			Item itemDropped = location.getWorld().dropItemNaturally(location, item );
-			String strAmount = String.format("%.2f", amount);
 
+			String strAmount = String.format("%.2f", amount);
 			// removes decimal place
 			if (disableDecimal)
 				strAmount = String.format("%.0f", amount);
 
-			
+			final String finalAmount = strAmount;
+
+			Item itemDropped = location.getWorld().dropItemNaturally(location, item, itemdropped ->{
+				itemdropped.setCustomNameVisible(true);
+				itemdropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", finalAmount));
+			});
+
 			// schedules task to remove drop in certain amount of time if enabled
 			if (autoRemoveDrop) {
 				Bukkit.getScheduler().runTaskLater(plugin, itemDropped::remove, timeUntilRemove * 20L);
 			}
-			
-			itemDropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", strAmount));
-			itemDropped.setCustomNameVisible(true);
 		}
 	}
 	
@@ -156,6 +158,9 @@ public class DropsManager {
 			return false;
 		
 		if (!babyMobsCanDropMoney && entity instanceof Ageable && !((Ageable) entity).isAdult())
+			return false;
+
+		if (entity instanceof Player && !playerDropsMoneyInCreative && ((Player) entity).getGameMode() == GameMode.CREATIVE)
 			return false;
 		
 		return canDropWithSpawnReason(entity);
@@ -255,5 +260,9 @@ public class DropsManager {
 	}
 	public boolean shouldDisableDecimal() {
 		return disableDecimal;
+	}
+
+	public boolean shouldKillerEarnMoney() {
+		return killerEarnsMoney;
 	}
 }

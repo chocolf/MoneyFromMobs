@@ -10,11 +10,12 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.manager.MessageManager;
 import me.chocolf.moneyfrommobs.manager.MultipliersManager;
 
+import java.lang.reflect.Array;
+
 public class MfmEventCommand implements CommandExecutor{
 	
 	private final MoneyFromMobs plugin;
-	
-	BukkitTask task;
+
 	
 	
 	public MfmEventCommand(MoneyFromMobs plugin) {
@@ -27,6 +28,7 @@ public class MfmEventCommand implements CommandExecutor{
 		int numberOfArgs = args.length;
 		MessageManager messageManager = plugin.getMessageManager();
 		MultipliersManager multipliersManager = plugin.getMultipliersManager();
+		BukkitTask task = multipliersManager.getCurrentMultiplierEvent();
 		
 		if (numberOfArgs > 0) {
 			if (args[0].equalsIgnoreCase("stop")) {
@@ -34,7 +36,7 @@ public class MfmEventCommand implements CommandExecutor{
 					multipliersManager.setEventMultiplier(0);
 					Bukkit.broadcastMessage(messageManager.getMessage("eventFinish"));
 					Bukkit.getScheduler().cancelTask(task.getTaskId());
-					task = null;
+					multipliersManager.setCurrentMultiplierEvent(null);
 				}
 				else {
 					sender.sendMessage(messageManager.getMessage("noEventRunningMessage") );
@@ -42,7 +44,7 @@ public class MfmEventCommand implements CommandExecutor{
 				return true;
 			}
 
-			else if (args[0].equalsIgnoreCase("start") && numberOfArgs >= 5) {
+			else if (args[0].equalsIgnoreCase("start") && numberOfArgs >= 3) {
 				try {
 					if (task != null) {
 						sender.sendMessage(messageManager.getMessage("eventAlreadyRunningMessage"));
@@ -50,23 +52,39 @@ public class MfmEventCommand implements CommandExecutor{
 					}
 					
 					multipliersManager.setEventMultiplier(Double.parseDouble(args[1].replace("%", ""))/100);
-					
-					int hours = Integer.parseInt(args[2]);
-					int minutes = Integer.parseInt(args[3]);
-					int seconds = Integer.parseInt(args[4]);
+					String duration = args[2];
+					int hours = 0;
+					int minutes = 0;
+					int seconds = 0;
+
+					if (duration.contains("h")){
+						String[] hoursArray = duration.split("h")[0].split("[a-zA-Z]");
+						hours = Integer.parseInt(hoursArray[hoursArray.length - 1]);
+					}
+					if (duration.contains("m")){
+						String[] minutesArray = duration.split("m")[0].split("[a-zA-Z]");
+						minutes = Integer.parseInt(minutesArray[minutesArray.length - 1]);
+					}
+					if (duration.contains("s")){
+						String[] secondsArray = duration.split("s")[0].split("[a-zA-Z]");
+						seconds = Integer.parseInt(secondsArray[secondsArray.length - 1]);
+					}
 					int totalTime = hours*3600 + minutes*60 + seconds;
-					
+
+					if (totalTime == 0) return false;
+
 					Bukkit.broadcastMessage(messageManager.getMessage("eventStart")
 							.replace("{multiplier}", args[1].replace("%", ""))
-							.replace("{hours}", args[2])
-							.replace("{minutes}", args[3])
-							.replace("{seconds}", args[4]));
+							.replace("{hours}", String.valueOf(hours))
+							.replace("{minutes}", String.valueOf(minutes))
+							.replace("{seconds}", String.valueOf(seconds)));
 					
-					task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+					BukkitTask currentTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
 						multipliersManager.setEventMultiplier(0);
-						task = null;
+						multipliersManager.setCurrentMultiplierEvent(null);
 						Bukkit.broadcastMessage(messageManager.getMessage("eventFinish"));
 					}, totalTime * 20L);
+					multipliersManager.setCurrentMultiplierEvent(currentTask);
 					return true;
 				} catch (Exception e) {
 					return false;

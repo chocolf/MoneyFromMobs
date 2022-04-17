@@ -82,25 +82,29 @@ public class DeathListeners implements Listener{
 		
 		// if money should be dropped as item
 		if ( dropsManager.doesMoneyDropOnGround() ){
-			ItemStack itemToDrop = pickUpManager.getItemToDrop();
-			Location location = entity.getLocation();
-			
-			// calls drop money event
-			DropMoneyEvent dropMoneyEvent = new DropMoneyEvent(itemToDrop,amount, location, killer, entity, numberOfDrops);
-			Bukkit.getPluginManager().callEvent(dropMoneyEvent);
-			if (dropMoneyEvent.isCancelled())
-				return;
-			itemToDrop = dropMoneyEvent.getItemToDrop();
-			amount = dropMoneyEvent.getAmount();
-			location = dropMoneyEvent.getLocation();
-			numberOfDrops = dropMoneyEvent.getNumberOfDrops();
-			
-			// drops item
-			dropsManager.dropItem(itemToDrop, amount, location, numberOfDrops, killer);
+			if (!(entity instanceof Player && !dropsManager.shouldKillerEarnMoney())){
+				ItemStack itemToDrop = pickUpManager.getItemToDrop();
+				Location location = entity.getLocation();
+
+				// calls drop money event
+				DropMoneyEvent dropMoneyEvent = new DropMoneyEvent(itemToDrop,amount, location, killer, entity, numberOfDrops);
+				Bukkit.getPluginManager().callEvent(dropMoneyEvent);
+				if (dropMoneyEvent.isCancelled())
+					return;
+				itemToDrop = dropMoneyEvent.getItemToDrop();
+				amount = dropMoneyEvent.getAmount();
+				location = dropMoneyEvent.getLocation();
+				numberOfDrops = dropMoneyEvent.getNumberOfDrops();
+
+				// drops item
+				dropsManager.dropItem(itemToDrop, amount, location, numberOfDrops, killer);
+			}
+
 		}
 		// if money goes straight into players account
 		else if (killer!=null){
-			pickUpManager.giveMoney(amount, killer);
+			if (!(entity instanceof Player && !dropsManager.shouldKillerEarnMoney()))
+				pickUpManager.giveMoney(amount, killer);
 		}
 
 		// take money from dead player

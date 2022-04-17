@@ -29,3 +29,18 @@ LevelledMobsMultiplier: 1%
 
 # Extra money given if the mob that was killed was an Infernal Mob from the plugin InfernalMobs
 InfernalMobsMultiplier: 10%
+
+# Server Restart is required to disable/edit Repeating Multiplier Events
+RepeatingMultiplierEvent:
+  Enabled: false
+  # Percentage increase of money dropped whilst event is active
+  Multiplier: 100%
+  # Duration of the multiplier Event in minutes
+  Duration: 5
+  # How often the multiplier event repeats in minutes. Starting from the beginning of the last multiplier event
+  RepeatDelay: 60
+  # Messages sent when the multiplier event starts/stops
+  EventStartMessage: "&aA Money Multiplier Event has started! Mobs will drop &f100% &amore money for 5 minutes"
+  EventEndMessage: "&cThe Money Multiplier Event has ended! All mobs will now drop their normal amount!"
+
+

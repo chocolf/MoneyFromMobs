@@ -7,6 +7,7 @@ import java.util.List;
 
 import me.chocolf.moneyfrommobs.integration.WorldGuardFlags;
 import me.chocolf.moneyfrommobs.listener.*;
+import me.chocolf.moneyfrommobs.runnable.RepeatingMultiplierEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
@@ -50,6 +51,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	private MobManager mobManager;
 	private MultipliersManager multipliersManager;
 	private BukkitTask inventoryIsFullRunnable;
+	private BukkitTask repeatingMultiplierEvent;
 	private PlaceholderAPIListener placeholderListener;
 	private static MoneyFromMobs instance;
 	
@@ -107,6 +109,9 @@ public class MoneyFromMobs extends JavaPlugin{
 	
 		// Bukkit runnable to allow players to pickup items when inventory is full
 		loadInventoryIsFullRunnable();
+
+		// Bukkit runnable for Repeating Multiplier Event
+		loadRepeatingMultiplierEvent();
 		
 		// Checks if user is using the latest version of the plugin on spigot
 		try {
@@ -194,6 +199,13 @@ public class MoneyFromMobs extends JavaPlugin{
 			inventoryIsFullRunnable = new NearEntitiesRunnable(this).runTaskTimer(this, interval, interval);
 		}
 	}
+
+	public void loadRepeatingMultiplierEvent(){
+		if(getMultipliersConfig().getConfig().getBoolean("RepeatingMultiplierEvent.Enabled")){
+			int repeatDelay = getMultipliersConfig().getConfig().getInt("RepeatingMultiplierEvent.RepeatDelay");
+			repeatingMultiplierEvent = new RepeatingMultiplierEvent(this).runTaskTimer(this, 100, repeatDelay*60*20);
+		}
+	}
 	
 	// checks if server is running Paper 1.13+
 	public boolean isUsingPaper() {
@@ -235,6 +247,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	public BukkitTask getInventoryIsFullRunnable() {
 		return inventoryIsFullRunnable;
 	}
+	public BukkitTask getRepeatingMultiplierEvent(){return repeatingMultiplierEvent;};
 	public static MoneyFromMobs getInstance() {
 		return instance;
 	}

@@ -176,7 +176,12 @@ public class PickUpManager {
 		Location loc = p.getLocation();
 		
 		// give money
-		plugin.getEcon().depositPlayer(p,amount);
+		if (amount >= 0){
+			plugin.getEcon().depositPlayer(p,amount);
+		}
+		else{
+			plugin.getEcon().withdrawPlayer(p, amount*-1);
+		}
 		
 		// play sound
 		if (sound != null) {

@@ -1,11 +1,11 @@
 main: me.chocolf.moneyfrommobs.MoneyFromMobs
 name: MoneyFromMobs
-version: 4.42
+version: 4.5
 api-version: 1.13
 author: Chocolf
 description: Makes mobs drop money with looting multiplier
 depend: [Vault]
-softdepend: [WorldEdit,WorldGuard,MythicMobs,PlaceholderAPI,RoseStacker,LorinthsRpgMobs,LevelledMobs]
+softdepend: [InfernalMobs,WorldEdit,WorldGuard,MythicMobs,PlaceholderAPI,RoseStacker,LorinthsRpgMobs,LevelledMobs]
 commands:
   MfmHelp:
     description: Displays all commands for Money From Mobs
@@ -31,7 +31,7 @@ commands:
   MfmEvent:
     description: Starts/Stops an event that increases the amount of money dropped by mobs for a certain amount of time.
     permission: MoneyFromMobs.event
-    usage: "Usage: /MfmEvent <Start/Stop> [Percentage Increase] [Hours] [Minutes] [Seconds]"
+    usage: "Usage: /MfmEvent <Start/Stop> [Percentage Increase] [Duration e.g. 1h10m0s]"
 
 permissions:
   MoneyFromMobs.use:

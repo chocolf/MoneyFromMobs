@@ -11,9 +11,7 @@ public class MfmEventTabCompleter implements TabCompleter{
 
 	List<String> startOrStop = new ArrayList<>();
 	List<String> percentageIncrease = new ArrayList<>();
-	List<String> hours = new ArrayList<>();
-	List<String> minutes = new ArrayList<>();
-	List<String> seconds = new ArrayList<>();
+	List<String> duration = new ArrayList<>();
 	List<String> nothing = new ArrayList<>();
 	
 	@Override
@@ -28,16 +26,8 @@ public class MfmEventTabCompleter implements TabCompleter{
 			percentageIncrease.add("<PercentageIncrease>");
 		}
 		
-		if (hours.isEmpty()) {
-			hours.add("<Hours>");
-		}
-		
-		if (minutes.isEmpty()) {
-			minutes.add("<Minutes>");
-		}
-		
-		if (seconds.isEmpty()) {
-			seconds.add("<Seconds>");
+		if (duration.isEmpty()) {
+			duration.add("<Duration e.g. 1h10m0s>");
 		}
 				
 		int argsLength = args.length;
@@ -49,16 +39,7 @@ public class MfmEventTabCompleter implements TabCompleter{
 			}
 			
 			if (argsLength == 3) {
-				
-				return hours;
-			}
-			
-			if (argsLength == 4) {
-				return minutes;
-			}
-			
-			if (argsLength == 5) {
-				return seconds;
+				return duration;
 			}
 		}
 		return nothing;

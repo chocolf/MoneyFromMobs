@@ -19,7 +19,6 @@ public class NearEntitiesRunnable extends BukkitRunnable{
 	public NearEntitiesRunnable(MoneyFromMobs plugin) {
 		this.plugin = plugin;
 		this.radius = plugin.getConfig().getInt("PickupMoneyWhenInventoryIsFull.Radius");
-		
 	}
 	
 	public void run() {

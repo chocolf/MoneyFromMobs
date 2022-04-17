@@ -28,7 +28,7 @@ public class HelpCommand implements CommandExecutor{
 		sender.sendMessage("");
 		sender.sendMessage(MessageManager.applyColour("&a/MfmDrop <Amount> [NumberOfDrops] - &fDrops money on player's cursor"));
 		sender.sendMessage("");
-		sender.sendMessage(MessageManager.applyColour("&a/MfmEvent <Start/Stop> [PercentageIncrease] [Hours] [Minutes] [Seconds] - &fCreate global multipliers for a limited time"));
+		sender.sendMessage(MessageManager.applyColour("&a/MfmEvent <Start/Stop> [PercentageIncrease] [Duration e.g. 1h10m0s] - &fCreate global multipliers for a limited time and optionally automatically repeat them"));
 		sender.sendMessage("");
 		sender.sendMessage(MessageManager.applyColour(MessageManager.applyColour("&aWiki:&f https://github.com/chocolf/MoneyFromMobs/wiki")));
 		

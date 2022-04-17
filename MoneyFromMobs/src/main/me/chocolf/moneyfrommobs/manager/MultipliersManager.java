@@ -18,6 +18,7 @@ import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
 import me.lokka30.levelledmobs.LevelInterface;
 import me.lokka30.levelledmobs.LevelledMobs;
 import me.lorinth.rpgmobs.LorinthsRpgMobs;
+import org.bukkit.scheduler.BukkitTask;
 
 public class MultipliersManager {
 	
@@ -30,6 +31,7 @@ public class MultipliersManager {
 	private double mythicMobsLevelsMultiplier = 0;
 	private double levelledMobsMultiplier = 0;
 	private double infernalMobsMultiplier = 0;
+	private BukkitTask currentMultiplierEvent;
 	
 	private final HashMap<String, Double> worldMultipliers = new HashMap<>();
 	private final HashMap<String, Double> permissionGroupMultipliers = new HashMap<>();
@@ -255,4 +257,7 @@ public class MultipliersManager {
 	public double getEventMultiplier() {
 		return eventMultiplier;
 	}
+
+	public BukkitTask getCurrentMultiplierEvent(){return currentMultiplierEvent;}
+	public void setCurrentMultiplierEvent(BukkitTask task){currentMultiplierEvent = task;}
 }

@@ -48,6 +48,9 @@ AutoRemoveMoney:
 # For example, if you set a Pig to drop $10 with 2 drops, Setting this option to true would make it drop 2x$5 but setting this option to false would make it drop 2x$10
 DivideMoneyBetweenDrops: true
 
+# If a player dies in creative mode, should they drop money?
+CreativeModeDropsMoney: false
+
 
 ###################################################### Pick Up Options ######################################################
 
@@ -129,7 +132,10 @@ PLAYER:
   DropChance: 100
   NumberOfDrops: 5
   OnlyOnKill: true
+  # TakeMoneyFromKilledPlayer: setting to false means killed player doesn't lose money but killer can still earn money (e.g. kitpvp servers)
   TakeMoneyFromKilledPlayer: true
+  # MoneyDrops: setting to false killer doesn't earn money and the money doesn't drop on the ground, so it cannot be re-picked up
+  MoneyDrops: true
   Message: '&cYou dropped $%amount% on death. You now have: $%balance%.'
   
 ########## ANIMALS ##########
