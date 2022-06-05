@@ -36,7 +36,14 @@ public class MultipliersManager {
 	private final HashMap<String, Double> worldMultipliers = new HashMap<>();
 	private final HashMap<String, Double> permissionGroupMultipliers = new HashMap<>();
 	private final HashMap<String, Double> playerDeathMultipliers = new HashMap<>();
-	
+
+	private double repeatingMultiplier;
+	private int repeatingDuration;
+	private int repeatingDelay;
+	private int repeatingInitialDelay;
+	private String repeatingStartMessage;
+	private String repeatingEndMessage;
+
 	public MultipliersManager(MoneyFromMobs plugin) {
 		this.plugin = plugin;
 		init();
@@ -52,8 +59,18 @@ public class MultipliersManager {
 		loadMythicMobsLevelsMultiplier(config);
 		loadLevelledMobsMultiplier(config);
 		loadInfernalMobsMultiplier(config);
+		reloadRepeatingMultiplierEventValues(config);
 	}
-	
+
+	private void reloadRepeatingMultiplierEventValues(FileConfiguration config) {
+		this.repeatingMultiplier = Double.parseDouble(config.getString("RepeatingMultiplierEvent.Multiplier").replace("%",""))/100;
+		this.repeatingDuration = config.getInt("RepeatingMultiplierEvent.Duration") * 60;
+		this.repeatingDelay = config.getInt("RepeatingMultiplierEvent.RepeatDelay") * 60 * 20;
+		this.repeatingInitialDelay = config.getInt("RepeatingMultiplierEvent.InitialDelay") * 60 * 20;
+		this.repeatingStartMessage = MessageManager.applyColour(config.getString("RepeatingMultiplierEvent.EventStartMessage"));
+		this.repeatingEndMessage = MessageManager.applyColour(config.getString("RepeatingMultiplierEvent.EventEndMessage"));
+	}
+
 	public double applyMultipliers(double amount, Player p, Entity entity) {
 		double baseAmount = amount;
 		
@@ -150,8 +167,8 @@ public class MultipliersManager {
 	private double applyLevelledMobsMultiplier(double amountToAdd, Entity entity) {
 		if (levelledMobsMultiplier == 0) return 0;
 		if ( levelledMobs.isLevelled(( LivingEntity) entity) ) {
-			int level = levelledMobs.getLevelOfMob((LivingEntity) entity) - 1;
-			return amountToAdd * levelledMobsMultiplier * level;
+			int level = levelledMobs.getLevelOfMob((LivingEntity) entity);
+			return amountToAdd * levelledMobsMultiplier * (level-1);
 		}
 		return 0;
 	}
@@ -260,4 +277,48 @@ public class MultipliersManager {
 
 	public BukkitTask getCurrentMultiplierEvent(){return currentMultiplierEvent;}
 	public void setCurrentMultiplierEvent(BukkitTask task){currentMultiplierEvent = task;}
+
+
+	public void reloadRepeatingMultiplierEvent(){
+		FileConfiguration config = plugin.getMultipliersConfig().getConfig();
+		int newDelay = config.getInt("RepeatingMultiplierEvent.RepeatDelay") * 60 * 20;
+
+		if (newDelay != repeatingDelay || (plugin.getRepeatingMultiplierEvent() == null && config.getBoolean("RepeatingMultiplierEvent.Enabled")) ){
+			if (plugin.getRepeatingMultiplierEvent() != null) {
+				Bukkit.getScheduler().cancelTask(plugin.getRepeatingMultiplierEvent().getTaskId());
+			}
+			reloadRepeatingMultiplierEventValues(config);
+			plugin.loadRepeatingMultiplierEvent();
+		}
+		else if (!config.getBoolean("RepeatingMultiplierEvent.Enabled")){
+			if (plugin.getRepeatingMultiplierEvent() != null) {
+				Bukkit.getScheduler().cancelTask(plugin.getRepeatingMultiplierEvent().getTaskId());
+			}
+			plugin.setRepeatingMultiplierEvent(null);
+		}
+	}
+
+	public double getRepeatingMultiplier() {
+		return repeatingMultiplier;
+	}
+
+	public int getRepeatingDuration() {
+		return repeatingDuration;
+	}
+
+	public String getRepeatingStartMessage() {
+		return repeatingStartMessage;
+	}
+
+	public String getRepeatingEndMessage() {
+		return repeatingEndMessage;
+	}
+
+	public int getRepeatingDelay() {
+		return repeatingDelay;
+	}
+
+	public int getRepeatingInitialDelay() {
+		return repeatingInitialDelay;
+	}
 }

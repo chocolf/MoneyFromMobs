@@ -92,16 +92,4 @@ public class HopperListeners implements Listener {
             state.update();
         }
     }
-
-    @EventHandler
-    private void onHopperMinecartPlaced(EntityPlaceEvent e){
-        Entity hopperMinecart = e.getEntity();
-
-        if (hopperMinecart instanceof HopperMinecart){
-            PersistentDataContainer dataContainer = hopperMinecart.getPersistentDataContainer();
-            NamespacedKey key = new NamespacedKey(plugin, "MfmHopperOwner");
-            dataContainer.set(key, PersistentDataType.STRING, e.getPlayer().getUniqueId().toString());
-        }
-    }
-
 }

@@ -43,7 +43,7 @@ public class DropsManager {
 	private boolean roseStackerSupport;
 	private boolean autoRemoveDrop;
 	private int timeUntilRemove;
-	private boolean playerDropsMoneyInCreative;
+	private boolean moneyDropsInCreative;
 	private boolean killerEarnsMoney;
 
 	private final HashMap<String, Integer> numberOfDropsThisMinute = new HashMap<>();
@@ -69,7 +69,7 @@ public class DropsManager {
 		roseStackerSupport = Bukkit.getPluginManager().isPluginEnabled("RoseStacker");
 		autoRemoveDrop = config.getBoolean("AutoRemoveMoney.Enabled");
 		timeUntilRemove = config.getInt("AutoRemoveMoney.TimeUntilRemove");
-		playerDropsMoneyInCreative = config.getBoolean("CreativeModeDropsMoney");
+		moneyDropsInCreative = config.getBoolean("CreativeModeDropsMoney");
 		dropMoneyOnGround = config.getBoolean("MoneyDropsOnGround.Enabled");
 	}
 
@@ -134,11 +134,18 @@ public class DropsManager {
 				strAmount = String.format("%.0f", amount);
 
 			final String finalAmount = strAmount;
-
-			Item itemDropped = location.getWorld().dropItemNaturally(location, item, itemdropped ->{
-				itemdropped.setCustomNameVisible(true);
-				itemdropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", finalAmount));
-			});
+			Item itemDropped;
+			if (VersionUtils.getVersionNumber() > 15){
+				itemDropped = location.getWorld().dropItemNaturally(location, item, itemdropped ->{
+					itemdropped.setCustomNameVisible(true);
+					itemdropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", finalAmount));
+				});
+			}
+			else {
+				itemDropped = location.getWorld().dropItemNaturally(location, item);
+				itemDropped.setCustomNameVisible(true);
+				itemDropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", finalAmount));
+			}
 
 			// schedules task to remove drop in certain amount of time if enabled
 			if (autoRemoveDrop) {
@@ -160,7 +167,7 @@ public class DropsManager {
 		if (!babyMobsCanDropMoney && entity instanceof Ageable && !((Ageable) entity).isAdult())
 			return false;
 
-		if (entity instanceof Player && !playerDropsMoneyInCreative && ((Player) entity).getGameMode() == GameMode.CREATIVE)
+		if (p != null && !moneyDropsInCreative && p.getGameMode() == GameMode.CREATIVE)
 			return false;
 		
 		return canDropWithSpawnReason(entity);
@@ -201,6 +208,10 @@ public class DropsManager {
 			String mythicMobName = MythicBukkit.inst().getAPIHelper().getMythicMobInstance(entity).getType().getInternalName();
 			if (this.isEntityEnabled(mythicMobName)) 
 				return mythicMobName;
+		}
+		else if (entity.hasMetadata("NPC")){
+			if (this.isEntityEnabled(entity.getName()))
+				return entity.getName();
 		}
 		return entity.getType().toString();	
 	}

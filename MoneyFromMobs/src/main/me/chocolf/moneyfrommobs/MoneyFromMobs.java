@@ -77,7 +77,10 @@ public class MoneyFromMobs extends JavaPlugin{
 		new MobSpawnListener(this);
 		new OnJoinListener(this);
 		new HopperListeners(this);
-		if (isUsingPaper()) new PaperListeners(this);
+		if (VersionUtils.getVersionNumber() > 13)
+			new PlaceMinecartHopperListener(this);
+		if (isUsingPaper())
+			new PaperListeners(this);
 		if(Bukkit.getServer().getPluginManager().isPluginEnabled("WorldGuard") && VersionUtils.getVersionNumber() > 15)
 			new WorldGuardListener(this);
 		
@@ -201,10 +204,8 @@ public class MoneyFromMobs extends JavaPlugin{
 	}
 
 	public void loadRepeatingMultiplierEvent(){
-		if(getMultipliersConfig().getConfig().getBoolean("RepeatingMultiplierEvent.Enabled")){
-			int repeatDelay = getMultipliersConfig().getConfig().getInt("RepeatingMultiplierEvent.RepeatDelay");
-			repeatingMultiplierEvent = new RepeatingMultiplierEvent(this).runTaskTimer(this, 100, repeatDelay*60*20);
-		}
+		if(getMultipliersConfig().getConfig().getBoolean("RepeatingMultiplierEvent.Enabled"))
+			repeatingMultiplierEvent = new RepeatingMultiplierEvent(this).runTaskTimer(this, multipliersManager.getRepeatingInitialDelay(), multipliersManager.getRepeatingDelay());
 	}
 	
 	// checks if server is running Paper 1.13+
@@ -247,7 +248,8 @@ public class MoneyFromMobs extends JavaPlugin{
 	public BukkitTask getInventoryIsFullRunnable() {
 		return inventoryIsFullRunnable;
 	}
-	public BukkitTask getRepeatingMultiplierEvent(){return repeatingMultiplierEvent;};
+	public BukkitTask getRepeatingMultiplierEvent(){return repeatingMultiplierEvent;}
+	public void setRepeatingMultiplierEvent(BukkitTask newRepeatingMultiplierEvent){ repeatingMultiplierEvent = newRepeatingMultiplierEvent;}
 	public static MoneyFromMobs getInstance() {
 		return instance;
 	}

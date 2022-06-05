@@ -136,6 +136,6 @@ public class MessageManager {
 	}
 	
 	private String getMessage(String messageName, double balance, String strAmount) {
-		return messagesMap.get(messageName).replace("%amount%", strAmount).replace("%balance%", String.format("%.2f", balance) );
+		return messagesMap.get(messageName).replace("%amount%", strAmount).replace("%balance%", String.format("%.2f", balance)).replace("%balance_0dp%", String.format("%.0f", balance) );
 	}
 }

@@ -48,8 +48,8 @@ AutoRemoveMoney:
 # For example, if you set a Pig to drop $10 with 2 drops, Setting this option to true would make it drop 2x$5 but setting this option to false would make it drop 2x$10
 DivideMoneyBetweenDrops: true
 
-# If a player dies in creative mode, should they drop money?
-CreativeModeDropsMoney: false
+# If a player is in creative, do mobs still drop money when they kill them?
+CreativeModeDropsMoney: true
 
 
 ###################################################### Pick Up Options ######################################################

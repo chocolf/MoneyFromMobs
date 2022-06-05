@@ -1,6 +1,15 @@
 # Add your MythicMobs here using the template below.
+# You can also add Citizens NPCs by using whatever their name is above their head.
 
 Skeleton_King:
+  Enabled: true
+  Min: 150
+  Max: 150
+  DropChance: 100
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+
+CitizenNpc1:
   Enabled: true
   Min: 150
   Max: 150

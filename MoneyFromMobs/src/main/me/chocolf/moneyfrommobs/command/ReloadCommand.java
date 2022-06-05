@@ -34,7 +34,10 @@ public class ReloadCommand implements CommandExecutor{
 		plugin.reloadConfig();
 		plugin.getMMConfig().reloadConfig();
 		plugin.getMultipliersConfig().reloadConfig();
-		
+
+		// reload Repeating Multiplier Events if something was changed in the config
+		multipliersManager.reloadRepeatingMultiplierEvent();
+
 		// Reload values stored in managers
 		messageManager.loadMessage();
 		pickUpManager.init();
@@ -49,6 +52,8 @@ public class ReloadCommand implements CommandExecutor{
 			}
 			plugin.loadInventoryIsFullRunnable();
 		}
+
+
 		
 		// sends message saying it reloaded correctly
 		sender.sendMessage(messageManager.getMessage("reloadMessage"));

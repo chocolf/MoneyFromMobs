@@ -1,6 +1,6 @@
 ###################################################### Multipliers ######################################################
 
-# Extra money based on a percentage per level of Looting. For example, LootingMultiplier: 10% means a player with Looting 3 will get 30% more money
+# Extra money based on a percentage per level of Looting. For example, LootingMultiplier: 10% means a player with Looting 1 will get 10% more money and Looting 3 will get 30% more money
 LootingMultiplier: 10%
 
 # Players in these Permission Groups will gain extra money based on the percentages next to the Permission Group name. Set the first Permission Group to "NONE" if you want to disable this Multiplier, or if you don't use a vault based permissions plugin.
@@ -39,6 +39,8 @@ RepeatingMultiplierEvent:
   Duration: 5
   # How often the multiplier event repeats in minutes. Starting from the beginning of the last multiplier event
   RepeatDelay: 60
+  # The initial delay for the multiplier event to start when starting your server or using /mfmreload in minutes
+  InitialDelay: 0
   # Messages sent when the multiplier event starts/stops
   EventStartMessage: "&aA Money Multiplier Event has started! Mobs will drop &f100% &amore money for 5 minutes"
   EventEndMessage: "&cThe Money Multiplier Event has ended! All mobs will now drop their normal amount!"

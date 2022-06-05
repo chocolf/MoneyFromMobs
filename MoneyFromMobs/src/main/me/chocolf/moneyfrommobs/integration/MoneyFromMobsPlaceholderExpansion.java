@@ -38,7 +38,20 @@ public class MoneyFromMobsPlaceholderExpansion extends PlaceholderExpansion {
         else if (identifier.equals("current_event_multiplier")) {
         	return plugin.getMultipliersManager().getEventMultiplier()*100+"%";
         }
-        
+
+//        // %moneyfrommobs_chat_message%
+//        else if (identifier.equals("chat_message"))
+//            return plugin.getMessageManager().getMessage("chatMessage");
+//
+//        // %moneyfrommobs_actionbar_message%
+//        else if (identifier.equals("actionbar_message"))
+//            return plugin.getMessageManager().getMessage("actionBarMessage");
+//
+//        // %moneyfrommobs_floatingtext_message%
+//        else if (identifier.equals("floatingtext_message"))
+//            return plugin.getMessageManager().getMessage("actionBarMessage");
+
+
 
 //        // %someplugin_placeholder2%
 //      if(identifier.equals("placeholder2")){
