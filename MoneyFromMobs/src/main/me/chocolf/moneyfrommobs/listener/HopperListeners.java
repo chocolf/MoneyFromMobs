@@ -75,7 +75,6 @@ public class HopperListeners implements Listener {
                 }
             }
         }
-
     }
 
     @EventHandler
