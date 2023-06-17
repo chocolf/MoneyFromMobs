@@ -11,18 +11,24 @@ import me.chocolf.moneyfrommobs.manager.MessageManager;
 import me.chocolf.moneyfrommobs.util.UpdateChecker;
 
 public class OnJoinListener implements Listener{
-	
+
+	MoneyFromMobs plugin;
 	
 	public OnJoinListener(MoneyFromMobs plugin) {
+		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
-		Player p = e.getPlayer();
-		if (p.isOp() && UpdateChecker.checkForUpdate()) {
-			p.sendMessage(MessageManager.applyColour("&bUpdate Available for MoneyFromMobs:"));
-			p.sendMessage(MessageManager.applyColour("&bhttps://www.spigotmc.org/resources/money-from-mobs-1-9-1-16-4.79137/"));
-		}
+		Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+			Player p = e.getPlayer();
+			if (p.isOp() && UpdateChecker.checkForUpdate()) {
+				p.sendMessage("");
+				p.sendMessage(MessageManager.applyColour("&aUpdate Available for &lMoneyFromMobs&a: "));
+				p.sendMessage(MessageManager.applyColour("https://www.spigotmc.org/resources/money-from-mobs.79137/"));
+				p.sendMessage("");
+			}
+		}, 0L);
 	}
 }

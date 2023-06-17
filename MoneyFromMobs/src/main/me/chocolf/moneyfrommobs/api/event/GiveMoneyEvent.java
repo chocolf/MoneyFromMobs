@@ -1,7 +1,6 @@
 package me.chocolf.moneyfrommobs.api.event;
 
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -12,10 +11,10 @@ public class GiveMoneyEvent extends Event implements Cancellable{
 	private boolean isCancelled;
 	private final Player player;
 	private Double amount;
-	private Sound sound;
+	private String sound;
 	private Particle particle;
 	
-	public GiveMoneyEvent(Player player, Double amount, Sound sound, Particle particle) {
+	public GiveMoneyEvent(Player player, Double amount, String sound, Particle particle) {
 		this.player = player;
 		this.setAmount(amount);
 		this.setSound(sound);
@@ -54,11 +53,11 @@ public class GiveMoneyEvent extends Event implements Cancellable{
 		this.amount = amount;
 	}
 
-	public Sound getSound() {
+	public String getSound() {
 		return sound;
 	}
 
-	public void setSound(Sound sound) {
+	public void setSound(String sound) {
 		this.sound = sound;
 	}
 

@@ -31,11 +31,14 @@ public class PickUpManager {
 	private static final Pattern pattern = Pattern.compile("([0-9]){6}mfm");
 	private final MoneyFromMobs plugin;
 	private boolean onlyKillerPickUpMoney;
+	private boolean hopperGivesMoneyToOfflinePlayer;
 	private ItemStack itemToDrop;
 	private String itemName;
 	private Particle particleEffect;
 	private int numberOfParticles;
-	private Sound sound;
+	private String sound;
+	private float pitch;
+	private float volume;
 	private String hopperGivesMoneyTo;
 
 	public PickUpManager(MoneyFromMobs plugin) {
@@ -50,6 +53,7 @@ public class PickUpManager {
 		loadSound(config);
 		onlyKillerPickUpMoney = config.getBoolean("OnlyKillerCanPickUpMoney");
 		hopperGivesMoneyTo = config.getString("HopperGivesMoneyTo");
+		hopperGivesMoneyToOfflinePlayer = config.getBoolean("HopperGivesMoneyToOfflinePlayer");
 	}
 	
 	private void loadItem(FileConfiguration config) {
@@ -84,34 +88,86 @@ public class PickUpManager {
 	}
 	
 	private void loadParticles(FileConfiguration config) {
-		if (config.getString("ParticleEffect").equalsIgnoreCase("NONE")) {
-			particleEffect = null;
-		}
-		else {
+		if (config.getBoolean("Particle.Enabled")){
 			try {
-				particleEffect = Particle.valueOf( config.getString("ParticleEffect").toUpperCase() );
-				numberOfParticles = config.getInt("AmountOfParticles");
+				particleEffect = Particle.valueOf( config.getString("Particle.ParticleEffect").toUpperCase() );
+				numberOfParticles = config.getInt("Particle.NumberOfParticles");
 			}
 			catch(Exception e) {
-				plugin.getLogger().warning("Disabling particles on pickup. Make sure you have entered a valid Particle Effect in your config");
+				Bukkit.getConsoleSender().sendMessage(MessageManager.applyColour("&c[MoneyFromMobs] Unknown Particle Effect set in the Config! Please make sure it is spelt correctly!"));
 				particleEffect = null;
 			}
 		}
+		else
+			particleEffect = null;
 	}
 	
 	private void loadSound(FileConfiguration config) {
-		if (config.getString("Sound").equalsIgnoreCase("NONE")) {
-			sound = null;
+		if (config.getBoolean("Sound.Enabled"))
+			sound = config.getString("Sound.SoundToBePlayed");
+		else
+			sound = "NONE";
+		pitch = (float) config.getDouble("Sound.Pitch");
+		volume = (float) config.getDouble("Sound.Volume")/100;
+	}
+
+	public void giveMoney(Double amount,Player p) {
+		// call pickup money event
+		GiveMoneyEvent giveMoneyEvent = new GiveMoneyEvent(p, amount, sound, particleEffect);
+		Bukkit.getPluginManager().callEvent(giveMoneyEvent);
+		if (giveMoneyEvent.isCancelled()) return;
+		amount = giveMoneyEvent.getAmount();
+		sound = giveMoneyEvent.getSound();
+		particleEffect = giveMoneyEvent.getParticle();
+
+		if (amount == 0) return;
+
+		Location loc = p.getLocation();
+
+		// give money
+		if (amount >= 0){
+			plugin.getEcon().depositPlayer(p,amount);
 		}
-		else {
-			try {
-				sound = Sound.valueOf( config.getString("Sound").toUpperCase().replace(".", "_") ) ;
+		else{
+			plugin.getEcon().withdrawPlayer(p, amount*-1);
+		}
+
+		// play sound
+		if (!sound.equals("NONE")) {
+			try{
+				p.playSound(loc, sound, volume, pitch);
 			}
-			catch (Exception e) {
-				plugin.getLogger().warning("Disabling sound on pick up. Make sure you have entered a valid Sound in your config");
-				sound = null;
+			catch (Exception e){
+				Bukkit.getConsoleSender().sendMessage(MessageManager.applyColour("&c[MoneyFromMobs] Unknown Sound set in the Config! Please make sure it is spelt correctly!"));
 			}
 		}
+
+		// spawn particle
+		if (particleEffect != null) {
+			loc.setY(loc.getY()+3);
+			p.getWorld().spawnParticle(this.getParticleEffect(), loc, this.getNumberOfParticles());
+		}
+
+		// convert amount to string ready to place it in message
+		String strAmount = String.format("%.2f", amount);
+
+		// take off decimal place if enabled in config
+		if (plugin.getDropsManager().shouldDisableDecimal())
+			strAmount = String.format("%.0f", amount);
+
+		plugin.getMessageManager().sendMessage(strAmount,p);
+
+	}
+
+	public boolean isMoneyPickedUp(ItemStack itemStack) {
+		// checks if item picked up is money
+		if (itemStack == null) return false;
+		if (!itemStack.hasItemMeta()) return false;
+		ItemMeta itemMeta = itemStack.getItemMeta();
+		if (!itemMeta.hasLore()) return false;
+		List<String> itemLore = itemMeta.getLore();
+		Matcher matcher = pattern.matcher(itemLore.get(0));
+		return matcher.find();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -154,7 +210,7 @@ public class PickUpManager {
 		return numberOfParticles;
 	}
 
-	public Sound getSound() {
+	public String getSound() {
 		return sound;
 	}
 
@@ -162,61 +218,11 @@ public class PickUpManager {
 		return onlyKillerPickUpMoney;
 	}
 
-	public void giveMoney(Double amount,Player p) {
-		// call pickup money event
-		GiveMoneyEvent giveMoneyEvent = new GiveMoneyEvent(p, amount, sound, particleEffect);
-		Bukkit.getPluginManager().callEvent(giveMoneyEvent);
-		if (giveMoneyEvent.isCancelled()) return;
-		amount = giveMoneyEvent.getAmount();
-		sound = giveMoneyEvent.getSound();
-		particleEffect = giveMoneyEvent.getParticle();
-		
-		if (amount == 0) return;
-		
-		Location loc = p.getLocation();
-		
-		// give money
-		if (amount >= 0){
-			plugin.getEcon().depositPlayer(p,amount);
-		}
-		else{
-			plugin.getEcon().withdrawPlayer(p, amount*-1);
-		}
-		
-		// play sound
-		if (sound != null) {
-			p.playSound(loc, sound, 1, 1);
-		}
-		
-		// spawn particle
-		if (particleEffect != null) {
-	    	loc.setY(loc.getY()+3);
-	    	p.getWorld().spawnParticle(this.getParticleEffect(), loc, this.getNumberOfParticles());
-	    }
-		
-		// convert amount to string ready to place it in message
-		String strAmount = String.format("%.2f", amount);
-		
-		// take off decimal place if enabled in config
-		if (plugin.getDropsManager().shouldDisableDecimal())
-			strAmount = String.format("%.0f", amount);
-		
-		plugin.getMessageManager().sendMessage(strAmount,p);
-		
-	}
-
-	public boolean isMoneyPickedUp(ItemStack itemStack) {
-		// checks if item picked up is money
-		if (itemStack == null) return false;
-		if (!itemStack.hasItemMeta()) return false;
-		ItemMeta itemMeta = itemStack.getItemMeta();
-		if (!itemMeta.hasLore()) return false;
-		List<String> itemLore = itemMeta.getLore();
-		Matcher matcher = pattern.matcher(itemLore.get(0));
-		return matcher.find();
-	}
-
 	public String getWhoHopperGivesMoneyTo() {
 		return hopperGivesMoneyTo;
+	}
+
+	public boolean doesHopperGiveMoneyToOfflinePlayer() {
+		return hopperGivesMoneyToOfflinePlayer;
 	}
 }

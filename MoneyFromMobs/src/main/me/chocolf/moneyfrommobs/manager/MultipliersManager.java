@@ -128,8 +128,8 @@ public class MultipliersManager {
 	}
 	
 	private double applyPermissionGroupMultiplier(double amount, Player p) {
-		if (permissionGroupMultipliers.isEmpty())
-			return 0;
+		if (permissionGroupMultipliers.isEmpty()) return 0;
+		if (!p.isOnline()) return 0;
 		
 		String[] playerGroups = plugin.getPerms().getPlayerGroups(p);
 		if (playerGroups.length == 0)
@@ -238,21 +238,21 @@ public class MultipliersManager {
 	}
 	
 	private void loadLorinthsRpgMobsMultiplier(FileConfiguration config) {
-		if (Bukkit.getPluginManager().getPlugin("LorinthsRpgMobs") != null) {
+		if (Bukkit.getPluginManager().isPluginEnabled("LorinthsRpgMobs")) {
 			String strLorinthsRpgMobsMultiplier = config.getString("LorinthsRpgMobsMultiplier").replace("%", "");
 			lorinthsRpgMobsMultiplier =  Double.parseDouble(strLorinthsRpgMobsMultiplier)/100;
 		}
 	}
 	
 	private void loadMythicMobsLevelsMultiplier(FileConfiguration config) {
-		if (Bukkit.getPluginManager().getPlugin("MythicMobs") != null) {
+		if (Bukkit.getPluginManager().isPluginEnabled("MythicMobs")) {
 			String strMythicMobsLevelsMultiplier = config.getString("MythicMobsLevelsMultiplier").replace("%", "");
 			mythicMobsLevelsMultiplier = Double.parseDouble(strMythicMobsLevelsMultiplier)/100;
 		}	
 	}
 	
 	private void loadLevelledMobsMultiplier(FileConfiguration config) {
-		if (Bukkit.getPluginManager().getPlugin("LevelledMobs") != null) {
+		if (Bukkit.getPluginManager().isPluginEnabled("LevelledMobs")) {
 			levelledMobs = ((LevelledMobs) Bukkit.getPluginManager().getPlugin("LevelledMobs")).levelInterface;
 			String strLevelledMobsMultiplier = config.getString("LevelledMobsMultiplier").replace("%", "");
 			levelledMobsMultiplier = Double.parseDouble(strLevelledMobsMultiplier)/100;
@@ -260,7 +260,7 @@ public class MultipliersManager {
 	}
 	
 	private void loadInfernalMobsMultiplier(FileConfiguration config) {
-		if (Bukkit.getPluginManager().getPlugin("InfernalMobs") != null) {
+		if (Bukkit.getPluginManager().isPluginEnabled("InfernalMobs")) {
 			infernalMobs = (infernal_mobs) Bukkit.getPluginManager().getPlugin("InfernalMobs");
 			String strInfernalMobsMultiplier = config.getString("InfernalMobsMultiplier").replace("%", "");
 			infernalMobsMultiplier = Double.parseDouble(strInfernalMobsMultiplier)/100;

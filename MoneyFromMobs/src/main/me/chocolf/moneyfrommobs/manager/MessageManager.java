@@ -25,6 +25,7 @@ public class MessageManager {
 	private boolean shouldSendChatMessage;
 	private boolean shouldSendActionBarMessage;
 	private boolean shouldSendFloatingTextMessage;
+	private boolean sendEventMessageAsTitle;
 	private boolean moveFloatingTextMessageUpwards;
 	private double floatingTextDuration;
 	private final HashMap<String, String> messagesMap = new HashMap<>();
@@ -43,6 +44,7 @@ public class MessageManager {
 		shouldSendChatMessage = config.getBoolean("ShowMessageInChat.Enabled");
 		shouldSendActionBarMessage = config.getBoolean("ShowMessageInActionBar.Enabled");
 		shouldSendFloatingTextMessage = config.getBoolean("ShowMessageAsFloatingText.Enabled");
+		sendEventMessageAsTitle = config.getBoolean("SendEventMessageAsTitle");
 		moveFloatingTextMessageUpwards = config.getBoolean("ShowMessageAsFloatingText.Movement");
 		floatingTextDuration = config.getDouble("ShowMessageAsFloatingText.Duration") * 20;
 		
@@ -67,24 +69,20 @@ public class MessageManager {
 	}
 	
 	public void sendMessage(String strAmount, Player p) {
-		String messageToSend;
 		if ( p.hasMetadata("MfmMuteMessages"))
 			return;
 		
 		double balance = plugin.getEcon().getBalance(p);
 		if (shouldSendChatMessage) {
-			messageToSend = getMessage("chatMessage", balance, strAmount);
-			p.sendMessage(messageToSend);
+			p.sendMessage(getMessage("chatMessage", balance, strAmount));
 		}
 		
 		if (shouldSendActionBarMessage) {
-			messageToSend = getMessage("actionBarMessage", balance, strAmount);
-			p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(messageToSend));
+			p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(getMessage("actionBarMessage", balance, strAmount)));
 		}
 		
 		if (shouldSendFloatingTextMessage) {
-			messageToSend = getMessage("floatingTextMessage", balance, strAmount);
-			sendFloatingTextMessage(messageToSend, p.getLocation());
+			sendFloatingTextMessage(getMessage("floatingTextMessage", balance, strAmount), p.getLocation());
 		}
 	}
 	
@@ -124,7 +122,7 @@ public class MessageManager {
 			Matcher match = pattern.matcher(msg);
 			while (match.find()) {
 				String color = msg.substring(match.start(), match.end());
-				msg = msg.replace(color, ChatColor.of(color) + "");
+				msg = msg.replace(color, ChatColor.valueOf(color) + "");
 				match = pattern.matcher(msg);
 			}
 		}
@@ -137,5 +135,9 @@ public class MessageManager {
 	
 	private String getMessage(String messageName, double balance, String strAmount) {
 		return messagesMap.get(messageName).replace("%amount%", strAmount).replace("%balance%", String.format("%.2f", balance)).replace("%balance_0dp%", String.format("%.0f", balance) );
+	}
+
+	public boolean shouldSendEventMessageAsTitle() {
+		return sendEventMessageAsTitle;
 	}
 }

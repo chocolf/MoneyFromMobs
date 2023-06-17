@@ -6,6 +6,7 @@ import me.chocolf.moneyfrommobs.util.VersionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Hopper;
 import org.bukkit.block.TileState;
@@ -16,7 +17,6 @@ import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -40,9 +40,11 @@ public class HopperListeners implements Listener {
         PickUpManager pickUpManager = plugin.getPickUpManager();
         if (pickUpManager.isMoneyPickedUp(itemStack)){
             e.setCancelled(true);
+            // checks if user is using 1.14+ and config option is set to PLACER
             if (VersionUtils.getVersionNumber() > 13 && pickUpManager.getWhoHopperGivesMoneyTo().equalsIgnoreCase("PLACER")){
                 String uuid = null;
 
+                // gets owner of hopper or hopper minecart
                 if (e.getInventory().getHolder() instanceof Hopper) {
                     TileState state = (TileState) e.getInventory().getLocation().getBlock().getState();
                     NamespacedKey key = new NamespacedKey(plugin, "MfmHopperOwner");
@@ -53,18 +55,24 @@ public class HopperListeners implements Listener {
                     NamespacedKey key = new NamespacedKey(plugin, "MfmHopperOwner");
                     uuid = hopperMinecart.getPersistentDataContainer().get(key, PersistentDataType.STRING);
                 }
-
+                // gives money to hopper owner if they are online
                 if (uuid != null && Bukkit.getPlayer(UUID.fromString(uuid)) != null){
                     List<String> itemLore = itemStack.getItemMeta().getLore();
                     Player p = Bukkit.getPlayer(UUID.fromString(uuid));
-                    if (pickUpManager.shouldOnlyKillerPickUpMoney() && itemLore.size() > 2 && !itemLore.get(2).equals(p.getName()) )
-                        return;
-
                     double amount = Double.parseDouble(itemLore.get(1));
                     pickUpManager.giveMoney(amount, p);
                     item.remove();
                 }
+                // gives money to hopper owner if they are offline and is allowed in config
+                else if (pickUpManager.doesHopperGiveMoneyToOfflinePlayer() && uuid != null && Bukkit.getOfflinePlayer(UUID.fromString(uuid)) != null ){
+                    List<String> itemLore = itemStack.getItemMeta().getLore();
+                    OfflinePlayer p = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+                    double amount = Double.parseDouble(itemLore.get(1));
+                    plugin.getEcon().depositPlayer(p, amount);
+                    item.remove();
+                }
             }
+            // if config option is set to KILLER
             else if (pickUpManager.getWhoHopperGivesMoneyTo().equalsIgnoreCase("KILLER")){
                 List<String> itemLore = itemStack.getItemMeta().getLore();
                 if (itemLore.size() > 2 && Bukkit.getPlayer(itemLore.get(2)) != null){

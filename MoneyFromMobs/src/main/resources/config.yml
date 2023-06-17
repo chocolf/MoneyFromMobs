@@ -54,12 +54,20 @@ CreativeModeDropsMoney: true
 
 ###################################################### Pick Up Options ######################################################
 
-# Sound = Sound played on pickup. Change to "NONE" if you don't want a sound to be played. Sounds list: https://www.digminecraft.com/lists/sound_list_pc.php
-Sound: entity.item.pickup
+# SoundToBePlayed = Sound played on pickup. Sounds list: https://www.digminecraft.com/lists/sound_list_pc.php
+# Volume = Value between 0 and 100
+# Pitch = Value between 0.0 and 2.0
+Sound:
+  Enabled: true
+  SoundToBePlayed: entity.item.pickup
+  Volume: 50
+  Pitch: 1
 
-# ParticleEffect = Particle effect spawned on pickup. Change to "NONE" if you don't want a particle to spawn. Particles list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
-ParticleEffect: VILLAGER_HAPPY
-AmountOfParticles: 5
+# ParticleEffect = Particle effect spawned on pickup. Particles list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Particle.html
+Particle:
+  Enabled: true
+  ParticleEffect: VILLAGER_HAPPY
+  NumberOfParticles: 5
 
 # This option loops through all players and checks for dropped items every so many ticks to see if there is money next to a player so if you have a lot of players it could cause lag.
 # You only need to enable this option if you are not using PaperMC 1.13+, as PaperMC allows you to pick up money when your inventory is full without this option. https://papermc.io/downloads
@@ -79,10 +87,14 @@ OnlyKillerCanPickUpMoney: false
 # NONE = Hopper does not pick up money
 HopperGivesMoneyTo: KILLER
 
+# Whether hoppers should pick up money for offline players (Hopper won't pick up money if the player is offline and this option is set to false)
+HopperGivesMoneyToOfflinePlayer: true
+
 
 ###################################################### Messages ######################################################
 
-# Where the message is shown when a player picks up money. Usable Placeholders: %amount% and %balance%
+# Where the message is shown when a player picks up money.
+# Usable Placeholders: %amount% , %balance% and %balance_0dp%
 ShowMessageInChat:
   Enabled: false
   Message: '&aYou picked up $%amount%!'
@@ -117,6 +129,8 @@ EventStart: '&aA Money Multiplier Event has started! Mobs will drop &f{multiplie
 EventFinish: '&cThe Money Multiplier Event has ended! All mobs will now drop their normal amount!'
 EventAlreadyRunningMessage: '&cThere is already a Money Multiplier Event running.'
 NoEventRunningMessage: '&cThere is no Money Multiplier Event to stop.'
+# Setting to true means the event start and finish messages are sent as a title instead of in the chat
+SendEventMessageAsTitle: false
 
 ###################################################### Mob/Player Options ######################################################
 
@@ -372,6 +386,34 @@ AXOLOTL:
   DropChance: 25
   NumberOfDrops: 1-3
   OnlyOnKill: true
+TADPOLE:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+FROG:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+CAMEL:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+SNIFFER:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
   
   
 ########## HOSTILE OVERWORLD MOBS ##########
@@ -503,6 +545,13 @@ WANDERING_TRADER:
   DropChance: 25
   NumberOfDrops: 1-3
   OnlyOnKill: true
+ALLAY:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
 IRON_GOLEM:
   Enabled: true
   Min: 10
@@ -561,7 +610,8 @@ STRIDER:
   DropChance: 25
   NumberOfDrops: 1-3
   OnlyOnKill: true
-PIG_ZOMBIE: #This is old Zombie Pigman
+# This is old Zombie Pigman used for 1.15 and under
+PIG_ZOMBIE:
   Enabled: true
   Min: 15
   Max: 15
@@ -657,6 +707,13 @@ ENDER_DRAGON:
   NumberOfDrops: 1-3
   OnlyOnKill: true
 WITHER:
+  Enabled: true
+  Min: 500
+  Max: 500
+  DropChance: 100
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+WARDEN:
   Enabled: true
   Min: 500
   Max: 500

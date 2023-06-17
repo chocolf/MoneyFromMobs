@@ -30,6 +30,7 @@ LevelledMobsMultiplier: 1%
 # Extra money given if the mob that was killed was an Infernal Mob from the plugin InfernalMobs
 InfernalMobsMultiplier: 10%
 
+# An automatic multiplier event that runs every X minutes
 # Server Restart is required to disable/edit Repeating Multiplier Events
 RepeatingMultiplierEvent:
   Enabled: false

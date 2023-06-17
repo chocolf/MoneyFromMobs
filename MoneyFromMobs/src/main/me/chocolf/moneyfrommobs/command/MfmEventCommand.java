@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
@@ -34,7 +35,16 @@ public class MfmEventCommand implements CommandExecutor{
 			if (args[0].equalsIgnoreCase("stop")) {
 				if (task != null) {
 					multipliersManager.setEventMultiplier(0);
-					Bukkit.broadcastMessage(messageManager.getMessage("eventFinish"));
+					String messageToSendOnEnd = messageManager.getMessage("eventFinish");
+					Bukkit.getConsoleSender().sendMessage(messageToSendOnEnd);
+					for (Player p : Bukkit.getServer().getOnlinePlayers()){
+						if (!p.hasMetadata("MfmMuteMessages")){
+							if (messageManager.shouldSendEventMessageAsTitle())
+								p.sendTitle("",messageToSendOnEnd,1,50,1);
+							else
+								p.sendMessage(messageToSendOnEnd);
+						}
+					}
 					Bukkit.getScheduler().cancelTask(task.getTaskId());
 					multipliersManager.setCurrentMultiplierEvent(null);
 				}
@@ -73,16 +83,36 @@ public class MfmEventCommand implements CommandExecutor{
 
 					if (totalTime == 0) return false;
 
-					Bukkit.broadcastMessage(messageManager.getMessage("eventStart")
+					String messageToSend = messageManager.getMessage("eventStart")
 							.replace("{multiplier}", args[1].replace("%", ""))
 							.replace("{hours}", String.valueOf(hours))
 							.replace("{minutes}", String.valueOf(minutes))
-							.replace("{seconds}", String.valueOf(seconds)));
-					
+							.replace("{seconds}", String.valueOf(seconds));
+
+					Bukkit.getConsoleSender().sendMessage(messageToSend);
+					for (Player p : Bukkit.getServer().getOnlinePlayers()){
+						if (!p.hasMetadata("MfmMuteMessages")){
+							if (messageManager.shouldSendEventMessageAsTitle())
+								p.sendTitle("",messageToSend,1,50,1);
+							else
+								p.sendMessage(messageToSend);
+						}
+
+					}
+
 					BukkitTask currentTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
 						multipliersManager.setEventMultiplier(0);
 						multipliersManager.setCurrentMultiplierEvent(null);
-						Bukkit.broadcastMessage(messageManager.getMessage("eventFinish"));
+						String messageToSendOnEnd = messageManager.getMessage("eventFinish");
+						Bukkit.getConsoleSender().sendMessage(messageToSendOnEnd);
+						for (Player p : Bukkit.getServer().getOnlinePlayers()){
+							if (!p.hasMetadata("MfmMuteMessages")){
+								if (messageManager.shouldSendEventMessageAsTitle())
+									p.sendTitle("",messageToSendOnEnd,1,50,1);
+								else
+									p.sendMessage(messageToSendOnEnd);
+							}
+						}
 					}, totalTime * 20L);
 					multipliersManager.setCurrentMultiplierEvent(currentTask);
 					return true;

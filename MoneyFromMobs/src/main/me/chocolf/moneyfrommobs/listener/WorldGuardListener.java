@@ -1,6 +1,7 @@
 package me.chocolf.moneyfrommobs.listener;
 
 import me.chocolf.moneyfrommobs.integration.WorldGuardFlags;
+import me.chocolf.moneyfrommobs.manager.DropsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -18,9 +19,11 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.api.event.AttemptToDropMoneyEvent;
 
 public class WorldGuardListener implements Listener{
-	
+
+	MoneyFromMobs plugin;
 	
 	public WorldGuardListener(MoneyFromMobs plugin) {
+		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
@@ -31,6 +34,7 @@ public class WorldGuardListener implements Listener{
 		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 		RegionQuery query = container.createQuery();
 		ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(loc));
+		DropsManager dropsManager = plugin.getDropsManager();
 
 		// if drop-money flag is deny cancel the drop
 		if (!set.testState(null, WorldGuardFlags.getDropMoneyFlag())){
@@ -43,7 +47,7 @@ public class WorldGuardListener implements Listener{
 		}
 
 		// if spawner-mob-drop-money flag is deny and entity was spawned from a spawner cancel the drop
-		else if (!set.testState(null, WorldGuardFlags.getSpawnerMobDropMoneyFlag()) && MoneyFromMobs.getInstance().getDropsManager().getSpawnReason(entity).equals("SPAWNER")){
+		else if (!set.testState(null, WorldGuardFlags.getSpawnerMobDropMoneyFlag()) && dropsManager.getSpawnReason(entity) != null && dropsManager.getSpawnReason(entity).equals("SPAWNER")){
 			e.setCancelled(true);
 		}
 	}

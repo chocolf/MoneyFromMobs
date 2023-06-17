@@ -16,8 +16,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataType;
 
 import dev.rosewood.rosestacker.utils.PersistentDataUtils;
@@ -135,6 +137,7 @@ public class DropsManager {
 
 			final String finalAmount = strAmount;
 			Item itemDropped;
+
 			if (VersionUtils.getVersionNumber() > 15){
 				itemDropped = location.getWorld().dropItemNaturally(location, item, itemdropped ->{
 					itemdropped.setCustomNameVisible(true);
@@ -146,6 +149,8 @@ public class DropsManager {
 				itemDropped.setCustomNameVisible(true);
 				itemDropped.setCustomName(plugin.getPickUpManager().getItemName().replace("%amount%", finalAmount));
 			}
+			// used so Upgradable Hoppers plugin does not pick up money
+			itemDropped.setMetadata("NO_PICKUP", new FixedMetadataValue(this.plugin, "no_pickup"));
 
 			// schedules task to remove drop in certain amount of time if enabled
 			if (autoRemoveDrop) {
