@@ -30,6 +30,9 @@ LevelledMobsMultiplier: 1%
 # Extra money given if the mob that was killed was an Infernal Mob from the plugin InfernalMobs
 InfernalMobsMultiplier: 10%
 
+# Extra money based on the level of the Guild the player is in. For example, GuildsMultiplier: 1% means if the player is in a level 2 Guild mobs will drop 1% more money and level 3 Guilds will drop 2% more money and so on
+GuildsMultiplier: 1%
+
 # An automatic multiplier event that runs every X minutes
 # Server Restart is required to disable/edit Repeating Multiplier Events
 RepeatingMultiplierEvent:

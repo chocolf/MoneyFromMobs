@@ -263,7 +263,7 @@ public class DropsManager {
 			}
 		}
 		if (roseStackerSupport) {
-			return PersistentDataUtils.getEntitySpawnReason((LivingEntity) entity).toString();
+			return PersistentDataUtils.getEntitySpawnReason(entity).toString();
 		}
 		return null;
 	}

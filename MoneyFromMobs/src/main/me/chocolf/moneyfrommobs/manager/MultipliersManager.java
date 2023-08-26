@@ -3,6 +3,10 @@ package me.chocolf.moneyfrommobs.manager;
 import java.util.HashMap;
 
 import io.lumine.mythic.bukkit.BukkitAPIHelper;
+import me.glaremasters.guilds.Guilds;
+import me.glaremasters.guilds.api.GuildsAPI;
+import me.glaremasters.guilds.guild.Guild;
+import me.glaremasters.guilds.guild.GuildTier;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -23,14 +27,16 @@ import org.bukkit.scheduler.BukkitTask;
 public class MultipliersManager {
 	
 	private final MoneyFromMobs plugin;
-	private static LevelInterface levelledMobs;
-	private static infernal_mobs infernalMobs;
+	private static LevelInterface levelledMobsAPI;
+	private static infernal_mobs infernalMobsAPI;
+	private static GuildsAPI guildsAPI;
 	private double lootingMultiplier;
 	private double eventMultiplier = 0;
 	private double lorinthsRpgMobsMultiplier = 0;	
 	private double mythicMobsLevelsMultiplier = 0;
 	private double levelledMobsMultiplier = 0;
 	private double infernalMobsMultiplier = 0;
+	private double guildsMultiplier = 0;
 	private BukkitTask currentMultiplierEvent;
 	
 	private final HashMap<String, Double> worldMultipliers = new HashMap<>();
@@ -59,6 +65,7 @@ public class MultipliersManager {
 		loadMythicMobsLevelsMultiplier(config);
 		loadLevelledMobsMultiplier(config);
 		loadInfernalMobsMultiplier(config);
+		loadGuildsMultiplier(config);
 		reloadRepeatingMultiplierEventValues(config);
 	}
 
@@ -71,19 +78,20 @@ public class MultipliersManager {
 		this.repeatingEndMessage = MessageManager.applyColour(config.getString("RepeatingMultiplierEvent.EventEndMessage"));
 	}
 
-	public double applyMultipliers(double amount, Player p, Entity entity) {
+	public double applyMultipliers(double amount, Player player, Entity entityKilled) {
 		double baseAmount = amount;
 		
-		if ( p!=null ) {
-			amount += applyLootingMultiplier(baseAmount, p);
-			amount += applyPermissionGroupMultiplier(baseAmount, p);
+		if ( player!=null ) {
+			amount += applyLootingMultiplier(baseAmount, player);
+			amount += applyPermissionGroupMultiplier(baseAmount, player);
 		}
 		amount += applyEventMultiplier(baseAmount);
-		amount += applyWorldMultiplier(baseAmount, entity);
-		amount += applyLorinthsRpgMobsMultiplier(baseAmount, entity);
-		amount += applyMythicMobsLevelsMultiplier(baseAmount, entity);
-		amount += applyLevelledMobsMultiplier(baseAmount, entity);
-		amount += applyInfernalMobsMultiplier(baseAmount, entity);
+		amount += applyWorldMultiplier(baseAmount, entityKilled);
+		amount += applyLorinthsRpgMobsMultiplier(baseAmount, entityKilled);
+		amount += applyMythicMobsLevelsMultiplier(baseAmount, entityKilled);
+		amount += applyLevelledMobsMultiplier(baseAmount, entityKilled);
+		amount += applyInfernalMobsMultiplier(baseAmount, entityKilled);
+		amount += applyGuildsMultiplier(baseAmount, player);
 		
 		return RandomNumberUtils.round(amount, 2);
 	}
@@ -166,8 +174,8 @@ public class MultipliersManager {
 	
 	private double applyLevelledMobsMultiplier(double amountToAdd, Entity entity) {
 		if (levelledMobsMultiplier == 0) return 0;
-		if ( levelledMobs.isLevelled(( LivingEntity) entity) ) {
-			int level = levelledMobs.getLevelOfMob((LivingEntity) entity);
+		if ( levelledMobsAPI.isLevelled(( LivingEntity) entity) ) {
+			int level = levelledMobsAPI.getLevelOfMob((LivingEntity) entity);
 			return amountToAdd * levelledMobsMultiplier * (level-1);
 		}
 		return 0;
@@ -175,8 +183,18 @@ public class MultipliersManager {
 	
 	private double applyInfernalMobsMultiplier(double amountToAdd, Entity entity) {
 		if (infernalMobsMultiplier == 0) return 0;
-		if ( infernalMobs.findMobAbilities(entity.getUniqueId())!= null ) {
+		if ( infernalMobsAPI.findMobAbilities(entity.getUniqueId())!= null ) {
 			return amountToAdd * infernalMobsMultiplier;
+		}
+		return 0;
+	}
+
+	private double applyGuildsMultiplier(double amountToAdd, Player player){
+		if (guildsMultiplier == 0) return 0;
+		Guild playersGuild = guildsAPI.getGuild(player);
+		if (playersGuild != null){
+			int guildLevel = playersGuild.getTier().getLevel();
+			return amountToAdd * guildsMultiplier * (guildLevel-1);
 		}
 		return 0;
 	}
@@ -253,7 +271,7 @@ public class MultipliersManager {
 	
 	private void loadLevelledMobsMultiplier(FileConfiguration config) {
 		if (Bukkit.getPluginManager().isPluginEnabled("LevelledMobs")) {
-			levelledMobs = ((LevelledMobs) Bukkit.getPluginManager().getPlugin("LevelledMobs")).levelInterface;
+			levelledMobsAPI = ((LevelledMobs) Bukkit.getPluginManager().getPlugin("LevelledMobs")).levelInterface;
 			String strLevelledMobsMultiplier = config.getString("LevelledMobsMultiplier").replace("%", "");
 			levelledMobsMultiplier = Double.parseDouble(strLevelledMobsMultiplier)/100;
 		}
@@ -261,10 +279,18 @@ public class MultipliersManager {
 	
 	private void loadInfernalMobsMultiplier(FileConfiguration config) {
 		if (Bukkit.getPluginManager().isPluginEnabled("InfernalMobs")) {
-			infernalMobs = (infernal_mobs) Bukkit.getPluginManager().getPlugin("InfernalMobs");
+			infernalMobsAPI = (infernal_mobs) Bukkit.getPluginManager().getPlugin("InfernalMobs");
 			String strInfernalMobsMultiplier = config.getString("InfernalMobsMultiplier").replace("%", "");
 			infernalMobsMultiplier = Double.parseDouble(strInfernalMobsMultiplier)/100;
 		}	
+	}
+
+	private void loadGuildsMultiplier(FileConfiguration config){
+		if (Bukkit.getPluginManager().isPluginEnabled("Guilds")) {
+			guildsAPI = Guilds.getApi();
+			String strGuildsMultiplier = config.getString("GuildsMultiplier").replace("%", "");
+			guildsMultiplier = Double.parseDouble(strGuildsMultiplier)/100;
+		}
 	}
 
 	public void setEventMultiplier(double eventMultiplier) {
