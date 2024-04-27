@@ -14,9 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -106,9 +104,9 @@ public class DropsManager {
 	    canDropIfSplitSlimes = config.getBoolean("MoneyDropsFromSplitSlimes");
 	}
 	
-	public void dropItem(ItemStack item, Double amount, Location location, int numberOfDrops, Player p) {
+	public void dropItem(ItemStack item, Double amount, Location location, int numberOfDrops, Player p, boolean isMobDeath) {
 		if (amount == 0) return;
-		if (divideMoneyBetweenDrops)
+		if (divideMoneyBetweenDrops || !isMobDeath)
 			amount = amount/numberOfDrops;
 
 		if (disableDecimal)

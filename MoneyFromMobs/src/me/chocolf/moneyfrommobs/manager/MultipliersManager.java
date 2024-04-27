@@ -6,7 +6,6 @@ import io.lumine.mythic.bukkit.BukkitAPIHelper;
 import me.glaremasters.guilds.Guilds;
 import me.glaremasters.guilds.api.GuildsAPI;
 import me.glaremasters.guilds.guild.Guild;
-import me.glaremasters.guilds.guild.GuildTier;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -21,7 +20,6 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.util.RandomNumberUtils;
 import me.lokka30.levelledmobs.LevelInterface;
 import me.lokka30.levelledmobs.LevelledMobs;
-import me.lorinth.rpgmobs.LorinthsRpgMobs;
 import org.bukkit.scheduler.BukkitTask;
 
 public class MultipliersManager {
@@ -32,7 +30,6 @@ public class MultipliersManager {
 	private static GuildsAPI guildsAPI;
 	private double lootingMultiplier;
 	private double eventMultiplier = 0;
-	private double lorinthsRpgMobsMultiplier = 0;	
 	private double mythicMobsLevelsMultiplier = 0;
 	private double levelledMobsMultiplier = 0;
 	private double infernalMobsMultiplier = 0;
@@ -61,7 +58,6 @@ public class MultipliersManager {
 		loadWorldMultipliers(config);
 		loadPermissionGroupMultipliers(config);
 		loadPlayerDeathMultipliers(config);
-		loadLorinthsRpgMobsMultiplier(config);
 		loadMythicMobsLevelsMultiplier(config);
 		loadLevelledMobsMultiplier(config);
 		loadInfernalMobsMultiplier(config);
@@ -87,7 +83,6 @@ public class MultipliersManager {
 		}
 		amount += applyEventMultiplier(baseAmount);
 		amount += applyWorldMultiplier(baseAmount, entityKilled);
-		amount += applyLorinthsRpgMobsMultiplier(baseAmount, entityKilled);
 		amount += applyMythicMobsLevelsMultiplier(baseAmount, entityKilled);
 		amount += applyLevelledMobsMultiplier(baseAmount, entityKilled);
 		amount += applyInfernalMobsMultiplier(baseAmount, entityKilled);
@@ -117,7 +112,7 @@ public class MultipliersManager {
 	
 	private double applyLootingMultiplier(double amountToAdd, Player p) {
 		ItemStack killersWeapon = p.getInventory().getItemInMainHand();
-		int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
+		int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOTING );
 		return amountToAdd * lootingMultiplier * lootingLevel;
 	}
 	
@@ -151,15 +146,6 @@ public class MultipliersManager {
 			amountToAdd += amount * groupMultiplier;
 		}
 		return amountToAdd;
-	}
-	
-	private double applyLorinthsRpgMobsMultiplier(double amountToAdd, Entity entity) {
-		if (lorinthsRpgMobsMultiplier == 0) return 0;
-		if (LorinthsRpgMobs.GetLevelOfEntity(entity) != null) {
-			int level = LorinthsRpgMobs.GetLevelOfEntity(entity) - 1;
-			return amountToAdd * lorinthsRpgMobsMultiplier * level;
-		}
-		return 0;
 	}
 	
 	private double applyMythicMobsLevelsMultiplier(double amountToAdd, Entity entity) {
@@ -252,13 +238,6 @@ public class MultipliersManager {
 			
 			double playerDeathMultiplier = Double.parseDouble(splitList[1].replace("%", "") )/100;
 			playerDeathMultipliers.put(permissionGroupName, playerDeathMultiplier);
-		}
-	}
-	
-	private void loadLorinthsRpgMobsMultiplier(FileConfiguration config) {
-		if (Bukkit.getPluginManager().isPluginEnabled("LorinthsRpgMobs")) {
-			String strLorinthsRpgMobsMultiplier = config.getString("LorinthsRpgMobsMultiplier").replace("%", "");
-			lorinthsRpgMobsMultiplier =  Double.parseDouble(strLorinthsRpgMobsMultiplier)/100;
 		}
 	}
 	

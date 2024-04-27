@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -77,7 +76,7 @@ public class PickUpManager {
 		}
 		// Makes item glow if it is enabled
 		if (config.getBoolean("MoneyDropsOnGround.Enchanted")){
-			itemToDrop.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+			itemToDrop.addUnsafeEnchantment(Enchantment.AQUA_AFFINITY, 1);
 			meta = itemToDrop.getItemMeta();
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 			itemToDrop.setItemMeta(meta);

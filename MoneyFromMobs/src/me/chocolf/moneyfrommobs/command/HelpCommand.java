@@ -1,11 +1,11 @@
 package me.chocolf.moneyfrommobs.command;
 
+import me.chocolf.moneyfrommobs.manager.MessageManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
-import me.chocolf.moneyfrommobs.manager.MessageManager;
 
 public class HelpCommand implements CommandExecutor{
 	

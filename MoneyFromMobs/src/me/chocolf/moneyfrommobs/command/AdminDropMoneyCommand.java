@@ -15,12 +15,12 @@ import me.chocolf.moneyfrommobs.manager.DropsManager;
 import me.chocolf.moneyfrommobs.manager.MessageManager;
 import me.chocolf.moneyfrommobs.manager.PickUpManager;
 
-public class DropMoneyCommand implements CommandExecutor{
+public class AdminDropMoneyCommand implements CommandExecutor{
 	
 	private final MoneyFromMobs plugin;
 	
 	
-	public DropMoneyCommand(MoneyFromMobs plugin) {
+	public AdminDropMoneyCommand(MoneyFromMobs plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("mfmdrop").setExecutor(this);	
 	}
@@ -31,7 +31,15 @@ public class DropMoneyCommand implements CommandExecutor{
 		DropsManager dropsManager = plugin.getDropsManager();
 		
 		if(args.length > 0) {
-			double amount = Double.parseDouble(args[0]);
+			double amount;
+			try {
+				amount = Double.parseDouble(args[0]);
+			}
+			catch (Exception e) {
+				sender.sendMessage(MessageManager.applyColour("&cInvalid number."));
+				return false;
+			}
+
 			int numberOfDrops = 1;
 			ItemStack itemToDrop = pickUpManager.getItemToDrop();
 
@@ -40,11 +48,12 @@ public class DropMoneyCommand implements CommandExecutor{
 					numberOfDrops = Integer.parseInt(args[1]);
 				}
 				catch (Exception e) {
+					sender.sendMessage(MessageManager.applyColour("&cInvalid number."));
 					return false;
 				}
-				if (numberOfDrops > 100) {
-					sender.sendMessage(MessageManager.applyColour("&9Number of drops can not be above 100."));
-					numberOfDrops = 100;
+				if (numberOfDrops > 25) {
+					sender.sendMessage(MessageManager.applyColour("&9Number of drops can not be above 25."));
+					numberOfDrops = 25;
 				}
 			}
 			// sets location if they have included it in the command
@@ -74,7 +83,7 @@ public class DropMoneyCommand implements CommandExecutor{
 			location = dropMoneyEvent.getLocation();
 			numberOfDrops = dropMoneyEvent.getNumberOfDrops();
 			
-			dropsManager.dropItem(itemToDrop, amount*numberOfDrops, location, numberOfDrops, null);
+			dropsManager.dropItem(itemToDrop, amount*numberOfDrops, location, numberOfDrops, null, false);
 			return true;
 		}
 		return false;

@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import me.chocolf.moneyfrommobs.command.*;
 import me.chocolf.moneyfrommobs.integration.WorldGuardFlags;
 import me.chocolf.moneyfrommobs.listener.*;
+import me.chocolf.moneyfrommobs.manager.*;
 import me.chocolf.moneyfrommobs.runnable.RepeatingMultiplierEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -16,22 +18,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.chocolf.moneyfrommobs.command.ClearDropsCommand;
-import me.chocolf.moneyfrommobs.command.DropMoneyCommand;
-import me.chocolf.moneyfrommobs.command.DropMoneyTabCompleter;
-import me.chocolf.moneyfrommobs.command.HelpCommand;
-import me.chocolf.moneyfrommobs.command.MfmEventCommand;
-import me.chocolf.moneyfrommobs.command.MfmEventTabCompleter;
-import me.chocolf.moneyfrommobs.command.MuteMessagesCommand;
-import me.chocolf.moneyfrommobs.command.ReloadCommand;
 import me.chocolf.moneyfrommobs.integration.MoneyFromMobsPlaceholderExpansion;
 import me.chocolf.moneyfrommobs.integration.MythicMobsFileManager;
-import me.chocolf.moneyfrommobs.manager.DropsManager;
-import me.chocolf.moneyfrommobs.manager.MessageManager;
-import me.chocolf.moneyfrommobs.manager.MultipliersFileManager;
-import me.chocolf.moneyfrommobs.manager.MultipliersManager;
-import me.chocolf.moneyfrommobs.manager.MobManager;
-import me.chocolf.moneyfrommobs.manager.PickUpManager;
 import me.chocolf.moneyfrommobs.runnable.NearEntitiesRunnable;
 import me.chocolf.moneyfrommobs.util.ConfigUpdater;
 import me.chocolf.moneyfrommobs.util.Metrics;
@@ -89,7 +77,8 @@ public class MoneyFromMobs extends JavaPlugin{
 		
 		// Commands
 		new ClearDropsCommand(this);
-		new DropMoneyCommand(this);
+		new AdminDropMoneyCommand(this);
+		new PlayerDropMoneyCommand(this);
 		this.getCommand("mfmdrop").setTabCompleter(new DropMoneyTabCompleter());
 		new MfmEventCommand(this);
 		this.getCommand("mfmevent").setTabCompleter(new MfmEventTabCompleter());

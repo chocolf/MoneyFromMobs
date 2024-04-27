@@ -155,6 +155,13 @@ PLAYER:
 ########## ANIMALS ##########
 # Min = Lowest amount of money to be dropped.
 # Max = Highest amount of money to be dropped.
+ARMADILLO:
+  Enabled: true
+  Min: 5
+  Max: 5
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
 CHICKEN:
   Enabled: true
   Min: 5

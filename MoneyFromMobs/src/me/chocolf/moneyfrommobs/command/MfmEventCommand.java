@@ -11,8 +11,6 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.manager.MessageManager;
 import me.chocolf.moneyfrommobs.manager.MultipliersManager;
 
-import java.lang.reflect.Array;
-
 public class MfmEventCommand implements CommandExecutor{
 	
 	private final MoneyFromMobs plugin;

@@ -1,11 +1,11 @@
 main: me.chocolf.moneyfrommobs.MoneyFromMobs
 name: MoneyFromMobs
-version: 4.71
+version: 4.81
 api-version: 1.13
 author: Chocolf
 description: Makes mobs drop money with looting multiplier
 depend: [Vault]
-softdepend: [InfernalMobs,WorldEdit,WorldGuard,MythicMobs,PlaceholderAPI,RoseStacker,LorinthsRpgMobs,LevelledMobs,Guilds]
+softdepend: [PlaceholderAPI,InfernalMobs,WorldEdit,WorldGuard,MythicMobs,RoseStacker,LevelledMobs,Guilds]
 commands:
   MfmHelp:
     description: Displays all commands for Money From Mobs
@@ -18,14 +18,18 @@ commands:
     usage: "Usage: /MfmReload"
   MfmDrop:
     description: Drops a specified amount of money on the ground
-    permission: MoneyFromMobs.drop
+    permission: MoneyFromMobs.dropUnlimited
     usage: "Usage: /MfmDrop <AmountToDrop> [NumberOfDrops] [World] [PosX] [PosY] [PosZ]"
+  DropMoney:
+    description: Drops a specified amount of money on the ground
+    permission: MoneyFromMobs.drop
+    usage: "Usage: /DropMoney <AmountToDrop>"
   MfmMute:
     description: Mutes messages sent by the plugin when a player picks up money
     permission: MoneyFromMobs.mute
     usage: "Usage: /MfmMute"
   MfmClear:
-    description: Clears all money from the ground. Can also be used to remove glitched holographic messages
+    description: Clears all money from the ground. Can also be used to remove glitched holographic messages by standing right next to the message and using the command
     permission: MoneyFromMobs.clear
     usage: "Usage: /MfmClear"
   MfmEvent:
@@ -42,7 +46,9 @@ permissions:
   MoneyFromMobs.reload:
     description: Allows player to use /MfmReload
   MoneyFromMobs.drop:
-    description: Allows player to use /MfmDrop <AmountToDrop> [NumberOfDrops]
+    description: Allows player to use /DropMoney <AmountToDrop>
+  MoneyFromMobs.dropUnlimited:
+    description: Allows player to use /MfmDrop <AmountToDrop> [NumberOfDrops] [World] [PosX] [PosY] [PosZ]
   MoneyFromMobs.mute:
     description: Allows player to use /MfmMute
   MoneyFromMobs.clear:

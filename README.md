@@ -1,5 +1,5 @@
 # MoneyFromMobs  
-MoneyFromMobs is a Spigot plugin that allows you to make mobs drop money with a customizable drop chance and amount. MoneyFromMobs includes support for many other plugins like MythicMobs, Worldguard, PlaceholderAPI, LevelledMobs, InfernalMobs and LorinthsRPGMobs. Make sure to check out the [wiki](https://github.com/chocolf/MoneyFromMobs/wiki) for any info you need.  
+MoneyFromMobs is a Spigot plugin that allows you to make mobs drop money with a customizable drop chance and amount. MoneyFromMobs includes support for many other plugins like MythicMobs, Worldguard, PlaceholderAPI, LevelledMobs and InfernalMobs. Make sure to check out the [wiki](https://github.com/chocolf/MoneyFromMobs/wiki) for any info you need.  
 Find/Download MoneyFromMobs on Spigot [here](https://www.spigotmc.org/resources/money-from-mobs-1-12-1-17.79137/)  
 
 ## Support  

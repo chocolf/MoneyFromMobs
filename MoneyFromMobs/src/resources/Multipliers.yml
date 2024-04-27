@@ -18,9 +18,6 @@ PlayerDeathMultipliers:
   - PermissionGroup1 5%
   - PermissionGroup2 10%
 
-# Extra money based on the level of the mob when using the plugin LorinthsRpgMobs. For example, LorinthsRpgMobsMultiplier: 1% means level 2 mobs will drop 1% more money and level 3 mobs will drop 2% more money and so on
-LorinthsRpgMobsMultiplier: 1%
-
 # Extra money based on the level of the mob when using MythicMobs. For example, MythicMobsLevelsMultiplier: 1% means level 2 mobs will drop 1% more money and level 3 mobs will drop 2% more money and so on
 MythicMobsLevelsMultiplier: 0%
 

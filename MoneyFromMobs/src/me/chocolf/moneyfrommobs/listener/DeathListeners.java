@@ -2,7 +2,6 @@ package me.chocolf.moneyfrommobs.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -96,7 +95,7 @@ public class DeathListeners implements Listener{
 				numberOfDrops = dropMoneyEvent.getNumberOfDrops();
 
 				// drops item
-				dropsManager.dropItem(itemToDrop, amount, location, numberOfDrops, killer);
+				dropsManager.dropItem(itemToDrop, amount, location, numberOfDrops, killer, !entityName.equals("PLAYER"));
 			}
 
 		}
