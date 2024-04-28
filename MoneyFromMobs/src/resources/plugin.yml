@@ -18,11 +18,11 @@ commands:
     usage: "Usage: /MfmReload"
   MfmDrop:
     description: Drops a specified amount of money on the ground
-    permission: MoneyFromMobs.dropUnlimited
-    usage: "Usage: /MfmDrop <AmountToDrop> [NumberOfDrops] [World] [PosX] [PosY] [PosZ]"
+    permission: MoneyFromMobs.AdminDropMoney
+    usage: "Usage: /AdminDropMoney <AmountToDrop> [NumberOfDrops] [World] [PosX] [PosY] [PosZ]"
   DropMoney:
     description: Drops a specified amount of money on the ground
-    permission: MoneyFromMobs.drop
+    permission: MoneyFromMobs.DropMoney
     usage: "Usage: /DropMoney <AmountToDrop>"
   MfmMute:
     description: Mutes messages sent by the plugin when a player picks up money
@@ -45,10 +45,10 @@ permissions:
     description: Stops player from dropping money when they die
   MoneyFromMobs.reload:
     description: Allows player to use /MfmReload
-  MoneyFromMobs.drop:
+  MoneyFromMobs.DropMoney:
     description: Allows player to use /DropMoney <AmountToDrop>
-  MoneyFromMobs.dropUnlimited:
-    description: Allows player to use /MfmDrop <AmountToDrop> [NumberOfDrops] [World] [PosX] [PosY] [PosZ]
+  MoneyFromMobs.AdminDropMoney:
+    description: Allows player to use /AdminDropMoney <AmountToDrop> [NumberOfDrops] [World] [PosX] [PosY] [PosZ]
   MoneyFromMobs.mute:
     description: Allows player to use /MfmMute
   MoneyFromMobs.clear:

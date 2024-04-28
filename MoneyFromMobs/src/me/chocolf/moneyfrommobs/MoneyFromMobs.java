@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import me.chocolf.moneyfrommobs.command.*;
-import me.chocolf.moneyfrommobs.integration.WorldGuardFlags;
-import me.chocolf.moneyfrommobs.listener.*;
-import me.chocolf.moneyfrommobs.manager.*;
-import me.chocolf.moneyfrommobs.runnable.RepeatingMultiplierEvent;
+import me.chocolf.moneyfrommobs.commands.*;
+import me.chocolf.moneyfrommobs.integrations.WorldGuardFlags;
+import me.chocolf.moneyfrommobs.listeners.*;
+import me.chocolf.moneyfrommobs.managers.*;
+import me.chocolf.moneyfrommobs.runnables.RepeatingMultiplierEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
@@ -18,13 +18,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.chocolf.moneyfrommobs.integration.MoneyFromMobsPlaceholderExpansion;
-import me.chocolf.moneyfrommobs.integration.MythicMobsFileManager;
-import me.chocolf.moneyfrommobs.runnable.NearEntitiesRunnable;
-import me.chocolf.moneyfrommobs.util.ConfigUpdater;
-import me.chocolf.moneyfrommobs.util.Metrics;
-import me.chocolf.moneyfrommobs.util.UpdateChecker;
-import me.chocolf.moneyfrommobs.util.VersionUtils;
+import me.chocolf.moneyfrommobs.integrations.MoneyFromMobsPlaceholderExpansion;
+import me.chocolf.moneyfrommobs.integrations.MythicMobsFileManager;
+import me.chocolf.moneyfrommobs.runnables.NearEntitiesRunnable;
+import me.chocolf.moneyfrommobs.utils.ConfigUpdater;
+import me.chocolf.moneyfrommobs.utils.Metrics;
+import me.chocolf.moneyfrommobs.utils.UpdateChecker;
+import me.chocolf.moneyfrommobs.utils.VersionUtils;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -52,7 +52,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		
 		// Disable plugin if fail to set up vault and econ plugin
 		if(!setupEconomy()){
-			this.getLogger().severe("&cCOMPATIBLE ECONOMY PLUGIN NOT FOUND! DISABLING PLUGIN!!!");
+			getLogger().severe("COMPATIBLE ECONOMY PLUGIN NOT FOUND! DISABLING PLUGIN!!!");
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -94,9 +94,10 @@ public class MoneyFromMobs extends JavaPlugin{
 		multipliersManager = new MultipliersManager(this);
 		
 		// PlaceholderAPI integration
-		if(Bukkit.getPluginManager().isPluginEnabled("PlaceHolderAPI")){
+		if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null){
 			new MoneyFromMobsPlaceholderExpansion(this).register();
 			placeholderListener = new PlaceholderAPIListener(this);
+			getLogger().info("Found PlaceholderAPI and expansion successfully registered ");
 		}
 	
 		// Bukkit runnable to allow players to pickup items when inventory is full
@@ -108,7 +109,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		// Checks if user is using the latest version of the plugin on spigot
 		try {
 			if (UpdateChecker.checkForUpdate())
-				getLogger().info("Update Available for MoneyFromMobs: https://www.spigotmc.org/resources/money-from-mobs-1-9-1-16-4.79137/");	
+				getLogger().info("Update Available for MoneyFromMobs: https://www.spigotmc.org/resources/money-from-mobs-1-12-1-20-5.79137/");
 		}
 		catch (Exception e) {
 			getLogger().warning("Unable to retrieve latest update from SpigotMC.org");
