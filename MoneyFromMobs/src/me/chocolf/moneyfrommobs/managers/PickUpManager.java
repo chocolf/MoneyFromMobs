@@ -76,7 +76,7 @@ public class PickUpManager {
 		}
 		// Makes item glow if it is enabled
 		if (config.getBoolean("MoneyDropsOnGround.Enchanted")){
-			itemToDrop.addUnsafeEnchantment(Enchantment.AQUA_AFFINITY, 1);
+			itemToDrop.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
 			meta = itemToDrop.getItemMeta();
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 			itemToDrop.setItemMeta(meta);

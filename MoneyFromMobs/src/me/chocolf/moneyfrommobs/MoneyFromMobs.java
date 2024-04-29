@@ -79,7 +79,7 @@ public class MoneyFromMobs extends JavaPlugin{
 		new ClearDropsCommand(this);
 		new AdminDropMoneyCommand(this);
 		new PlayerDropMoneyCommand(this);
-		this.getCommand("mfmdrop").setTabCompleter(new DropMoneyTabCompleter());
+		this.getCommand("AdminDropMoney").setTabCompleter(new DropMoneyTabCompleter());
 		new MfmEventCommand(this);
 		this.getCommand("mfmevent").setTabCompleter(new MfmEventTabCompleter());
 		new MuteMessagesCommand(this);

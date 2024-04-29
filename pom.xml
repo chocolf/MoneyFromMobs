@@ -5,6 +5,10 @@
     <version>4.8</version>
     <name>MoneyFromMobs</name>
     <description>Makes mobs drop money with looting multiplier</description>
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+    </properties>
     <build>
         <sourceDirectory>MoneyFromMobs/src</sourceDirectory>
         <pluginManagement>
@@ -74,9 +78,9 @@
     </repositories>
     <dependencies>
         <dependency>
-            <groupId>org.spigotmc</groupId>
+            <groupId>org.spigotmc.</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.20.5-R0.1-SNAPSHOT</version>
+            <version>1.20.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -143,6 +147,10 @@
             <version>5.8</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.chocolf</groupId>
+            <artifactId>MoneyFromMobs</artifactId>
+            <version>4.82</version>
+        </dependency>
     </dependencies>
 </project>

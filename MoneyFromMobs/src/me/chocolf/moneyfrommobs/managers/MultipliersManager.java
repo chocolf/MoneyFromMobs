@@ -113,7 +113,7 @@ public class MultipliersManager {
 	
 	private double applyLootingMultiplier(double amountToAdd, Player p) {
 		ItemStack killersWeapon = p.getInventory().getItemInMainHand();
-		int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOTING );
+		int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS );
 		return amountToAdd * lootingMultiplier * lootingLevel;
 	}
 	
