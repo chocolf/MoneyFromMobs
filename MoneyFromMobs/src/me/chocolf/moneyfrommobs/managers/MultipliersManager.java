@@ -197,6 +197,7 @@ public class MultipliersManager {
 	private void loadLootingMultiplier(FileConfiguration config) {
 		String strLootingMultiplier = config.getString("LootingMultiplier").replace("%", "");
 		lootingMultiplier =  Double.parseDouble(strLootingMultiplier)/100;
+		plugin.getMessageManager().logToConsole("&b[MoneyFromMobs] Successfully loaded Looting multiplier of " + strLootingMultiplier + "% per level of enchantment");
 	}
 	
 	private void loadPermissionGroupMultipliers(FileConfiguration config) {
@@ -213,6 +214,7 @@ public class MultipliersManager {
 			
 			double permissionGroupMultiplier = Double.parseDouble(splitList[1].replace("%", "") )/100;
 			permissionGroupMultipliers.put(permissionGroupName, permissionGroupMultiplier);
+			plugin.getMessageManager().logToConsole("&b[MoneyFromMobs] Successfully loaded Permission multiplier of " + splitList[1] + " For Permission Group: " + permissionGroupName);
 		}
 	}
 	
@@ -227,6 +229,7 @@ public class MultipliersManager {
 			
 			Double worldMultiplier = Double.parseDouble(splitList[1].replace("%", "") )/100;
 			worldMultipliers.put(worldName,  worldMultiplier);
+			plugin.getMessageManager().logToConsole("&b[MoneyFromMobs] Successfully loaded World multiplier of " + splitList[1] + " For World: " + worldName);
 		}
 	}
 	
@@ -245,6 +248,7 @@ public class MultipliersManager {
 			
 			double playerDeathMultiplier = Double.parseDouble(splitList[1].replace("%", "") )/100;
 			playerDeathMultipliers.put(permissionGroupName, playerDeathMultiplier);
+			plugin.getMessageManager().logToConsole("&b[MoneyFromMobs] Successfully loaded Player Death multiplier of " + splitList[1] + " For Permission Group: " + permissionGroupName);
 		}
 	}
 	
@@ -252,6 +256,8 @@ public class MultipliersManager {
 		if (Bukkit.getPluginManager().isPluginEnabled("MythicMobs")) {
 			String strMythicMobsLevelsMultiplier = config.getString("MythicMobsLevelsMultiplier").replace("%", "");
 			mythicMobsLevelsMultiplier = Double.parseDouble(strMythicMobsLevelsMultiplier)/100;
+
+			plugin.getMessageManager().logToConsole("&b[MoneyFromMobs] Found MythicMobs and successfully loaded multiplier of " + strMythicMobsLevelsMultiplier + "% per level of mob");
 		}	
 	}
 	
@@ -260,6 +266,7 @@ public class MultipliersManager {
 			levelledMobsAPI = ((LevelledMobs) Bukkit.getPluginManager().getPlugin("LevelledMobs")).levelInterface;
 			String strLevelledMobsMultiplier = config.getString("LevelledMobsMultiplier").replace("%", "");
 			levelledMobsMultiplier = Double.parseDouble(strLevelledMobsMultiplier)/100;
+			plugin.getMessageManager().logToConsole("&b[MoneyFromMobs] Found LevelledMobs and successfully loaded multiplier of " + strLevelledMobsMultiplier + "% per level of mob");
 		}
 	}
 	
@@ -268,7 +275,8 @@ public class MultipliersManager {
 			infernalMobsAPI = (infernal_mobs) Bukkit.getPluginManager().getPlugin("InfernalMobs");
 			String strInfernalMobsMultiplier = config.getString("InfernalMobsMultiplier").replace("%", "");
 			infernalMobsMultiplier = Double.parseDouble(strInfernalMobsMultiplier)/100;
-		}	
+			plugin.getMessageManager().logToConsole("&b[MoneyFromMobs] Found Infernal Mobs and successfully loaded multiplier of " + strInfernalMobsMultiplier + "%");
+		}
 	}
 
 	private void loadGuildsMultiplier(FileConfiguration config){
@@ -276,6 +284,7 @@ public class MultipliersManager {
 			guildsAPI = Guilds.getApi();
 			String strGuildsMultiplier = config.getString("GuildsMultiplier").replace("%", "");
 			guildsMultiplier = Double.parseDouble(strGuildsMultiplier)/100;
+			plugin.getMessageManager().logToConsole("&b[MoneyFromMobs] Found Guilds and successfully loaded multiplier of " + strGuildsMultiplier + "% per level of guild");
 		}
 	}
 

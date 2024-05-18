@@ -97,7 +97,7 @@ public class MessageManager {
 		Vector directionVector = loc.getDirection();
 		directionVector.setY(floatingTextHeight);
 		loc.add(directionVector.multiply(4));
-		
+
 		ArmorStand armorstand = loc.getWorld().spawn(loc, ArmorStand.class, armorStand ->{
 			armorStand.setVisible(false);
 			armorStand.setMarker(true);
@@ -106,13 +106,13 @@ public class MessageManager {
 			armorStand.setCustomNameVisible(true);
 			armorStand.setMetadata("mfmas", new FixedMetadataValue(this.plugin, "mfmas"));
 		});
-		
+
 		if (moveFloatingTextMessageUpwards) {
 			for (int i = 0; i < floatingTextDuration; i += 1) {
 				Bukkit.getScheduler().runTaskLater(plugin, () -> armorstand.teleport(armorstand.getLocation().add(0, 0.1,0)), i);
-			} 
+			}
 		}
-		
+
 		Bukkit.getScheduler().runTaskLater(plugin, armorstand::remove, (long) floatingTextDuration);
 	}
 	
@@ -127,6 +127,10 @@ public class MessageManager {
 			}
 		}
 		return ChatColor.translateAlternateColorCodes('&', msg);
+	}
+
+	public void logToConsole (String msg){
+		plugin.getServer().getConsoleSender().sendMessage(MessageManager.applyColour(msg));
 	}
 	
 	public String getMessage(String messageName) {

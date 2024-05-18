@@ -1,7 +1,6 @@
 package me.chocolf.moneyfrommobs.managers;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,6 +71,7 @@ public class PickUpManager {
 		//sets custom model data
 		if (VersionUtils.getVersionNumber() > 13) {
 			meta.setCustomModelData(plugin.getConfig().getInt("MoneyDropsOnGround.CustomModelData"));
+
 			itemToDrop.setItemMeta(meta);
 		}
 		// Makes item glow if it is enabled
@@ -160,12 +160,17 @@ public class PickUpManager {
 
 	public boolean isMoneyPickedUp(ItemStack itemStack) {
 		// checks if item picked up is money
-		if (itemStack == null) return false;
-		if (!itemStack.hasItemMeta()) return false;
+		if (itemStack == null)
+			return false;
+
+		if (!itemStack.hasItemMeta())
+			return false;
+
 		ItemMeta itemMeta = itemStack.getItemMeta();
-		if (!itemMeta.hasLore()) return false;
-		List<String> itemLore = itemMeta.getLore();
-		Matcher matcher = pattern.matcher(itemLore.get(0));
+		if (!itemMeta.hasLore())
+			return false;
+
+		Matcher matcher = pattern.matcher(itemMeta.getLore().get(0));
 		return matcher.find();
 	}
 
