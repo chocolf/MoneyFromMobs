@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,15 +17,13 @@ import io.hotmail.com.jacob_vejvoda.infernal_mobs.infernal_mobs;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.utils.RandomNumberUtils;
-import me.lokka30.levelledmobs.LevelInterface;
-import me.lokka30.levelledmobs.LevelledMobs;
 import org.bukkit.scheduler.BukkitTask;
 
 public class MultipliersManager {
 	
 	private final MoneyFromMobs plugin;
-	private static LevelInterface levelledMobsAPI;
 	private static infernal_mobs infernalMobsAPI;
+	private LevelledMobsManager levelledMobsManager;
 	private static GuildsAPI guildsAPI;
 	private double lootingMultiplier;
 	private double eventMultiplier = 0;
@@ -165,8 +162,9 @@ public class MultipliersManager {
 	private double applyLevelledMobsMultiplier(double amountToAdd, Entity entity) {
 		if (levelledMobsMultiplier == 0)
 			return 0;
-		if ( levelledMobsAPI.isLevelled(( LivingEntity) entity) ) {
-			int level = levelledMobsAPI.getLevelOfMob((LivingEntity) entity);
+
+		int level = levelledMobsManager.getLevelledMobsMobLevel(entity);
+		if (level > 0) {
 			return amountToAdd * levelledMobsMultiplier * (level-1);
 		}
 		return 0;
@@ -262,8 +260,9 @@ public class MultipliersManager {
 	}
 	
 	private void loadLevelledMobsMultiplier(FileConfiguration config) {
-		if (Bukkit.getPluginManager().isPluginEnabled("LevelledMobs")) {
-			levelledMobsAPI = ((LevelledMobs) Bukkit.getPluginManager().getPlugin("LevelledMobs")).levelInterface;
+		levelledMobsManager = new LevelledMobsManager();
+
+		if (levelledMobsManager.hasLevelledMobsInstalled()) {
 			String strLevelledMobsMultiplier = config.getString("LevelledMobsMultiplier").replace("%", "");
 			levelledMobsMultiplier = Double.parseDouble(strLevelledMobsMultiplier)/100;
 			plugin.getMessageManager().logToConsole("&b[MoneyFromMobs] Found LevelledMobs and successfully loaded multiplier of " + strLevelledMobsMultiplier + "% per level of mob");
