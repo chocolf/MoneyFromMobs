@@ -12,8 +12,6 @@ public class RandomNumberUtils {
 	public static int intRandomNumber(int min, int max) {
 		// Min is included
 		// Max is Excluded
-		// TODO: check if can remove this
-		r = new Random();
 		return r.nextInt(max-min) + min;
 	}
 	

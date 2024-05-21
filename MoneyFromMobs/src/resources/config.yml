@@ -78,7 +78,7 @@ PickupMoneyWhenInventoryIsFull:
   # Radius = radius around player to check for money
   Radius: 1
 
-# Setting this option to true means only the person who killed the mob can pick up the money that it dropped. This can lead to money lying around because someone forgot to pick it up though, which might cause confusion for other players trying to pick it up.
+# Setting this option to true means only the person who killed the mob can pick up the money that it dropped. This can lead to money lying around because someone forgot to pick it up though
 OnlyKillerCanPickUpMoney: false
 
 # Where the money should go when a hopper picks up money. Options are: PLACER, KILLER or NONE
@@ -87,7 +87,7 @@ OnlyKillerCanPickUpMoney: false
 # NONE = Hopper does not pick up money
 HopperGivesMoneyTo: KILLER
 
-# Whether hoppers should pick up money for offline players (Hopper won't pick up money if the player is offline and this option is set to false)
+# Whether hoppers should pick up money for offline players
 HopperGivesMoneyToOfflinePlayer: true
 
 

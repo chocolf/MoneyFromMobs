@@ -72,25 +72,27 @@ public class MultipliersManager {
 		this.repeatingEndMessage = MessageManager.applyColour(config.getString("RepeatingMultiplierEvent.EventEndMessage"));
 	}
 
-	public double applyMultipliers(double amount, Player player, Entity entityKilled) {
+	public double applyMultipliers(double amount, Player p, Entity entityKilled) {
 		double baseAmount = amount;
 		
-		if ( player!=null ) {
-			amount += applyLootingMultiplier(baseAmount, player);
-			amount += applyPermissionGroupMultiplier(baseAmount, player);
+		if ( p!=null ) {
+			amount += applyLootingMultiplier(baseAmount, p.getInventory().getItemInMainHand());
+			amount += applyPermissionGroupMultiplier(baseAmount, p);
 		}
 		amount += applyEventMultiplier(baseAmount);
-		amount += applyWorldMultiplier(baseAmount, entityKilled);
+		amount += applyWorldMultiplier(baseAmount, entityKilled.getWorld().getName());
 		amount += applyMythicMobsLevelsMultiplier(baseAmount, entityKilled);
 		amount += applyLevelledMobsMultiplier(baseAmount, entityKilled);
 		amount += applyInfernalMobsMultiplier(baseAmount, entityKilled);
-		amount += applyGuildsMultiplier(baseAmount, player);
+		amount += applyGuildsMultiplier(baseAmount, p);
 		
 		return RandomNumberUtils.round(amount, 2);
 	}
 	
-	public double applyPlayerDeathMultipliers(double amount, Player p) {
+	public double applyPlayerDeathMultipliers(double baseAmount, Player p) {
 		if (this.playerDeathMultipliers.isEmpty())
+			return 0;
+		if (!p.isOnline())
 			return 0;
 		
 		String[] playerGroups = plugin.getPerms().getPlayerGroups(p);
@@ -103,32 +105,30 @@ public class MultipliersManager {
 				continue;
 			
 			double groupMultiplier = playerDeathMultipliers.get(groupName);
-			amountToAdd += amount * groupMultiplier;
+			amountToAdd += baseAmount * groupMultiplier;
 		}
 		return RandomNumberUtils.round(amountToAdd, 2);
 	}
 	
-	private double applyLootingMultiplier(double amountToAdd, Player p) {
-		ItemStack killersWeapon = p.getInventory().getItemInMainHand();
+	private double applyLootingMultiplier(double baseAmount, ItemStack killersWeapon) {
 		int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS );
-		return amountToAdd * lootingMultiplier * lootingLevel;
+		return baseAmount * lootingMultiplier * lootingLevel;
 	}
 	
-	private double applyEventMultiplier(double amountToAdd) {
-		return amountToAdd * eventMultiplier;
+	private double applyEventMultiplier(double baseAmount) {
+		return baseAmount * eventMultiplier;
 	}
 	
-	private double applyWorldMultiplier(double amountToAdd, Entity entity) {
-		String worldName = entity.getWorld().getName();
+	private double applyWorldMultiplier(double baseAmount, String worldName) {
 		if (worldMultipliers.isEmpty() || !worldMultipliers.containsKey(worldName))
 			return 0;
 		
 		double worldMultiplier = worldMultipliers.get(worldName);
-		amountToAdd *= worldMultiplier;
-		return amountToAdd;
+		baseAmount *= worldMultiplier;
+		return baseAmount;
 	}
 	
-	private double applyPermissionGroupMultiplier(double amount, Player p) {
+	private double applyPermissionGroupMultiplier(double baseAmount, Player p) {
 		if (permissionGroupMultipliers.isEmpty())
 			return 0;
 		if (!p.isOnline())
@@ -143,29 +143,29 @@ public class MultipliersManager {
 				continue;
 			
 			double groupMultiplier = permissionGroupMultipliers.get(groupName);
-			amountToAdd += amount * groupMultiplier;
+			amountToAdd += baseAmount * groupMultiplier;
 		}
 		return amountToAdd;
 	}
 	
-	private double applyMythicMobsLevelsMultiplier(double amountToAdd, Entity entity) {
+	private double applyMythicMobsLevelsMultiplier(double baseAmount, Entity entity) {
 		if (mythicMobsLevelsMultiplier == 0)
 			return 0;
 		BukkitAPIHelper MythicMobsAPI = MythicBukkit.inst().getAPIHelper();
 		if ( MythicMobsAPI.isMythicMob(entity)) {
 			double level = MythicMobsAPI.getMythicMobInstance(entity).getLevel() - 1;
-			return amountToAdd * mythicMobsLevelsMultiplier * level;
+			return baseAmount * mythicMobsLevelsMultiplier * level;
 		}
 		return 0;
 	}
 	
-	private double applyLevelledMobsMultiplier(double amountToAdd, Entity entity) {
+	private double applyLevelledMobsMultiplier(double baseAmount, Entity entity) {
 		if (levelledMobsMultiplier == 0)
 			return 0;
 
 		int level = levelledMobsManager.getLevelledMobsMobLevel(entity);
-		if (level > 0) {
-			return amountToAdd * levelledMobsMultiplier * (level-1);
+		if (level > 0){
+			return baseAmount * levelledMobsMultiplier * (level-1);
 		}
 		return 0;
 	}
