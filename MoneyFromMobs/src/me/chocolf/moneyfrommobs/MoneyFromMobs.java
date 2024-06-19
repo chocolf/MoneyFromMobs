@@ -201,7 +201,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	// checks if server is running Paper 1.13+
 	public boolean isUsingPaper() {
 		String version = getServer().getVersion();
-		return ( version.contains("Paper") || version.contains("Purpur") ) && !VersionUtils.getBukkitVersion().contains("1.12");
+		return version.contains("Paper") || version.contains("Purpur");
 	}
 
 	public MythicMobsFileManager getMMConfig() {

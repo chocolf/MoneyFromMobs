@@ -257,7 +257,12 @@ public class DropsManager {
 			}
 		}
 		if (roseStackerSupport) {
-			return PersistentDataUtils.getEntitySpawnReason(entity).toString();
+			try{
+				return PersistentDataUtils.getEntitySpawnReason(entity).toString();
+			}
+			catch (Exception e){
+				return null;
+			}
 		}
 		return null;
 	}

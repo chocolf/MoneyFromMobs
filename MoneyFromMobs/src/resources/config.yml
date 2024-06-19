@@ -424,6 +424,20 @@ SNIFFER:
   
   
 ########## HOSTILE OVERWORLD MOBS ##########
+BREEZE:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
+BOGGED:
+  Enabled: true
+  Min: 10
+  Max: 10
+  DropChance: 25
+  NumberOfDrops: 1-3
+  OnlyOnKill: true
 ZOMBIE:
   Enabled: true
   Min: 10

@@ -7,7 +7,7 @@ import me.chocolf.moneyfrommobs.MoneyFromMobs;
 public class VersionUtils {
 
 	private static final String bukkitVersion = Bukkit.getServer().getBukkitVersion().split("-")[0];
-	private static final int versionNumber = Integer.parseInt(Bukkit.getServer().getBukkitVersion().split("\\.")[1]);
+	private static final int versionNumber = Integer.parseInt(Bukkit.getServer().getBukkitVersion().split("\\.")[1].substring(0,2));
 
 
 	public static String getBukkitVersion() {
