@@ -12,12 +12,14 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 public class PlaceMinecartHopperListener implements Listener {
+
     private final MoneyFromMobs plugin;
 
     public PlaceMinecartHopperListener(MoneyFromMobs plugin){
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
+
     @EventHandler
     private void onHopperMinecartPlaced(EntityPlaceEvent e){
         Entity hopperMinecart = e.getEntity();

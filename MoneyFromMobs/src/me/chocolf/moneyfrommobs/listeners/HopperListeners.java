@@ -35,9 +35,15 @@ public class HopperListeners implements Listener {
 
     @EventHandler
     public void onHopperPickupItem(InventoryPickupItemEvent e) {
+        if (!plugin.getDropsManager().doesMoneyDropOnGround()) {
+            return;
+        }
+        PickUpManager pickUpManager = plugin.getPickUpManager();
+        if (pickUpManager.getWhoHopperGivesMoneyTo().equalsIgnoreCase("NONE")) {
+            return;
+        }
         Item item = e.getItem();
         ItemStack itemStack = item.getItemStack();
-        PickUpManager pickUpManager = plugin.getPickUpManager();
         if (pickUpManager.isMoneyPickedUp(itemStack)){
             e.setCancelled(true);
             // checks if user is using 1.14+ and config option is set to PLACER

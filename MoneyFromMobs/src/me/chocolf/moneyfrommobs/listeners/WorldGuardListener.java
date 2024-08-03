@@ -18,9 +18,9 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 import me.chocolf.moneyfrommobs.MoneyFromMobs;
 import me.chocolf.moneyfrommobs.api.events.AttemptToDropMoneyEvent;
 
-public class WorldGuardListener implements Listener{
+public class WorldGuardListener implements Listener {
 
-	MoneyFromMobs plugin;
+	private final MoneyFromMobs plugin;
 	
 	public WorldGuardListener(MoneyFromMobs plugin) {
 		this.plugin = plugin;

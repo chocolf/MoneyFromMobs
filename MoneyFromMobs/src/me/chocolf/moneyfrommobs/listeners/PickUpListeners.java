@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class PickUpListeners implements Listener{
+public class PickUpListeners implements Listener {
 
 	private final MoneyFromMobs plugin;
 	
@@ -21,9 +21,12 @@ public class PickUpListeners implements Listener{
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
-	
 	@EventHandler
 	public void onPickup(EntityPickupItemEvent e) {
+		if (!plugin.getDropsManager().doesMoneyDropOnGround()) {
+			return;
+		}
+
 		PickUpManager pickUpManager = plugin.getPickUpManager();
 		// gets item picked up
 		Item item = e.getItem();

@@ -22,6 +22,10 @@ public class NearEntitiesRunnable extends BukkitRunnable{
 	}
 	
 	public void run() {
+		if (!plugin.getDropsManager().doesMoneyDropOnGround()) {
+			return;
+		}
+
 		for ( Player p : Bukkit.getOnlinePlayers()) {
 			if (p.getInventory().firstEmpty() == -1) {
 				for ( Entity entity : p.getNearbyEntities(radius, radius, radius)) {

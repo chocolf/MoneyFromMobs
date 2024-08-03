@@ -25,6 +25,10 @@ public class PaperListeners implements Listener{
 	
 	@EventHandler
 	public void onAttemptToPickUp(PlayerAttemptPickupItemEvent e) {
+		if (!plugin.getDropsManager().doesMoneyDropOnGround()) {
+			return;
+		}
+
 		PickUpManager pickUpManager = plugin.getPickUpManager();
 		// gets item picked up
 		Item item = e.getItem();
