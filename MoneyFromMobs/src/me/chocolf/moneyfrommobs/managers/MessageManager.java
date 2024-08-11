@@ -122,7 +122,7 @@ public class MessageManager {
 			Matcher match = hexColorPattern.matcher(msg);
 			while (match.find()) {
 				String color = msg.substring(match.start(), match.end());
-				msg = msg.replace(color, ChatColor.valueOf(color) + "");
+				msg = msg.replace(color, ChatColor.of(color) + "");
 				match = hexColorPattern.matcher(msg);
 			}
 		}
