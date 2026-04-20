@@ -3,6 +3,7 @@ package me.chocolf.moneyfrommobs.managers;
 import java.util.HashMap;
 
 import io.lumine.mythic.bukkit.BukkitAPIHelper;
+import me.chocolf.moneyfrommobs.utils.EnchantmentHelper;
 import me.glaremasters.guilds.Guilds;
 import me.glaremasters.guilds.api.GuildsAPI;
 import me.glaremasters.guilds.guild.Guild;
@@ -111,7 +112,7 @@ public class MultipliersManager {
 	}
 	
 	private double applyLootingMultiplier(double baseAmount, ItemStack killersWeapon) {
-		int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS );
+		int lootingLevel = killersWeapon.getEnchantmentLevel(EnchantmentHelper.LOOTING);
 		return baseAmount * lootingMultiplier * lootingLevel;
 	}
 	

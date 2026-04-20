@@ -41,6 +41,7 @@ public class MoneyFromMobs extends JavaPlugin{
 	private BukkitTask inventoryIsFullRunnable;
 	private BukkitTask repeatingMultiplierEvent;
 	private PlaceholderAPIListener placeholderListener;
+	private Boolean paper;
 	private static MoneyFromMobs instance;
 	
 	@Override
@@ -198,10 +199,17 @@ public class MoneyFromMobs extends JavaPlugin{
 			repeatingMultiplierEvent = new RepeatingMultiplierEvent(this).runTaskTimer(this, multipliersManager.getRepeatingInitialDelay(), multipliersManager.getRepeatingDelay());
 	}
 	
-	// checks if server is running Paper 1.13+
+	// checks if server is running Paper
 	public boolean isUsingPaper() {
-		String version = getServer().getVersion();
-		return version.contains("Paper") || version.contains("Purpur");
+		if (paper == null) {
+			try {
+				Class.forName("com.destroystokyo.paper.PaperConfig");
+				paper = true;
+			} catch (ClassNotFoundException e) {
+				paper = false;
+			}
+		}
+		return paper;
 	}
 
 	public MythicMobsFileManager getMMConfig() {

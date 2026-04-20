@@ -1,0 +1,320 @@
+diff --git a/.github/workflows/maven.yml b/.github/workflows/maven.yml
+new file mode 100644
+index 0000000..40ccd38
+--- /dev/null
++++ b/.github/workflows/maven.yml
+@@ -0,0 +1,36 @@
++# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
++# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
++
++# This workflow uses actions that are not certified by GitHub.
++# They are provided by a third-party and are governed by
++# separate terms of service, privacy policy, and support
++# documentation.
++
++name: Java CI with Maven
++
++on:
++  push:
++    branches: [ "main" ]
++  pull_request:
++    branches: [ "main" ]
++
++jobs:
++  build:
++
++    runs-on: ubuntu-latest
++
++    steps:
++    - uses: actions/checkout@v4
++    - name: Set up JDK 21
++      uses: actions/setup-java@v4
++      with:
++        java-version: '21'
++        distribution: 'temurin'
++        cache: maven
++    - name: Build with Maven
++      run: mvn -B package --file pom.xml
++    - name: Upload Artifact
++      uses: actions/upload-artifact@v4
++      with:
++        name: MoneyFromMobs.jar
++        path: target/MoneyFromMobs-*.jar
+diff --git a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/MoneyFromMobs.java b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/MoneyFromMobs.java
+index 8b9b280..0bc5987 100644
+--- a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/MoneyFromMobs.java
++++ b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/MoneyFromMobs.java
+@@ -41,6 +41,7 @@ public class MoneyFromMobs extends JavaPlugin{
+ 	private BukkitTask inventoryIsFullRunnable;
+ 	private BukkitTask repeatingMultiplierEvent;
+ 	private PlaceholderAPIListener placeholderListener;
++	private Boolean paper;
+ 	private static MoneyFromMobs instance;
+ 	
+ 	@Override
+@@ -198,10 +199,17 @@ public void loadRepeatingMultiplierEvent(){
+ 			repeatingMultiplierEvent = new RepeatingMultiplierEvent(this).runTaskTimer(this, multipliersManager.getRepeatingInitialDelay(), multipliersManager.getRepeatingDelay());
+ 	}
+ 	
+-	// checks if server is running Paper 1.13+
++	// checks if server is running Paper
+ 	public boolean isUsingPaper() {
+-		String version = getServer().getVersion();
+-		return version.contains("Paper") || version.contains("Purpur");
++		if (paper == null) {
++			try {
++				Class.forName("com.destroystokyo.paper.PaperConfig");
++				paper = true;
++			} catch (ClassNotFoundException e) {
++				paper = false;
++			}
++		}
++		return paper;
+ 	}
+ 
+ 	public MythicMobsFileManager getMMConfig() {
+diff --git a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/DropsManager.java b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/DropsManager.java
+index 0dbdf86..80ff13c 100644
+--- a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/DropsManager.java
++++ b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/DropsManager.java
+@@ -258,12 +258,16 @@ else if (entity.hasMetadata("MfMSpawnReason")){
+ 		}
+ 		if (roseStackerSupport) {
+ 			try{
+-				return PersistentDataUtils.getEntitySpawnReason(entity).toString();
++				if (PersistentDataUtils.isSpawnedFromSpawner(entity))
++					return "SPAWNER";
+ 			}
+ 			catch (Exception e){
+ 				return null;
+ 			}
+ 		}
++		if (plugin.isUsingPaper()) {
++			return entity.getEntitySpawnReason().toString();
++		}
+ 		return null;
+ 	}
+ 
+diff --git a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/MultipliersManager.java b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/MultipliersManager.java
+index 5468239..563e018 100644
+--- a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/MultipliersManager.java
++++ b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/MultipliersManager.java
+@@ -3,6 +3,7 @@
+ import java.util.HashMap;
+ 
+ import io.lumine.mythic.bukkit.BukkitAPIHelper;
++import me.chocolf.moneyfrommobs.utils.EnchantmentHelper;
+ import me.glaremasters.guilds.Guilds;
+ import me.glaremasters.guilds.api.GuildsAPI;
+ import me.glaremasters.guilds.guild.Guild;
+@@ -111,7 +112,7 @@ public double applyPlayerDeathMultipliers(double baseAmount, Player p) {
+ 	}
+ 	
+ 	private double applyLootingMultiplier(double baseAmount, ItemStack killersWeapon) {
+-		int lootingLevel = killersWeapon.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS );
++		int lootingLevel = killersWeapon.getEnchantmentLevel(EnchantmentHelper.LOOTING);
+ 		return baseAmount * lootingMultiplier * lootingLevel;
+ 	}
+ 	
+diff --git a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/PickUpManager.java b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/PickUpManager.java
+index 6adb155..462cf6a 100644
+--- a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/PickUpManager.java
++++ b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/managers/PickUpManager.java
+@@ -5,6 +5,7 @@
+ import java.util.regex.Matcher;
+ import java.util.regex.Pattern;
+ 
++import me.chocolf.moneyfrommobs.utils.EnchantmentHelper;
+ import org.bukkit.Bukkit;
+ import org.bukkit.Location;
+ import org.bukkit.Material;
+@@ -76,7 +77,7 @@ private void loadItem(FileConfiguration config) {
+ 		}
+ 		// Makes item glow if it is enabled
+ 		if (config.getBoolean("MoneyDropsOnGround.Enchanted")){
+-			itemToDrop.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
++			itemToDrop.addUnsafeEnchantment(EnchantmentHelper.UNBREAKING, 1);
+ 			meta = itemToDrop.getItemMeta();
+ 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+ 			itemToDrop.setItemMeta(meta);
+diff --git a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/runnables/NearEntitiesRunnable.java b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/runnables/NearEntitiesRunnable.java
+index 29b6af4..56bf9ac 100644
+--- a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/runnables/NearEntitiesRunnable.java
++++ b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/runnables/NearEntitiesRunnable.java
+@@ -24,15 +24,15 @@ public NearEntitiesRunnable(MoneyFromMobs plugin) {
+ 	public void run() {
+ 		for ( Player p : Bukkit.getOnlinePlayers()) {
+ 			if (p.getInventory().firstEmpty() == -1) {
++				// if player doesn't have permission continue
++				if (!(p.hasPermission("MoneyFromMobs.use"))) continue;
++
+ 				for ( Entity entity : p.getNearbyEntities(radius, radius, radius)) {
+ 					if (entity instanceof Item) {
+-						// if player doesn't have permission return
+-						if (!(p.hasPermission("MoneyFromMobs.use"))) return;
+-						
+ 						Item item = (Item) entity;
+ 						ItemStack itemStack = item.getItemStack();
+ 						
+-						// if item found is not money return
++						// if item found is not money continue
+ 						if (!plugin.getPickUpManager().isMoneyPickedUp(itemStack)) continue;
+ 						
+ 					    
+diff --git a/MoneyFromMobs/src/me/chocolf/moneyfrommobs/utils/EnchantmentHelper.java b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/utils/EnchantmentHelper.java
+new file mode 100644
+index 0000000..058ea42
+--- /dev/null
++++ b/MoneyFromMobs/src/me/chocolf/moneyfrommobs/utils/EnchantmentHelper.java
+@@ -0,0 +1,42 @@
++package me.chocolf.moneyfrommobs.utils;
++
++import org.bukkit.NamespacedKey;
++import org.bukkit.Registry;
++import org.bukkit.enchantments.Enchantment;
++
++public final class EnchantmentHelper {
++
++    public static final Enchantment UNBREAKING;
++    public static final Enchantment LOOTING;
++    static {
++        boolean registries;
++        try {
++            Class.forName("org.bukkit.Registry");
++            registries = true;
++        } catch (ClassNotFoundException e) {
++            registries = false;
++        }
++
++        if (registries) {
++            UNBREAKING = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("unbreaking"));
++            LOOTING = Registry.ENCHANTMENT.get(NamespacedKey.minecraft("looting"));
++        } else {
++            UNBREAKING = findEnchantmentLegacy("unbreaking");
++            LOOTING = findEnchantmentLegacy("looting");
++        }
++    }
++
++    private EnchantmentHelper() {
++
++    }
++
++    private static Enchantment findEnchantmentLegacy(String... names) {
++        for (String name : names) {
++            Enchantment enchantment = Enchantment.getByKey(NamespacedKey.fromString(name));
++            if (enchantment != null)
++                return enchantment;
++        }
++        return null;
++    }
++
++}
+diff --git a/pom.xml b/pom.xml
+index 57c9044..505c755 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -2,7 +2,7 @@
+     <modelVersion>4.0.0</modelVersion>
+     <groupId>MoneyFromMobs</groupId>
+     <artifactId>MoneyFromMobs</artifactId>
+-    <version>4.8.1</version>
++    <version>4.8.2</version>
+     <name>MoneyFromMobs</name>
+     <description>Makes mobs drop money with looting multiplier</description>
+     <properties>
+@@ -51,6 +51,10 @@
+             <id>rosewood-repo</id>
+             <url>https://repo.rosewooddev.io/repository/public/</url>
+         </repository>
++        <repository>
++            <id>aikar-repo</id>
++            <url>https://repo.aikar.co/content/groups/aikar/</url>
++        </repository>
+         <repository>
+             <id>lumine-repo</id>
+             <url>https://mvn.lumine.io/repository/maven-public/</url>
+@@ -65,22 +69,18 @@
+         </repository>
+         <repository>
+             <id>papermc</id>
+-            <url>https://papermc.io/repo/repository/maven-public/</url>
++            <url>https://repo.papermc.io/repository/maven-public/</url>
+         </repository>
+         <repository>
+             <id>minecraft-repo</id>
+             <url>https://libraries.minecraft.net/</url>
+         </repository>
+-        <repository>
+-            <id>InfernalMobs-repo</id>
+-            <url>https://maven.addstar.com.au/artifactory/ext-release-local/</url>
+-        </repository>
+     </repositories>
+     <dependencies>
+         <dependency>
+-            <groupId>org.spigotmc.</groupId>
+-            <artifactId>spigot-api</artifactId>
+-            <version>1.20.4-R0.1-SNAPSHOT</version>
++            <groupId>io.papermc.paper</groupId>
++            <artifactId>paper-api</artifactId>
++            <version>1.21.5-R0.1-SNAPSHOT</version>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+@@ -90,9 +90,9 @@
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+-            <groupId>com.github.MilkBowl</groupId>
+-            <artifactId>VaultAPI</artifactId>
+-            <version>1.7</version>
++            <groupId>com.github.milkbowl</groupId>
++            <artifactId>vault</artifactId>
++            <version>1.7.3</version>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+@@ -110,7 +110,7 @@
+         <dependency>
+             <groupId>dev.rosewood</groupId>
+             <artifactId>rosestacker</artifactId>
+-            <version>1.5.7</version>
++            <version>1.5.33</version>
+         </dependency>
+         <dependency>
+             <groupId>io.lumine</groupId>
+@@ -121,13 +121,7 @@
+         <dependency>
+             <groupId>me.clip</groupId>
+             <artifactId>placeholderapi</artifactId>
+-            <version>2.11.5</version>
+-            <scope>provided</scope>
+-        </dependency>
+-        <dependency>
+-            <groupId>com.destroystokyo.paper</groupId>
+-            <artifactId>paper-api</artifactId>
+-            <version>1.16.5-R0.1-SNAPSHOT</version>
++            <version>2.11.6</version>
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+@@ -137,15 +131,10 @@
+             <scope>provided</scope>
+         </dependency>
+         <dependency>
+-            <groupId>io.hotmail.com.jacob_vejvoda.infernal_mobs.infernal_mobs</groupId>
+-            <artifactId>InfernalMobs</artifactId>
+-            <version>5.8</version>
++            <groupId>com.jacob_vejvoda</groupId>
++            <artifactId>infernalmobs</artifactId>
++            <version>6.6</version>
+             <scope>provided</scope>
+         </dependency>
+-        <dependency>
+-            <groupId>com.github.chocolf</groupId>
+-            <artifactId>MoneyFromMobs</artifactId>
+-            <version>4.82</version>
+-        </dependency>
+     </dependencies>
+-</project>
+\ No newline at end of file
++</project>

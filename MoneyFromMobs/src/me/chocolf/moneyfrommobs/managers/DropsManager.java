@@ -258,11 +258,15 @@ public class DropsManager {
 		}
 		if (roseStackerSupport) {
 			try{
-				return PersistentDataUtils.getEntitySpawnReason(entity).toString();
+				if (PersistentDataUtils.isSpawnedFromSpawner(entity))
+					return "SPAWNER";
 			}
 			catch (Exception e){
 				return null;
 			}
+		}
+		if (plugin.isUsingPaper()) {
+			return entity.getEntitySpawnReason().toString();
 		}
 		return null;
 	}
