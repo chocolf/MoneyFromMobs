@@ -5,6 +5,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import me.chocolf.moneyfrommobs.utils.EnchantmentHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -76,7 +77,7 @@ public class PickUpManager {
 		}
 		// Makes item glow if it is enabled
 		if (config.getBoolean("MoneyDropsOnGround.Enchanted")){
-			itemToDrop.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+			itemToDrop.addUnsafeEnchantment(EnchantmentHelper.UNBREAKING, 1);
 			meta = itemToDrop.getItemMeta();
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 			itemToDrop.setItemMeta(meta);

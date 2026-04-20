@@ -24,15 +24,15 @@ public class NearEntitiesRunnable extends BukkitRunnable{
 	public void run() {
 		for ( Player p : Bukkit.getOnlinePlayers()) {
 			if (p.getInventory().firstEmpty() == -1) {
+				// if player doesn't have permission continue
+				if (!(p.hasPermission("MoneyFromMobs.use"))) continue;
+
 				for ( Entity entity : p.getNearbyEntities(radius, radius, radius)) {
 					if (entity instanceof Item) {
-						// if player doesn't have permission return
-						if (!(p.hasPermission("MoneyFromMobs.use"))) return;
-						
 						Item item = (Item) entity;
 						ItemStack itemStack = item.getItemStack();
 						
-						// if item found is not money return
+						// if item found is not money continue
 						if (!plugin.getPickUpManager().isMoneyPickedUp(itemStack)) continue;
 						
 					    
